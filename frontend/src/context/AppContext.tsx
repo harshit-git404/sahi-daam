@@ -27,6 +27,8 @@ interface AppContextType {
   isAudioModalOpen: boolean;
   setIsAudioModalOpen: (open: boolean) => void;
   isScanning: boolean;
+  apiError: string | null;
+  setApiError: (err: string | null) => void;
   allProduce: ProduceItem[];
   triggerCelebration: () => void;
 }
@@ -44,19 +46,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isAudioModalOpen, setIsAudioModalOpen] = useState<boolean>(false);
   const [isScanning, setIsScanning] = useState<boolean>(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const selectProduceById = async (id: string) => {
     setIsScanning(true);
+    setApiError(null);
     const item = PRODUCE_DATABASE.find(p => p.id === id) || PRODUCE_DATABASE[0];
     try {
       const backendResponse = await fetchScanResult(item.id);
       const mergedItem = mergeProduceData(item, backendResponse);
       setSelectedProduce(mergedItem);
       setVendorAskingPrice(mergedItem.typicalVendorAsking);
+      setCurrentScreen('quality_result');
     } catch (e) {
-      console.error('API failed, falling back to static mock:', e);
-      setSelectedProduce(item);
-      setVendorAskingPrice(item.typicalVendorAsking);
+      console.error('API failed:', e);
+      setApiError('Failed to connect to the server. Please check your connection and try again.');
     } finally {
       setIsScanning(false);
     }
@@ -69,6 +73,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setSelectedProduce(prev => ({ ...prev, suggestedOfferPrice: result.suggested_price }));
       } catch (e) {
         console.error('Haggle check API failed:', e);
+        // We might not want a blocking error for just the haggle check update, but we can log it.
       }
     };
     verifyPrice();
@@ -144,6 +149,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isAudioModalOpen,
         setIsAudioModalOpen,
         isScanning,
+        apiError,
+        setApiError,
         allProduce: PRODUCE_DATABASE,
         triggerCelebration
       }}

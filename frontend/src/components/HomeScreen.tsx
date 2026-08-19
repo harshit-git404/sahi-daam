@@ -8,7 +8,6 @@ export const HomeScreen: React.FC = () => {
 
   const handleSelectProduce = (id: string) => {
     selectProduceById(id);
-    setCurrentScreen('quality_result');
   };
 
   return (

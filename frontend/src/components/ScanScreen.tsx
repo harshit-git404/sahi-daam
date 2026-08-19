@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '../context/AppContext';
 
 export const ScanScreen: React.FC = () => {
-  const { setCurrentScreen, selectedProduce, selectProduceById, theme, allProduce } = useApp();
+  const { setCurrentScreen, selectedProduce, setSelectedProduce, selectProduceById, theme, allProduce } = useApp();
   const [flashOn, setFlashOn] = useState(false);
   const [isScanning, setIsScanning] = useState(true);
   const [useRealCamera, setUseRealCamera] = useState(false);
@@ -45,10 +45,10 @@ export const ScanScreen: React.FC = () => {
   }, [isScanning, selectedProduce]);
 
   const handleCompleteScan = () => {
-    setIsScanning(false);
     // Haptic feedback
     if (navigator.vibrate) navigator.vibrate(60);
-    setCurrentScreen('quality_result');
+    // We already chose the item via handleSwitchTarget or default. Now actually hit the API.
+    selectProduceById(selectedProduce.id);
   };
 
   const handleToggleFlash = () => {
@@ -57,7 +57,8 @@ export const ScanScreen: React.FC = () => {
   };
 
   const handleSwitchTarget = (id: string, idx: number) => {
-    selectProduceById(id);
+    const item = allProduce.find(p => p.id === id) || allProduce[0];
+    setSelectedProduce(item); // Just update locally for the viewfinder
     setActiveItemIndex(idx);
   };
 
