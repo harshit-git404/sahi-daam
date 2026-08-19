@@ -53,7 +53,7 @@ def analyze_produce_with_gemini(image_bytes: bytes) -> tuple[str, FreshnessResul
         
         # We need to upload or pass the raw bytes. With GenAI SDK we can pass bytes directly.
         response = client.models.generate_content(
-            model='gemini-1.5-flash',
+            model='gemini-3.7-flash',
             contents=[
                 types.Part.from_bytes(data=image_bytes, mime_type='image/jpeg'),
                 prompt
