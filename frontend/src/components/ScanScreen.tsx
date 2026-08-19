@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '../context/AppContext';
 
 export const ScanScreen: React.FC = () => {
-  const { setCurrentScreen, selectedProduce, setSelectedProduce, selectProduceById, theme, allProduce } = useApp();
+  const { setCurrentScreen, selectedProduce, setSelectedProduce, selectProduceById, theme, allProduce, isScanning: globalIsScanning } = useApp();
   const [flashOn, setFlashOn] = useState(false);
   const [isScanning, setIsScanning] = useState(true);
   const [useRealCamera, setUseRealCamera] = useState(true);
@@ -10,6 +10,16 @@ export const ScanScreen: React.FC = () => {
   const [cameraError, setCameraError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const isTerracotta = theme === 'terracotta';
+
+  // Freeze camera feed instantly when scan is triggered
+  useEffect(() => {
+    if (globalIsScanning && videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach(track => {
+        track.enabled = false; // "Freezes" the last frame
+      });
+    }
+  }, [globalIsScanning]);
 
   // Handle Real Camera stream
   useEffect(() => {

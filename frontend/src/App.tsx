@@ -10,8 +10,27 @@ import { BottomNav } from './components/BottomNav';
 import { DrawerMenu } from './components/DrawerMenu';
 import { AudioHaggleModal } from './components/AudioHaggleModal';
 
+const LOADING_MESSAGES = [
+  "Analyzing produce visuals...",
+  "Running Gemini Vision AI...",
+  "Assessing freshness levels...",
+  "Fetching live Mandi rates...",
+  "Finalizing analysis..."
+];
+
 const AppContent: React.FC = () => {
   const { currentScreen, isScanning, apiError, setApiError } = useApp();
+  const [loadingTextIdx, setLoadingTextIdx] = React.useState(0);
+
+  React.useEffect(() => {
+    if (isScanning) {
+      setLoadingTextIdx(0);
+      const interval = setInterval(() => {
+        setLoadingTextIdx((prev) => (prev + 1) % LOADING_MESSAGES.length);
+      }, 1500);
+      return () => clearInterval(interval);
+    }
+  }, [isScanning]);
 
   return (
     <div className="min-h-screen bg-[#fbf9f5] flex flex-col justify-between font-body text-[#1b1c1a] antialiased">
@@ -36,13 +55,15 @@ const AppContent: React.FC = () => {
 
       {/* Global Branded Loading Overlay */}
       {isScanning && (
-        <div className="fixed inset-0 z-[100] bg-[#fbf9f5]/90 backdrop-blur-sm flex flex-col items-center justify-center animate-in fade-in duration-200">
-          <div className="w-20 h-20 relative flex items-center justify-center">
-             <div className="absolute inset-0 rounded-full border-4 border-[#e4e2de]"></div>
-             <div className="absolute inset-0 rounded-full border-4 border-t-[#9e3d00] animate-spin"></div>
-             <span className="material-symbols-outlined text-[32px] text-[#9e3d00] animate-pulse">center_focus_strong</span>
+        <div className="fixed inset-0 z-[100] bg-[#fbf9f5] flex flex-col items-center justify-center animate-in fade-in duration-200">
+          <div className="w-24 h-24 relative flex items-center justify-center">
+             <div className="absolute inset-0 rounded-full border-[6px] border-[#e4e2de]"></div>
+             <div className="absolute inset-0 rounded-full border-[6px] border-t-[#9e3d00] animate-spin"></div>
+             <span className="material-symbols-outlined text-[40px] text-[#9e3d00] animate-pulse">center_focus_strong</span>
           </div>
-          <p className="mt-4 font-display font-semibold text-[#1b1c1a] animate-pulse">Scanning Produce...</p>
+          <p className="mt-6 font-display text-[18px] font-semibold text-[#1b1c1a] animate-pulse transition-all duration-300">
+            {LOADING_MESSAGES[loadingTextIdx]}
+          </p>
         </div>
       )}
 
