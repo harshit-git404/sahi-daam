@@ -19,37 +19,56 @@ MODEL_PATH = Path(__file__).resolve().parent / "models" / "rottenvsfresh98pval.h
 # The legacy tf_keras loader is required for this older H5 model.
 model = load_model(MODEL_PATH, compile=False)
 
+# Load MobileNetV2 for real object classification
+from tf_keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input, decode_predictions
+classification_model = MobileNetV2(weights='imagenet')
+
 def detect_produce(image: bytes) -> tuple[str, float]:
     """
-    Hackathon MVP: A lightweight color-based heuristic to classify 
-    the produce as tomato, potato, or onion instead of a heavy CNN.
-    Returns (produce_type, confidence_score)
+    Uses MobileNetV2 to classify the object.
     """
     image_array = np.frombuffer(image, dtype=np.uint8)
     img = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
     if img is None:
         return ("tomato", 0.5)
         
-    # Resize to speed up and reduce noise
-    img = cv2.resize(img, (50, 50))
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = cv2.resize(img, (224, 224))
+    img = np.expand_dims(img, axis=0)
+    img = preprocess_input(img)
     
-    # Get median color to avoid background skew
-    h, s, v = np.median(hsv[:,:,0]), np.median(hsv[:,:,1]), np.median(hsv[:,:,2])
+    preds = classification_model.predict(img, verbose=0)
+    results = decode_predictions(preds, top=5)[0]
     
-    # Red hue (0-15 or 160-180) -> Tomato
-    if (h < 15 or h > 160) and s > 80:
-        return ("tomato", 0.92)
-    # Brown/Tan/Yellow hue (15-40) -> Potato
-    elif 15 <= h <= 40:
-        return ("potato", 0.88)
-    # Else (Pink/Purple/White) -> Onion
-    else:
-        return ("onion", 0.85)
+    # Check top predictions for keywords
+    top_labels = [res[1].lower() for res in results]
+    confidence = float(results[0][2])
+    
+    for label in top_labels:
+        if 'banana' in label: return ('banana', confidence)
+        if 'apple' in label or 'granny_smith' in label: return ('apple', confidence)
+        if 'orange' in label or 'lemon' in label: return ('orange', confidence)
+        if 'bell_pepper' in label or 'strawberry' in label or 'tomato' in label: return ('tomato', confidence) # ImageNet has weird tomato mappings
+        if 'onion' in label or 'garlic' in label: return ('onion', confidence)
+        if 'potato' in label or 'squash' in label: return ('potato', confidence)
+
+    # Fallback to the top ImageNet label if it's something weird (like laptop)
+    return (top_labels[0], confidence)
 
 
 def predict_freshness(image: bytes, produce_type: str) -> FreshnessResult:
     """Return the model's freshness assessment for an uploaded produce image."""
+    
+    # Bypassing the .h5 model for unsupported fruits because it's only trained on tomatoes/onions/potatoes!
+    if produce_type not in ['tomato', 'onion', 'potato']:
+        # Mock freshness for other fruits so the progress bar isn't 0%
+        return {
+            "freshness_label": "Fresh",
+            "freshness_percent": 88,
+            "freshness_note": f"{produce_type.capitalize()} appears fresh. (Freshness simulated for demo)",
+            "quality_adjustment": 0,
+            "quality_adjustment_label": "No freshness deduction",
+        }
 
     image_array = np.frombuffer(image, dtype=np.uint8)
     img = cv2.imdecode(image_array, cv2.IMREAD_COLOR)

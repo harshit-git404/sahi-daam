@@ -41,6 +41,35 @@ export const PRODUCE_DATABASE: ProduceItem[] = [
     ]
   },
   {
+    id: 'banana',
+    name: 'Banana',
+    hindiName: 'Kela (केला)',
+    image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=400&q=80',
+    matchScore: 95,
+    qualitySummary: 'Yellow skin, perfect for consumption.',
+    freshness: 'fresh',
+    freshnessPercent: 88,
+    wholesalePrice: 40,
+    markupMinPercent: 15,
+    markupMaxPercent: 30,
+    retailFairMin: 50,
+    retailFairMax: 60,
+    typicalVendorAsking: 80,
+    suggestedOfferPrice: 55,
+    unit: 'dozen',
+    qualityAdjustment: 0,
+    qualityAdjustmentLabel: 'clean skin',
+    dataConfidence: 'High',
+    category: 'Fruits',
+    bargainPhrases: [
+      {
+        hindi: 'भैया, केले थोड़े ज्यादा पके लग रहे हैं, ₹50 दर्जन लगा लो।',
+        english: 'Brother, bananas look a bit overripe, give for ₹50 a dozen.',
+        phonetic: 'Bhaiya, kele thode zyada pake lag rahe hain, ₹50 darjan laga lo.'
+      }
+    ]
+  },
+  {
     id: 'onion',
     name: 'Onion',
     hindiName: 'Pyaaz (प्याज़)',
