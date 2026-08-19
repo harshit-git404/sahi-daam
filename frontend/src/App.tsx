@@ -16,7 +16,7 @@ const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#fbf9f5] flex flex-col justify-between font-body text-[#1b1c1a] antialiased">
       {/* Screen Router */}
-      <div className="flex-1">
+      <div key={currentScreen} className="flex-1 animate-in fade-in slide-in-from-bottom-2 duration-300 ease-out">
         {currentScreen === 'home' && <HomeScreen />}
         {currentScreen === 'scan' && <ScanScreen />}
         {currentScreen === 'quality_result' && <QualityResultScreen />}
