@@ -40,14 +40,21 @@ Sahi Daam is a fair-price companion app for buying fruits and vegetables that em
 1. Navigate to the `backend` directory: `cd backend`
 2. Create and activate a virtual environment: `python -m venv venv` and `.\venv\Scripts\activate` (Windows) or `source venv/bin/activate` (Mac/Linux).
 3. Install dependencies: `pip install -r requirements.txt`
-4. Run the server: `uvicorn main:app --reload`
+4. Run the server: `uvicorn main:app --reload --host 0.0.0.0 --port 8000`
 5. The API will be available at `http://127.0.0.1:8000`.
 
 ### Frontend
 1. Navigate to the `frontend` directory: `cd frontend`
 2. Install dependencies: `npm install`
-3. Run the development server: `npm run dev`
+3. Run the development server: `npm run dev -- --host`
 4. The application will be available at `http://localhost:5173`.
+5. Note: The frontend uses a Vite proxy (`/api`) to automatically route backend calls to `http://127.0.0.1:8000`.
+
+### Testing on a Phone (via ngrok)
+Since the frontend proxies API requests to the backend, you only need one ngrok tunnel for the frontend:
+1. Run both the backend and frontend servers as described above.
+2. Expose the frontend port via ngrok: `ngrok http 5173` (or use your static domain: `ngrok http 5173 --domain=your-domain.ngrok-free.app`).
+3. Access the ngrok URL on your phone.
 
 ## Documentation
 - [API Contract](docs/API_CONTRACT.md)

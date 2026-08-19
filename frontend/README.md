@@ -13,10 +13,12 @@ Wired to the backend via `src/services/api.ts` and `adapter.ts`. All screens are
 
 ## How to Run
 1. Install dependencies: `npm install`
-2. Start the dev server: `npm run dev`
+2. Start the dev server: `npm run dev -- --host`
 
 **Testing on a phone via ngrok:**
-To test the app on a mobile device over the internet, set `VITE_API_BASE_URL` in `.env.local` to the backend's ngrok URL (obtained from running `ngrok http 8000`), restart the dev server, and access the app via the frontend's static ngrok domain.
+Because the frontend Vite server proxies `/api` requests directly to the local backend, you only need a single ngrok tunnel. 
+Start both servers locally, then run: `ngrok http 5173` (or `ngrok http 5173 --domain=your-domain.ngrok-free.app`). Access the resulting URL on your mobile device.
+*(Note: Do not set `VITE_API_BASE_URL` in `.env.local` for ngrok testing unless you are explicitly bypassing the proxy.)*
 
 ## Future Plans
 - Voice haggling (staged: phrasebook mode first, full negotiation later).
