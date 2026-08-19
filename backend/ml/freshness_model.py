@@ -27,7 +27,7 @@ def analyze_produce_with_gemini(image_bytes: bytes) -> tuple[str, FreshnessResul
         return ("coconut", {
             "freshness_label": "Fresh",
             "freshness_percent": 90,
-            "freshness_note": "Mocked by AI: The coconut husk looks intact with no visible cracks or mold. (Add your Gemini API Key in .env for real analysis!)",
+            "freshness_note": "Mocked by AI: The coconut husk looks intact with no visible cracks or mold. (Add your Vision API Key in .env for real analysis!)",
             "quality_adjustment": 0,
             "quality_adjustment_label": "Intact husk"
         })

@@ -12,7 +12,7 @@ import { AudioHaggleModal } from './components/AudioHaggleModal';
 
 const LOADING_MESSAGES = [
   "Analyzing produce visuals...",
-  "Running Gemini Vision AI...",
+  "Running vision ensemble models...",
   "Assessing freshness levels...",
   "Fetching live Mandi rates...",
   "Finalizing analysis..."
