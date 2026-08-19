@@ -64,16 +64,30 @@ export const QualityResultScreen: React.FC = () => {
           <div id="freshness-gauge" className="w-full mb-3">
             <div className="flex justify-between items-end mb-2 px-1">
               <span
-                className={`font-semibold text-[14px] ${
-                  isTerracotta ? 'text-[#006d37]' : 'text-[#0e6c4a]'
+                className={`transition-colors duration-300 ${
+                  selectedProduce.freshness === 'fresh'
+                    ? `font-semibold text-[14px] ${isTerracotta ? 'text-[#006d37]' : 'text-[#0e6c4a]'}`
+                    : 'text-[12px] font-medium text-[#594238]'
                 }`}
               >
                 Fresh
               </span>
-              <span className="text-[12px] font-medium text-[#594238]">
+              <span
+                className={`transition-colors duration-300 ${
+                  selectedProduce.freshness === 'slightly_aged'
+                    ? `font-semibold text-[14px] ${isTerracotta ? 'text-[#9e3d00]' : 'text-[#0e6c4a]'}`
+                    : 'text-[12px] font-medium text-[#594238]'
+                }`}
+              >
                 Slightly Aged
               </span>
-              <span className="text-[12px] font-medium text-[#594238]">
+              <span
+                className={`transition-colors duration-300 ${
+                  selectedProduce.freshness === 'overripe'
+                    ? `font-semibold text-[14px] ${isTerracotta ? 'text-[#9e3d00]' : 'text-[#0e6c4a]'}`
+                    : 'text-[12px] font-medium text-[#594238]'
+                }`}
+              >
                 Overripe
               </span>
             </div>

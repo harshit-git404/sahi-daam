@@ -123,7 +123,7 @@ export const PriceBreakdownScreen: React.FC = () => {
                 </span>
               </div>
               <span className="font-semibold text-[15px] text-[#1b1c1a]">
-                ₹29–32/{selectedProduce.unit}
+                ₹{Math.round(selectedProduce.wholesalePrice * (1 + selectedProduce.markupMinPercent / 100))}–{Math.round(selectedProduce.wholesalePrice * (1 + selectedProduce.markupMaxPercent / 100))}/{selectedProduce.unit}
               </span>
             </li>
 
@@ -142,7 +142,7 @@ export const PriceBreakdownScreen: React.FC = () => {
                   isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'
                 }`}
               >
-                -₹1 to -2
+                {selectedProduce.qualityAdjustment < 0 ? `-₹${Math.abs(selectedProduce.qualityAdjustment)}` : selectedProduce.qualityAdjustment > 0 ? `+₹${selectedProduce.qualityAdjustment}` : '₹0'}
               </span>
             </li>
           </ul>
