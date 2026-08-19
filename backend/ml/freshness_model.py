@@ -1,4 +1,10 @@
 from typing import TypedDict, Literal
+from pathlib import Path
+
+import cv2
+import numpy as np
+from tf_keras.models import load_model
+
 
 class FreshnessResult(TypedDict):
     freshness_label: Literal["Fresh", "Slightly Aged", "Overripe"]
@@ -7,16 +13,60 @@ class FreshnessResult(TypedDict):
     quality_adjustment: int
     quality_adjustment_label: str
 
+
+MODEL_PATH = Path(__file__).resolve().parent / "models" / "rottenvsfresh98pval.h5"
+
+# The legacy tf_keras loader is required for this older H5 model.
+model = load_model(MODEL_PATH, compile=False)
+
+
 def predict_freshness(image: bytes, produce_type: str) -> FreshnessResult:
-    """
-    Analyzes an image of produce and predicts its freshness level.
-    
-    Args:
-        image (bytes): Raw bytes of the image file (e.g., JPEG or PNG data).
-        produce_type (str): The name/category of the produce (e.g. 'Tomato').
-        
-    Returns:
-        FreshnessResult dictionary containing the label, percentage, and adjustment details.
-    """
-    # TODO(Person 2): implement
-    pass
+    """Return the model's freshness assessment for an uploaded produce image."""
+
+    image_array = np.frombuffer(image, dtype=np.uint8)
+    img = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+
+    if img is None:
+        raise ValueError("The uploaded image could not be read.")
+
+    # Must match the preprocessing used when testing this trained model.
+    img = cv2.resize(img, (100, 100))
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = img.astype("float32") / 255.0
+    img = np.expand_dims(img, axis=0)
+
+    # Model convention: 0 = fresh, 1 = not fresh.
+    not_fresh_score = float(model.predict(img, verbose=0)[0][0])
+    not_fresh_score = max(0.0, min(1.0, not_fresh_score))
+    freshness_percent = round((1.0 - not_fresh_score) * 100)
+
+    if not_fresh_score < 0.10:
+        return {
+            "freshness_label": "Fresh",
+            "freshness_percent": freshness_percent,
+            "freshness_note": f"{produce_type.capitalize()} appears fresh and suitable for sale.",
+            "quality_adjustment": 0,
+            "quality_adjustment_label": "No freshness deduction",
+        }
+
+    if not_fresh_score < 0.35:
+        return {
+            "freshness_label": "Slightly Aged",
+            "freshness_percent": freshness_percent,
+            "freshness_note": (
+                f"{produce_type.capitalize()} is still usable but should be consumed soon."
+            ),
+            "quality_adjustment": -2,
+            "quality_adjustment_label": "Slight freshness deduction",
+        }
+
+    return {
+        "freshness_label": "Overripe",
+        "freshness_percent": freshness_percent,
+        "freshness_note": (
+            f"{produce_type.capitalize()} appears spoiled or severely overripe "
+            "and is not fit for sale."
+        ),
+        "quality_adjustment": -5,
+        "quality_adjustment_label": "Spoiled produce — do not buy",
+    }
