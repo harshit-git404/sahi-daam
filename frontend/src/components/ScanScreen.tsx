@@ -108,7 +108,7 @@ export const ScanScreen: React.FC = () => {
         {/* Quick Camera Mode Switcher (Simulated vs Live) */}
         <button
           onClick={() => setUseRealCamera(!useRealCamera)}
-          className="px-3 py-1 rounded-full bg-black/40 backdrop-blur-md text-white text-[11px] font-medium border border-white/20"
+          className="px-3 py-1 rounded-full bg-black/40 backdrop-blur-md text-white text-[11px] font-medium border border-white/20 active:scale-95 transition-transform"
         >
           {useRealCamera ? '📷 Live Camera' : '🖼 Market Simulation'}
         </button>
@@ -202,7 +202,7 @@ export const ScanScreen: React.FC = () => {
             <button
               key={item.id}
               onClick={() => handleSwitchTarget(item.id, idx)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium backdrop-blur-md transition-all ${
+              className={`px-3 py-1.5 rounded-full text-xs font-medium backdrop-blur-md transition-all active:scale-95 ${
                 selectedProduce.id === item.id
                   ? 'bg-white text-[#1b1c1a] font-bold shadow-md scale-105'
                   : 'bg-black/40 text-white/80 hover:bg-black/60'

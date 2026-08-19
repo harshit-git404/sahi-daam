@@ -20,7 +20,7 @@ export const PriceBreakdownScreen: React.FC = () => {
         {/* Breadcrumb Context Tag */}
         <div
           onClick={() => setCurrentScreen('quality_result')}
-          className="flex items-center gap-1.5 text-[#594238] cursor-pointer hover:opacity-80 transition-opacity"
+          className="flex items-center gap-1.5 text-[#594238] cursor-pointer hover:opacity-80 active:opacity-60 transition-opacity"
         >
           <span
             className={`material-symbols-outlined text-[20px] ${
