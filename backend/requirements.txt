@@ -6,4 +6,5 @@ numpy
 tf-keras
 tensorflow
 google-genai
-python-dotenv
+httpx==0.27.0
+python-dotenv==1.0.1
