@@ -5,3 +5,5 @@ opencv-python
 numpy
 tf-keras
 tensorflow
+google-genai
+python-dotenv

@@ -2,7 +2,7 @@ import base64
 from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import Optional
-from ml.freshness_model import predict_freshness, detect_produce
+from ml.freshness_model import analyze_produce_with_gemini
 
 router = APIRouter()
 
@@ -22,7 +22,7 @@ def scan_produce(request: ScanRequest):
     }
     
     produce_type = request.produce_type or "tomato"
-    confidence = 0.0
+    confidence = 0.99
     
     if request.image:
         try:
@@ -33,14 +33,11 @@ def scan_produce(request: ScanRequest):
             
             image_bytes = base64.b64decode(b64_data)
             
-            # Detect produce if not provided or just to override
-            detected_type, conf = detect_produce(image_bytes)
+            # Analyze completely using Gemini VLM
+            detected_type, gemini_freshness = analyze_produce_with_gemini(image_bytes)
             produce_type = detected_type
-            confidence = conf
+            freshness_data.update(gemini_freshness)
             
-            # Predict using teammate's ML model
-            pred = predict_freshness(image_bytes, produce_type)
-            freshness_data.update(pred)
         except Exception as e:
             print(f"ML Model Error: {e}")
             pass

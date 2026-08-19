@@ -189,6 +189,64 @@ export const PRODUCE_DATABASE: ProduceItem[] = [
         phonetic: 'Adrak ₹120 kilo lagaiye, 250 gram lena hai.'
       }
     ]
+  },
+  {
+    id: 'coconut',
+    name: 'Coconut',
+    hindiName: 'Nariyal (नारियल)',
+    image: 'https://images.unsplash.com/photo-1526369528659-19eb7b3d3957?auto=format&fit=crop&w=400&q=80',
+    matchScore: 99,
+    qualitySummary: 'Intact husk, feels heavy for its size.',
+    freshness: 'fresh',
+    freshnessPercent: 95,
+    wholesalePrice: 40,
+    markupMinPercent: 10,
+    markupMaxPercent: 25,
+    retailFairMin: 45,
+    retailFairMax: 55,
+    typicalVendorAsking: 60,
+    suggestedOfferPrice: 50,
+    unit: 'piece',
+    qualityAdjustment: 0,
+    qualityAdjustmentLabel: 'intact',
+    dataConfidence: 'High',
+    category: 'Fruits',
+    bargainPhrases: [
+      {
+        hindi: 'भैया, ₹50 लगा लो, 2 नारियल लूंगा।',
+        english: 'Make it ₹50 brother, I will buy 2 coconuts.',
+        phonetic: 'Bhaiya, ₹50 laga lo, 2 nariyal loonga.'
+      }
+    ]
+  },
+  {
+    id: 'unknown',
+    name: 'Produce Item',
+    hindiName: 'Sabzi/Phal',
+    image: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=400&q=80',
+    matchScore: 90,
+    qualitySummary: 'Fresh produce detected.',
+    freshness: 'fresh',
+    freshnessPercent: 85,
+    wholesalePrice: 50,
+    markupMinPercent: 20,
+    markupMaxPercent: 40,
+    retailFairMin: 60,
+    retailFairMax: 80,
+    typicalVendorAsking: 100,
+    suggestedOfferPrice: 75,
+    unit: 'kg',
+    qualityAdjustment: 0,
+    qualityAdjustmentLabel: 'standard',
+    dataConfidence: 'Low',
+    category: 'Vegetables',
+    bargainPhrases: [
+      {
+        hindi: 'भैया, सही दाम लगाइए, रोज़ का आना जाना है।',
+        english: 'Please give a fair price, I am a regular customer.',
+        phonetic: 'Bhaiya, sahi daam lagaiye, roz ka aana jaana hai.'
+      }
+    ]
   }
 ];
 

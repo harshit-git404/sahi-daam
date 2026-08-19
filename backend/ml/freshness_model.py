@@ -1,10 +1,13 @@
 from typing import TypedDict, Literal
 from pathlib import Path
 
-import cv2
-import numpy as np
-from tf_keras.models import load_model
+import os
+import json
+from typing import TypedDict, Literal
+from dotenv import load_dotenv
 
+# Load environment variables (GEMINI_API_KEY)
+load_dotenv()
 
 class FreshnessResult(TypedDict):
     freshness_label: Literal["Fresh", "Slightly Aged", "Overripe"]
@@ -13,107 +16,75 @@ class FreshnessResult(TypedDict):
     quality_adjustment: int
     quality_adjustment_label: str
 
-
-MODEL_PATH = Path(__file__).resolve().parent / "models" / "rottenvsfresh98pval.h5"
-
-# The legacy tf_keras loader is required for this older H5 model.
-model = load_model(MODEL_PATH, compile=False)
-
-# Load MobileNetV2 for real object classification
-from tf_keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input, decode_predictions
-classification_model = MobileNetV2(weights='imagenet')
-
-def detect_produce(image: bytes) -> tuple[str, float]:
+def analyze_produce_with_gemini(image_bytes: bytes) -> tuple[str, FreshnessResult]:
     """
-    Uses MobileNetV2 to classify the object.
+    Sends the image to Gemini Vision API to detect the produce and assess freshness.
+    Returns (detected_produce_id, FreshnessResult).
     """
-    image_array = np.frombuffer(image, dtype=np.uint8)
-    img = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
-    if img is None:
-        return ("tomato", 0.5)
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key or api_key == "your_gemini_api_key_here":
+        # MOCK FALLBACK for hackathon if no API key is provided
+        return ("coconut", {
+            "freshness_label": "Fresh",
+            "freshness_percent": 90,
+            "freshness_note": "Mocked by AI: The coconut husk looks intact with no visible cracks or mold. (Add your Gemini API Key in .env for real analysis!)",
+            "quality_adjustment": 0,
+            "quality_adjustment_label": "Intact husk"
+        })
+
+    try:
+        from google import genai
+        from google.genai import types
         
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = cv2.resize(img, (224, 224))
-    img = np.expand_dims(img, axis=0)
-    img = preprocess_input(img)
-    
-    preds = classification_model.predict(img, verbose=0)
-    results = decode_predictions(preds, top=5)[0]
-    
-    # Check top predictions for keywords
-    top_labels = [res[1].lower() for res in results]
-    confidence = float(results[0][2])
-    
-    for label in top_labels:
-        if 'banana' in label: return ('banana', confidence)
-        if 'apple' in label or 'granny_smith' in label: return ('apple', confidence)
-        if 'orange' in label or 'lemon' in label: return ('orange', confidence)
-        if 'bell_pepper' in label or 'strawberry' in label or 'tomato' in label: return ('tomato', confidence) # ImageNet has weird tomato mappings
-        if 'onion' in label or 'garlic' in label: return ('onion', confidence)
-        if 'potato' in label or 'squash' in label: return ('potato', confidence)
+        client = genai.Client(api_key=api_key)
+        
+        prompt = """
+        Analyze this image of produce.
+        Return ONLY a raw JSON object with the following structure (no markdown tags):
+        {
+          "detected_produce_id": "apple|banana|tomato|onion|potato|coconut|etc...",
+          "freshness_label": "Fresh|Slightly Aged|Overripe",
+          "freshness_percent": <number 0-100>,
+          "freshness_note": "<A short 1-sentence observation on its visual quality>",
+          "quality_adjustment": <number 0 to -10 depending on damage>,
+          "quality_adjustment_label": "<short 2-3 word reason for deduction, e.g. 'Bruised skin'>"
+        }
+        """
+        
+        # We need to upload or pass the raw bytes. With GenAI SDK we can pass bytes directly.
+        response = client.models.generate_content(
+            model='gemini-1.5-flash',
+            contents=[
+                types.Part.from_bytes(data=image_bytes, mime_type='image/jpeg'),
+                prompt
+            ]
+        )
+        
+        # Clean the JSON response (strip markdown blocks if Gemini returns them)
+        text = response.text.strip()
+        if text.startswith("```json"):
+            text = text[7:-3].strip()
+        elif text.startswith("```"):
+            text = text[3:-3].strip()
+            
+        data = json.loads(text)
+        
+        result: FreshnessResult = {
+            "freshness_label": data.get("freshness_label", "Fresh"),
+            "freshness_percent": data.get("freshness_percent", 85),
+            "freshness_note": data.get("freshness_note", "Visual analysis complete."),
+            "quality_adjustment": data.get("quality_adjustment", 0),
+            "quality_adjustment_label": data.get("quality_adjustment_label", "No deductions")
+        }
+        
+        return (data.get("detected_produce_id", "unknown").lower(), result)
 
-    # Fallback to the top ImageNet label if it's something weird (like laptop)
-    return (top_labels[0], confidence)
-
-
-def predict_freshness(image: bytes, produce_type: str) -> FreshnessResult:
-    """Return the model's freshness assessment for an uploaded produce image."""
-    
-    # Bypassing the .h5 model for unsupported fruits because it's only trained on tomatoes/onions/potatoes!
-    if produce_type not in ['tomato', 'onion', 'potato']:
-        # Mock freshness for other fruits so the progress bar isn't 0%
-        return {
+    except Exception as e:
+        print(f"Gemini API Error: {e}")
+        return ("unknown", {
             "freshness_label": "Fresh",
-            "freshness_percent": 88,
-            "freshness_note": f"{produce_type.capitalize()} appears fresh. (Freshness simulated for demo)",
+            "freshness_percent": 85,
+            "freshness_note": "Failed to analyze image due to API error.",
             "quality_adjustment": 0,
-            "quality_adjustment_label": "No freshness deduction",
-        }
-
-    image_array = np.frombuffer(image, dtype=np.uint8)
-    img = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
-
-    if img is None:
-        raise ValueError("The uploaded image could not be read.")
-
-    # Must match the preprocessing used when testing this trained model.
-    img = cv2.resize(img, (100, 100))
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = img.astype("float32") / 255.0
-    img = np.expand_dims(img, axis=0)
-
-    # Model convention: 0 = fresh, 1 = not fresh.
-    not_fresh_score = float(model.predict(img, verbose=0)[0][0])
-    not_fresh_score = max(0.0, min(1.0, not_fresh_score))
-    freshness_percent = round((1.0 - not_fresh_score) * 100)
-
-    if not_fresh_score < 0.10:
-        return {
-            "freshness_label": "Fresh",
-            "freshness_percent": freshness_percent,
-            "freshness_note": f"{produce_type.capitalize()} appears fresh and suitable for sale.",
-            "quality_adjustment": 0,
-            "quality_adjustment_label": "No freshness deduction",
-        }
-
-    if not_fresh_score < 0.35:
-        return {
-            "freshness_label": "Slightly Aged",
-            "freshness_percent": freshness_percent,
-            "freshness_note": (
-                f"{produce_type.capitalize()} is still usable but should be consumed soon."
-            ),
-            "quality_adjustment": -2,
-            "quality_adjustment_label": "Slight freshness deduction",
-        }
-
-    return {
-        "freshness_label": "Overripe",
-        "freshness_percent": freshness_percent,
-        "freshness_note": (
-            f"{produce_type.capitalize()} appears spoiled or severely overripe "
-            "and is not fit for sale."
-        ),
-        "quality_adjustment": -5,
-        "quality_adjustment_label": "Spoiled produce — do not buy",
-    }
+            "quality_adjustment_label": "API Error"
+        }) }
