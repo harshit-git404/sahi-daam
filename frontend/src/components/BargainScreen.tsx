@@ -55,7 +55,7 @@ export const BargainScreen: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#fbf9f5] flex flex-col pb-10 antialiased relative overflow-hidden">
+    <div className="min-h-screen bg-[#fbf9f5] flex flex-col pb-10 antialiased relative overflow-x-hidden">
       {/* TopAppBar */}
       <Header
         title={`${selectedProduce.name} Bargain`}

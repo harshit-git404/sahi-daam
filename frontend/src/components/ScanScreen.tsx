@@ -64,7 +64,7 @@ export const ScanScreen: React.FC = () => {
   return (
     <div
       id="scan-viewfinder-screen"
-      className="fixed inset-0 z-50 w-screen h-screen overflow-hidden bg-black flex flex-col justify-between select-none"
+      className="fixed inset-0 z-50 w-screen h-[100dvh] overflow-hidden bg-black flex flex-col justify-between select-none"
     >
       {/* Background Image / Camera Feed */}
       {useRealCamera ? (
