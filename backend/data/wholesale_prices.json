@@ -1,0 +1,5 @@
+{
+  "tomato": {"price_per_kg": 25},
+  "onion": {"price_per_kg": 30},
+  "potato": {"price_per_kg": 20}
+}

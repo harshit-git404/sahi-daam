@@ -1,0 +1,6 @@
+{
+  "name": "Sahi Daam",
+  "description": "Know the fair price before you pay. Scan produce, verify freshness and quality, get Mandi wholesale price breakdowns, and smart local bargaining suggestions.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
