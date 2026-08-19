@@ -40,7 +40,8 @@ Sahi Daam is a fair-price companion app for buying fruits and vegetables that em
 1. Navigate to the `backend` directory: `cd backend`
 2. Create and activate a virtual environment: `python -m venv venv` and `.\venv\Scripts\activate` (Windows) or `source venv/bin/activate` (Mac/Linux).
 3. Install dependencies: `pip install -r requirements.txt`
-4. Run the server: `uvicorn main:app --reload --host 0.0.0.0 --port 8000`
+4. Setup environment variables: Copy `.env.example` to `.env` and insert your `DATA_GOV_API_KEY`.
+5. Run the server: `uvicorn main:app --reload --host 0.0.0.0 --port 8000`
 5. The API will be available at `http://127.0.0.1:8000`.
 
 ### Frontend
