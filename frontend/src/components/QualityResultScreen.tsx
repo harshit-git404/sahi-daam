@@ -5,6 +5,11 @@ import { Header } from './Header';
 export const QualityResultScreen: React.FC = () => {
   const { setCurrentScreen, selectedProduce, capturedImage, theme } = useApp();
   const isTerracotta = theme === 'terracotta';
+  const freshnessLabel = selectedProduce.freshness === 'slightly_aged'
+    ? 'Slightly Aged'
+    : selectedProduce.freshness === 'overripe'
+      ? 'Overripe'
+      : 'Fresh';
 
   return (
     <div className="min-h-screen bg-[#fbf9f5] flex flex-col pb-[100px] antialiased">
@@ -25,23 +30,6 @@ export const QualityResultScreen: React.FC = () => {
               alt={selectedProduce.name}
               className="w-full h-full object-cover"
             />
-            {/* Match Badge */}
-            <div
-              id="match-score-badge"
-              className={`absolute top-3 right-3 font-medium text-[12px] px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm ${
-                isTerracotta
-                  ? 'bg-[#7bf8a1] text-[#007239]'
-                  : 'bg-[#a0f4c8] text-[#19724f]'
-              }`}
-            >
-              <span
-                className="material-symbols-outlined text-[16px]"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-              >
-                check_circle
-              </span>
-              {selectedProduce.matchScore}% Match
-            </div>
           </div>
 
           {/* Subject Text */}
@@ -51,6 +39,21 @@ export const QualityResultScreen: React.FC = () => {
           >
             {selectedProduce.name}
           </h2>
+
+          <div className="w-full grid grid-cols-2 gap-3 mb-6">
+            <div className="rounded-2xl bg-[#f5f3ef] border border-[#e4e2de] px-3 py-3 text-center">
+              <p className="text-[12px] font-medium text-[#594238]">Freshness score</p>
+              <p className="text-[24px] font-bold text-[#006d37]">
+                {selectedProduce.freshnessPercent}%
+              </p>
+            </div>
+            <div className="rounded-2xl bg-[#f5f3ef] border border-[#e4e2de] px-3 py-3 text-center">
+              <p className="text-[12px] font-medium text-[#594238]">Freshness level</p>
+              <p className="text-[18px] font-bold text-[#1b1c1a] mt-1">
+                {freshnessLabel}
+              </p>
+            </div>
+          </div>
 
           {/* Description */}
           <p

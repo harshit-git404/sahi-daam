@@ -60,8 +60,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
     const item = PRODUCE_DATABASE.find(p => p.id === id) || PRODUCE_DATABASE[0];
     try {
-      const backendResponse = await fetchScanResult(item.id, imageBase64);
-      const mergedItem = mergeProduceData(item, backendResponse);
+      if (!imageBase64) {
+        throw new Error('A live camera photo is required.');
+      }
+      const backendResponse = await fetchScanResult(imageBase64);
+      const detectedName = String(backendResponse.produce_type || '').trim();
+      const detectedId = detectedName.toLowerCase();
+      const detectedItem = PRODUCE_DATABASE.find(produce =>
+        produce.id === detectedId || produce.name.toLowerCase() === detectedId
+      ) || { ...item, id: detectedId || item.id, name: detectedName || item.name };
+      const mergedItem = mergeProduceData(detectedItem, backendResponse);
       setSelectedProduce(mergedItem);
       setVendorAskingPrice(mergedItem.typicalVendorAsking);
       setCurrentScreen('quality_result');

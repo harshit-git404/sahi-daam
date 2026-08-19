@@ -2,11 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '../context/AppContext';
 
 export const ScanScreen: React.FC = () => {
-  const { setCurrentScreen, selectedProduce, setSelectedProduce, selectProduceById, theme, allProduce } = useApp();
+  const { setCurrentScreen, selectedProduce, selectProduceById, theme } = useApp();
   const [flashOn, setFlashOn] = useState(false);
   const [isScanning, setIsScanning] = useState(true);
   const [useRealCamera, setUseRealCamera] = useState(true);
-  const [activeItemIndex, setActiveItemIndex] = useState(0);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const isTerracotta = theme === 'terracotta';
@@ -51,6 +50,10 @@ export const ScanScreen: React.FC = () => {
   const handleCompleteScan = () => {
     // Haptic feedback
     if (navigator.vibrate) navigator.vibrate(60);
+
+    if (!useRealCamera) {
+      return;
+    }
     
     let base64Image = undefined;
     if (useRealCamera && videoRef.current) {
@@ -64,19 +67,13 @@ export const ScanScreen: React.FC = () => {
       }
     }
     
-    // We already chose the item via handleSwitchTarget or default. Now actually hit the API.
+    // Send the captured frame to the backend for identification and freshness scoring.
     selectProduceById(selectedProduce.id, base64Image);
   };
 
   const handleToggleFlash = () => {
     setFlashOn(!flashOn);
     if (navigator.vibrate) navigator.vibrate(25);
-  };
-
-  const handleSwitchTarget = (id: string, idx: number) => {
-    const item = allProduce.find(p => p.id === id) || allProduce[0];
-    setSelectedProduce(item); // Just update locally for the viewfinder
-    setActiveItemIndex(idx);
   };
 
   return (
@@ -220,32 +217,11 @@ export const ScanScreen: React.FC = () => {
             </span>
           </div>
 
-          {/* Item Target Pill */}
+          {/* Identification status pill */}
           <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-black/70 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/20 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md">
             <span className="w-2 h-2 rounded-full bg-[#7bf8a1] animate-ping" />
-            Detected: {selectedProduce.name} ({selectedProduce.matchScore}%)
+            Ready to identify and score
           </div>
-        </div>
-
-        {/* Target Switcher Badges */}
-        <div className="flex gap-2 mt-10 z-20">
-          {[
-            { id: 'tomato', label: '🍅 Tomato' },
-            { id: 'onion', label: '🧅 Onion' },
-            { id: 'potato', label: '🥔 Potato' }
-          ].map((item, idx) => (
-            <button
-              key={item.id}
-              onClick={() => handleSwitchTarget(item.id, idx)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium backdrop-blur-md transition-all active:scale-95 ${
-                selectedProduce.id === item.id
-                  ? 'bg-white text-[#1b1c1a] font-bold shadow-md scale-105'
-                  : 'bg-black/40 text-white/80 hover:bg-black/60'
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
         </div>
       </main>
 
@@ -271,7 +247,9 @@ export const ScanScreen: React.FC = () => {
 
         <p className="text-[13px] font-medium text-white/95 text-center mt-3 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          Scanning automatically...
+          {useRealCamera
+            ? 'Capture a photo to identify and score'
+            : 'Market Simulation: no real photo available'}
         </p>
       </footer>
     </div>

@@ -1,9 +1,13 @@
+import logging
 from typing import TypedDict, Literal
 from pathlib import Path
 
 import cv2
 import numpy as np
 from tf_keras.models import load_model
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class FreshnessResult(TypedDict):
@@ -15,9 +19,25 @@ class FreshnessResult(TypedDict):
 
 
 MODEL_PATH = Path(__file__).resolve().parent / "models" / "rottenvsfresh98pval.h5"
+model = None
 
-# The legacy tf_keras loader is required for this older H5 model.
-model = load_model(MODEL_PATH, compile=False)
+
+def _get_model():
+    global model
+    if model is None:
+        if not MODEL_PATH.is_file():
+            raise RuntimeError(f"Freshness model not found: {MODEL_PATH}")
+        try:
+            # The legacy tf_keras loader is required for this older H5 model.
+            model = load_model(MODEL_PATH, compile=False)
+            logger.info(
+                "Freshness model loaded: input_shape=%s output_shape=%s",
+                model.input_shape,
+                model.output_shape,
+            )
+        except Exception as exc:
+            raise RuntimeError(f"Freshness model could not be loaded: {exc}") from exc
+    return model
 
 
 def predict_freshness(image: bytes, produce_type: str) -> FreshnessResult:
@@ -36,9 +56,12 @@ def predict_freshness(image: bytes, produce_type: str) -> FreshnessResult:
     img = np.expand_dims(img, axis=0)
 
     # Model convention: 0 = fresh, 1 = not fresh.
-    not_fresh_score = float(model.predict(img, verbose=0)[0][0])
+    loaded_model = _get_model()
+    not_fresh_score = float(loaded_model.predict(img, verbose=0)[0][0])
     not_fresh_score = max(0.0, min(1.0, not_fresh_score))
     freshness_percent = round((1.0 - not_fresh_score) * 100)
+    logger.info("Raw model score: %s", not_fresh_score)
+    logger.info("Final freshness percentage: %s%%", freshness_percent)
 
     if not_fresh_score < 0.10:
         return {

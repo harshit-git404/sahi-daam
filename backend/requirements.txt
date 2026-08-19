@@ -3,5 +3,9 @@ uvicorn[standard]==0.32.0
 pydantic==2.9.2
 opencv-python
 numpy
-tf-keras
-tensorflow
+tf_keras==2.21.0
+tensorflow==2.21.0
+torch
+transformers
+huggingface-hub<1.0
+Pillow
