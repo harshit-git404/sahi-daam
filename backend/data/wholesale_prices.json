@@ -1,5 +1,17 @@
 {
-  "tomato": {"price_per_kg": 25},
-  "onion": {"price_per_kg": 30},
-  "potato": {"price_per_kg": 20}
+  "tomato": {
+    "Katpadi, Vellore": {
+      "2026-08-19": 22
+    }
+  },
+  "onion": {
+    "Katpadi, Vellore": {
+      "2026-08-19": 28
+    }
+  },
+  "potato": {
+    "Katpadi, Vellore": {
+      "2026-08-19": 18
+    }
+  }
 }

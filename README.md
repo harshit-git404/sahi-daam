@@ -26,3 +26,13 @@ Sahi Daam is a fair-price companion app for buying fruits and vegetables. It use
 2. Install dependencies: `npm install`
 3. Run the development server: `npm run dev`
 4. The application will be available at the URL provided in the terminal (usually `http://localhost:5173`).
+
+## Team Ownership
+
+| Team Member | Area | Files |
+|-------------|------|-------|
+| Sai | Backend Data & Loaders | `backend/data/*`, `backend/routers/scan.py` |
+| Navneet | ML Models | `backend/ml/freshness_model.py` |
+| Abhiram | Pricing Engine | `backend/pricing/engine.py` |
+
+**Rule**: Do NOT change API response field names or shapes. Only replace the logic that generates the values!
