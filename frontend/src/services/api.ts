@@ -1,4 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+// Use environment variable if set (for local network override without ngrok), otherwise default to the Vite proxy (/api)
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 export async function fetchScanResult(produceId: string) {
   // Pass produceId if needed in the future, currently backend uses mock

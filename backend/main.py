@@ -6,8 +6,11 @@ app = FastAPI(title="Sahi Daam API")
 
 app.add_middleware(
     CORSMiddleware,
-    # TODO: Tighten CORS before real deployment
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_origin_regex=r"https://.*\.ngrok-free\.app",
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
