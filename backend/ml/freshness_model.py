@@ -87,4 +87,4 @@ def analyze_produce_with_gemini(image_bytes: bytes) -> tuple[str, FreshnessResul
             "freshness_note": "Failed to analyze image due to API error.",
             "quality_adjustment": 0,
             "quality_adjustment_label": "API Error"
-        }) }
+        })

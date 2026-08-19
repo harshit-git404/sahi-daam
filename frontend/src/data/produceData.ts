@@ -238,7 +238,7 @@ export const PRODUCE_DATABASE: ProduceItem[] = [
     unit: 'kg',
     qualityAdjustment: 0,
     qualityAdjustmentLabel: 'standard',
-    dataConfidence: 'Low',
+    dataConfidence: 'Estimated',
     category: 'Vegetables',
     bargainPhrases: [
       {
