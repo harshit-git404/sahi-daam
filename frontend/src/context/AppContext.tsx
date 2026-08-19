@@ -3,6 +3,8 @@ import { Screen, ProduceItem, PurchaseRecord, MandiLocation, AppTheme } from '..
 import { PRODUCE_DATABASE, INITIAL_PURCHASE_HISTORY } from '../data/produceData';
 import { MANDI_LOCATIONS } from '../data/mandiLocations';
 import confetti from 'canvas-confetti';
+import { fetchScanResult, fetchHaggleCheck } from '../services/api';
+import { mergeProduceData } from '../services/adapter';
 
 interface AppContextType {
   currentScreen: Screen;
@@ -24,6 +26,7 @@ interface AppContextType {
   setIsDrawerOpen: (open: boolean) => void;
   isAudioModalOpen: boolean;
   setIsAudioModalOpen: (open: boolean) => void;
+  isScanning: boolean;
   allProduce: ProduceItem[];
   triggerCelebration: () => void;
 }
@@ -40,12 +43,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [theme, setTheme] = useState<AppTheme>('terracotta');
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isAudioModalOpen, setIsAudioModalOpen] = useState<boolean>(false);
+  const [isScanning, setIsScanning] = useState<boolean>(false);
 
-  const selectProduceById = (id: string) => {
+  const selectProduceById = async (id: string) => {
+    setIsScanning(true);
     const item = PRODUCE_DATABASE.find(p => p.id === id) || PRODUCE_DATABASE[0];
-    setSelectedProduce(item);
-    setVendorAskingPrice(item.typicalVendorAsking);
+    try {
+      const backendResponse = await fetchScanResult(item.id);
+      const mergedItem = mergeProduceData(item, backendResponse);
+      setSelectedProduce(mergedItem);
+      setVendorAskingPrice(mergedItem.typicalVendorAsking);
+    } catch (e) {
+      console.error('API failed, falling back to static mock:', e);
+      setSelectedProduce(item);
+      setVendorAskingPrice(item.typicalVendorAsking);
+    } finally {
+      setIsScanning(false);
+    }
   };
+
+  useEffect(() => {
+    const verifyPrice = async () => {
+      try {
+        const result = await fetchHaggleCheck(vendorAskingPrice);
+        setSelectedProduce(prev => ({ ...prev, suggestedOfferPrice: result.suggested_price }));
+      } catch (e) {
+        console.error('Haggle check API failed:', e);
+      }
+    };
+    verifyPrice();
+  }, [vendorAskingPrice]);
 
   const triggerCelebration = () => {
     try {
@@ -116,6 +143,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setIsDrawerOpen,
         isAudioModalOpen,
         setIsAudioModalOpen,
+        isScanning,
         allProduce: PRODUCE_DATABASE,
         triggerCelebration
       }}

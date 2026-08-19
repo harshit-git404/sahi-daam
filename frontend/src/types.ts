@@ -34,6 +34,11 @@ export interface ProduceItem {
     english: string;
     phonetic: string;
   }[];
+  quickCommercePrice?: {
+    source: string;
+    price: number;
+    unit: string;
+  };
 }
 
 export interface PurchaseRecord {
