@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({ title, showBack, onBack }) => {
   const shouldShowBackButton = showBack ?? (currentScreen !== 'home' && currentScreen !== 'history');
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#fbf9f5] border-b border-[#e4e2de]/60 shadow-[0px_4px_20px_rgba(211,84,0,0.06)] transition-colors">
+    <header className="sticky top-0 z-40 w-full bg-[#fbf9f5] border-b border-[#e4e2de]/60 shadow-[0px_4px_20px_rgba(211,84,0,0.06)] transition-colors pt-[env(safe-area-inset-top)]">
       <div className="max-w-md mx-auto h-16 px-5 flex items-center justify-between">
         {/* Left Action */}
         {shouldShowBackButton ? (

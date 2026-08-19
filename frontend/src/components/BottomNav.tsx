@@ -19,7 +19,7 @@ export const BottomNav: React.FC = () => {
       id="bottom-navigation-bar"
       className="fixed bottom-0 left-0 w-full z-40 bg-[#fbf9f5] border-t border-[#e4e2de]/80 shadow-[0px_-4px_24px_rgba(211,84,0,0.06)] select-none"
     >
-      <div className="max-w-md mx-auto flex items-center justify-around px-5 pt-2 pb-5">
+      <div className="max-w-md mx-auto flex items-center justify-around px-5 pt-2 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
         {/* Home */}
         <button
           id="nav-home-btn"
