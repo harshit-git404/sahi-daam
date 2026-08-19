@@ -29,6 +29,7 @@ interface AppContextType {
   isScanning: boolean;
   apiError: string | null;
   setApiError: (err: string | null) => void;
+  capturedImage: string | null;
   allProduce: ProduceItem[];
   triggerCelebration: () => void;
 }
@@ -47,10 +48,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isAudioModalOpen, setIsAudioModalOpen] = useState<boolean>(false);
   const [isScanning, setIsScanning] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
 
-  const selectProduceById = async (id: string) => {
+  const selectProduceById = async (id: string, imageBase64?: string) => {
     setIsScanning(true);
     setApiError(null);
+    if (imageBase64) {
+      setCapturedImage(imageBase64);
+      // TODO: The backend ML endpoint does not yet accept image data. 
+      // Once /scan-produce accepts a file/base64, pass imageBase64 in the request body here.
+    } else {
+      setCapturedImage(null);
+    }
     const item = PRODUCE_DATABASE.find(p => p.id === id) || PRODUCE_DATABASE[0];
     try {
       const backendResponse = await fetchScanResult(item.id);
@@ -151,6 +160,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isScanning,
         apiError,
         setApiError,
+        capturedImage,
         allProduce: PRODUCE_DATABASE,
         triggerCelebration
       }}

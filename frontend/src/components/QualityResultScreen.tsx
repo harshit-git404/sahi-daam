@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { Header } from './Header';
 
 export const QualityResultScreen: React.FC = () => {
-  const { setCurrentScreen, selectedProduce, theme } = useApp();
+  const { setCurrentScreen, selectedProduce, capturedImage, theme } = useApp();
   const isTerracotta = theme === 'terracotta';
 
   return (
@@ -21,7 +21,7 @@ export const QualityResultScreen: React.FC = () => {
           {/* Thumbnail Image */}
           <div className="w-48 h-48 rounded-[24px] overflow-hidden mb-6 relative shadow-inner bg-[#f5f3ef]">
             <img
-              src={selectedProduce.image}
+              src={capturedImage || selectedProduce.image}
               alt={selectedProduce.name}
               className="w-full h-full object-cover"
             />

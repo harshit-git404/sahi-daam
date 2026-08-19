@@ -7,6 +7,7 @@ export const ScanScreen: React.FC = () => {
   const [isScanning, setIsScanning] = useState(true);
   const [useRealCamera, setUseRealCamera] = useState(false);
   const [activeItemIndex, setActiveItemIndex] = useState(0);
+  const [cameraError, setCameraError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const isTerracotta = theme === 'terracotta';
 
@@ -14,6 +15,7 @@ export const ScanScreen: React.FC = () => {
   useEffect(() => {
     let stream: MediaStream | null = null;
     if (useRealCamera && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      setCameraError(null);
       navigator.mediaDevices
         .getUserMedia({ video: { facingMode: 'environment' } })
         .then((s) => {
@@ -22,8 +24,9 @@ export const ScanScreen: React.FC = () => {
             videoRef.current.srcObject = s;
           }
         })
-        .catch(() => {
-          setUseRealCamera(false);
+        .catch((err) => {
+          console.error('Camera access denied:', err);
+          setCameraError('Camera access was denied or is unavailable.');
         });
     }
 
@@ -36,19 +39,33 @@ export const ScanScreen: React.FC = () => {
 
   // Auto-scan timer simulation (3 seconds then transition to quality result)
   useEffect(() => {
-    if (!isScanning) return;
+    // Only auto-scan in simulation mode, real camera requires manual capture
+    if (!isScanning || useRealCamera) return;
     const timer = setTimeout(() => {
       handleCompleteScan();
     }, 3200);
 
     return () => clearTimeout(timer);
-  }, [isScanning, selectedProduce]);
+  }, [isScanning, selectedProduce, useRealCamera]);
 
   const handleCompleteScan = () => {
     // Haptic feedback
     if (navigator.vibrate) navigator.vibrate(60);
+    
+    let base64Image = undefined;
+    if (useRealCamera && videoRef.current) {
+      const canvas = document.createElement('canvas');
+      canvas.width = videoRef.current.videoWidth || 640;
+      canvas.height = videoRef.current.videoHeight || 480;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+        base64Image = canvas.toDataURL('image/jpeg', 0.8);
+      }
+    }
+    
     // We already chose the item via handleSwitchTarget or default. Now actually hit the API.
-    selectProduceById(selectedProduce.id);
+    selectProduceById(selectedProduce.id, base64Image);
   };
 
   const handleToggleFlash = () => {
@@ -88,6 +105,23 @@ export const ScanScreen: React.FC = () => {
 
       {/* Dim overlay */}
       <div className="absolute inset-0 z-0 bg-black/25 pointer-events-none" />
+
+      {/* Camera Error Overlay */}
+      {cameraError && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 p-6 text-center">
+          <span className="material-symbols-outlined text-[48px] text-red-500 mb-4">videocam_off</span>
+          <p className="text-white font-medium mb-6">{cameraError}</p>
+          <button
+            onClick={() => {
+              setCameraError(null);
+              setUseRealCamera(false);
+            }}
+            className="px-6 py-3 rounded-full bg-white text-black font-semibold active:scale-95 transition-all"
+          >
+            Use Market Simulation Instead
+          </button>
+        </div>
+      )}
 
       {/* Flash simulation glare if on */}
       {flashOn && (
