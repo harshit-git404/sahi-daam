@@ -5,7 +5,7 @@ export const ScanScreen: React.FC = () => {
   const { setCurrentScreen, selectedProduce, setSelectedProduce, selectProduceById, theme, allProduce } = useApp();
   const [flashOn, setFlashOn] = useState(false);
   const [isScanning, setIsScanning] = useState(true);
-  const [useRealCamera, setUseRealCamera] = useState(false);
+  const [useRealCamera, setUseRealCamera] = useState(true);
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
