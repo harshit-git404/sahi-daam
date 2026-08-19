@@ -51,14 +51,28 @@ def analyze_produce_with_gemini(image_bytes: bytes) -> tuple[str, FreshnessResul
         }
         """
         
-        # We need to upload or pass the raw bytes. With GenAI SDK we can pass bytes directly.
-        response = client.models.generate_content(
-            model='gemini-3.7-flash',
-            contents=[
-                types.Part.from_bytes(data=image_bytes, mime_type='image/jpeg'),
-                prompt
-            ]
-        )
+        # Try models in order of preference, fallback if 503 high demand
+        fallback_models = ['gemini-3.7-flash', 'gemini-3.5-flash', 'gemini-2.5-flash']
+        response = None
+        last_error = None
+        
+        for model_name in fallback_models:
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=[
+                        types.Part.from_bytes(data=image_bytes, mime_type='image/jpeg'),
+                        prompt
+                    ]
+                )
+                break # Success!
+            except Exception as e:
+                last_error = e
+                print(f"Model {model_name} failed: {e}")
+                continue
+                
+        if not response:
+            raise last_error
         
         # Clean the JSON response (strip markdown blocks if Gemini returns them)
         text = response.text.strip()
