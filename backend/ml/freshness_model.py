@@ -19,6 +19,34 @@ MODEL_PATH = Path(__file__).resolve().parent / "models" / "rottenvsfresh98pval.h
 # The legacy tf_keras loader is required for this older H5 model.
 model = load_model(MODEL_PATH, compile=False)
 
+def detect_produce(image: bytes) -> tuple[str, float]:
+    """
+    Hackathon MVP: A lightweight color-based heuristic to classify 
+    the produce as tomato, potato, or onion instead of a heavy CNN.
+    Returns (produce_type, confidence_score)
+    """
+    image_array = np.frombuffer(image, dtype=np.uint8)
+    img = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+    if img is None:
+        return ("tomato", 0.5)
+        
+    # Resize to speed up and reduce noise
+    img = cv2.resize(img, (50, 50))
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    
+    # Get median color to avoid background skew
+    h, s, v = np.median(hsv[:,:,0]), np.median(hsv[:,:,1]), np.median(hsv[:,:,2])
+    
+    # Red hue (0-15 or 160-180) -> Tomato
+    if (h < 15 or h > 160) and s > 80:
+        return ("tomato", 0.92)
+    # Brown/Tan/Yellow hue (15-40) -> Potato
+    elif 15 <= h <= 40:
+        return ("potato", 0.88)
+    # Else (Pink/Purple/White) -> Onion
+    else:
+        return ("onion", 0.85)
+
 
 def predict_freshness(image: bytes, produce_type: str) -> FreshnessResult:
     """Return the model's freshness assessment for an uploaded produce image."""

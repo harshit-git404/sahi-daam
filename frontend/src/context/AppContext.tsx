@@ -58,10 +58,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } else {
       setCapturedImage(null);
     }
-    const item = PRODUCE_DATABASE.find(p => p.id === id) || PRODUCE_DATABASE[0];
+    const fallbackItem = PRODUCE_DATABASE.find(p => p.id === id) || PRODUCE_DATABASE[0];
     try {
-      const backendResponse = await fetchScanResult(item.id, imageBase64);
-      const mergedItem = mergeProduceData(item, backendResponse);
+      const backendResponse = await fetchScanResult(fallbackItem.id, imageBase64);
+      const finalId = backendResponse.detected_produce_id || fallbackItem.id;
+      const detectedItem = PRODUCE_DATABASE.find(p => p.id === finalId) || PRODUCE_DATABASE[0];
+      const mergedItem = mergeProduceData(detectedItem, backendResponse);
       setSelectedProduce(mergedItem);
       setVendorAskingPrice(mergedItem.typicalVendorAsking);
       setCurrentScreen('quality_result');

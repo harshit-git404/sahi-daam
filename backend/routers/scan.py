@@ -2,12 +2,12 @@ import base64
 from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import Optional
-from ml.freshness_model import predict_freshness
+from ml.freshness_model import predict_freshness, detect_produce
 
 router = APIRouter()
 
 class ScanRequest(BaseModel):
-    produce_type: str
+    produce_type: Optional[str] = None
     image: Optional[str] = None
 
 @router.post("/scan-produce")
@@ -21,6 +21,9 @@ def scan_produce(request: ScanRequest):
         "quality_adjustment_label": "Slight bruising detected",
     }
     
+    produce_type = request.produce_type or "tomato"
+    confidence = 0.0
+    
     if request.image:
         try:
             # Strip base64 header if present (e.g. data:image/jpeg;base64,...)
@@ -30,15 +33,22 @@ def scan_produce(request: ScanRequest):
             
             image_bytes = base64.b64decode(b64_data)
             
+            # Detect produce if not provided or just to override
+            detected_type, conf = detect_produce(image_bytes)
+            produce_type = detected_type
+            confidence = conf
+            
             # Predict using teammate's ML model
-            pred = predict_freshness(image_bytes, request.produce_type)
+            pred = predict_freshness(image_bytes, produce_type)
             freshness_data.update(pred)
         except Exception as e:
             print(f"ML Model Error: {e}")
             pass
             
     return {
-        "produce_type": request.produce_type.capitalize(),
+        "produce_type": produce_type.capitalize(),
+        "detected_produce_id": produce_type,
+        "classification_confidence": confidence,
         **freshness_data,
         "wholesale_price": 22,
         "markup_range": { "min_pct": 30, "max_pct": 45 },

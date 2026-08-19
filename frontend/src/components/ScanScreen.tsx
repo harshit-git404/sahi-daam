@@ -175,10 +175,10 @@ export const ScanScreen: React.FC = () => {
           className="mb-8 bg-[#fbf9f5]/90 backdrop-blur-md px-6 py-3 rounded-full shadow-[0px_8px_24px_rgba(0,0,0,0.25)] border border-white/60 text-center animate-in fade-in slide-in-from-top-4 duration-300"
         >
           <p className={`font-display text-[18px] font-bold ${isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'}`}>
-            Point at the produce
+            Scanning for produce...
           </p>
           <p className="text-[13px] text-[#594238] mt-0.5">
-            Align the item within the frame
+            Auto-detecting item type & freshness
           </p>
         </div>
 
@@ -223,29 +223,8 @@ export const ScanScreen: React.FC = () => {
           {/* Item Target Pill */}
           <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-black/70 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/20 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md">
             <span className="w-2 h-2 rounded-full bg-[#7bf8a1] animate-ping" />
-            Detected: {selectedProduce.name} ({selectedProduce.matchScore}%)
+            Ready to scan
           </div>
-        </div>
-
-        {/* Target Switcher Badges */}
-        <div className="flex gap-2 mt-10 z-20">
-          {[
-            { id: 'tomato', label: '🍅 Tomato' },
-            { id: 'onion', label: '🧅 Onion' },
-            { id: 'potato', label: '🥔 Potato' }
-          ].map((item, idx) => (
-            <button
-              key={item.id}
-              onClick={() => handleSwitchTarget(item.id, idx)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium backdrop-blur-md transition-all active:scale-95 ${
-                selectedProduce.id === item.id
-                  ? 'bg-white text-[#1b1c1a] font-bold shadow-md scale-105'
-                  : 'bg-black/40 text-white/80 hover:bg-black/60'
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
         </div>
       </main>
 
