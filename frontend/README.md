@@ -1,16 +1,16 @@
-# React + Vite
+# Frontend (Sahi Daam UI)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## Purpose
+The Sahi Daam UI, built from the Stitch export. Features the following screens: `HomeScreen`, `ScanScreen`, `QualityResultScreen`, `PriceBreakdownScreen`, `BargainScreen`, and `HistoryScreen`.
 
-Currently, two official plugins are available:
+## Current Status
+Wired to the backend via `src/services/api.ts` and `adapter.ts`. All screens are functional against live (currently mocked) backend data.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Development Stages
+- **Stage 1**: Stitch UI integrated and wired to backend (Done)
+- **Stage 2**: Reflect real data once backend folders complete their stages.
+- **Stage 3**: Roadmap features (multi-item basket mode, regional haggling phrasebook, savings/history polish).
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Future Plans
+- Voice haggling (staged: phrasebook mode first, full negotiation later).
+- General thrifting expansion (explicitly roadmap-only, not built).

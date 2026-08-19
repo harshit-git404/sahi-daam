@@ -5,7 +5,7 @@ def calculate_fair_price(wholesale_price: float, markup_min_pct: float, markup_m
     Calculates a fair retail price range based on wholesale data, typical markups, and freshness.
     Returns: {"min": float, "max": float}
     """
-    # TODO(Abhiram): implement
+    # TODO(Person 3): implement
     pass
 
 def calculate_haggle_verdict(asking_price: float, fair_price_range: Dict[str, float]) -> dict:
@@ -19,5 +19,5 @@ def calculate_haggle_verdict(asking_price: float, fair_price_range: Dict[str, fl
       "reasoning": str
     }
     """
-    # TODO(Abhiram): implement
+    # TODO(Person 3): implement
     pass

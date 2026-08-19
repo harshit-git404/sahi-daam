@@ -18,5 +18,5 @@ def predict_freshness(image: bytes, produce_type: str) -> FreshnessResult:
     Returns:
         FreshnessResult dictionary containing the label, percentage, and adjustment details.
     """
-    # TODO(Navneet): implement
+    # TODO(Person 2): implement
     pass

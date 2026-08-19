@@ -2,9 +2,9 @@
 
 ## Branch Naming Convention
 Please use the following prefixes for your branches:
-- `sai/data-*`
-- `navneet/ml-*`
-- `abhiram/pricing-*`
+- `person1/data-*`
+- `person2/ml-*`
+- `person3/pricing-*`
 
 ## Workflow
 - Do not push directly to `main`.
