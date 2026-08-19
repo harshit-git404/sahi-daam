@@ -11,7 +11,7 @@ interface AppContextType {
   setCurrentScreen: (screen: Screen) => void;
   selectedProduce: ProduceItem;
   setSelectedProduce: (item: ProduceItem) => void;
-  selectProduceById: (id: string) => void;
+  selectProduceById: (id: string, imageBase64?: string) => void;
   vendorAskingPrice: number;
   setVendorAskingPrice: React.Dispatch<React.SetStateAction<number>>;
   purchaseHistory: PurchaseRecord[];
