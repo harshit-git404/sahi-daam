@@ -55,14 +55,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setApiError(null);
     if (imageBase64) {
       setCapturedImage(imageBase64);
-      // TODO: The backend ML endpoint does not yet accept image data. 
-      // Once /scan-produce accepts a file/base64, pass imageBase64 in the request body here.
     } else {
       setCapturedImage(null);
     }
     const item = PRODUCE_DATABASE.find(p => p.id === id) || PRODUCE_DATABASE[0];
     try {
-      const backendResponse = await fetchScanResult(item.id);
+      const backendResponse = await fetchScanResult(item.id, imageBase64);
       const mergedItem = mergeProduceData(item, backendResponse);
       setSelectedProduce(mergedItem);
       setVendorAskingPrice(mergedItem.typicalVendorAsking);
