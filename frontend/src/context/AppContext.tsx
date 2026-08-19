@@ -62,7 +62,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       const backendResponse = await fetchScanResult(fallbackItem.id, imageBase64);
       const finalId = backendResponse.detected_produce_id || fallbackItem.id;
-      const detectedItem = PRODUCE_DATABASE.find(p => p.id === finalId) || PRODUCE_DATABASE[0];
+      let detectedItem = PRODUCE_DATABASE.find(p => p.id === finalId);
+      
+      if (!detectedItem) {
+        // If Gemini detects something not in our DB, use the 'unknown' generic template
+        detectedItem = PRODUCE_DATABASE.find(p => p.id === 'unknown') || PRODUCE_DATABASE[0];
+        // Inject the actual capitalized name from the backend (e.g. "Peanut")
+        detectedItem = { ...detectedItem, name: backendResponse.produce_type || 'Unknown' };
+      }
+      
       const mergedItem = mergeProduceData(detectedItem, backendResponse);
       setSelectedProduce(mergedItem);
       setVendorAskingPrice(mergedItem.typicalVendorAsking);
