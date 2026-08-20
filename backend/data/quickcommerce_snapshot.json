@@ -1,10 +1,461 @@
 {
   "tomato": {
-    "Blinkit": {
-      "2026-08-19": {
-        "price": 38,
-        "unit": "kg"
+    "blinkit": [
+      {
+        "product_name": "Tomato",
+        "variant": "regular",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 20,
+        "mrp": 25,
+        "price_per_kg": 40,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      },
+      {
+        "product_name": "Tomato Organic",
+        "variant": "organic",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 30,
+        "mrp": 35,
+        "price_per_kg": 60,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
       }
-    }
+    ],
+    "zepto": [
+      {
+        "product_name": "Fresh Tomato",
+        "variant": "regular",
+        "quantity": "1 kg",
+        "quantity_kg": 1.0,
+        "price": 38,
+        "mrp": 45,
+        "price_per_kg": 38,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "potato": {
+    "blinkit": [
+      {
+        "product_name": "Potato",
+        "variant": "regular",
+        "quantity": "1 kg",
+        "quantity_kg": 1.0,
+        "price": 28,
+        "mrp": 32,
+        "price_per_kg": 28,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Fresh Potato",
+        "variant": "regular",
+        "quantity": "2 kg",
+        "quantity_kg": 2.0,
+        "price": 54,
+        "mrp": 60,
+        "price_per_kg": 27,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "onion": {
+    "blinkit": [
+      {
+        "product_name": "Red Onion",
+        "variant": "red",
+        "quantity": "1 kg",
+        "quantity_kg": 1.0,
+        "price": 35,
+        "mrp": 40,
+        "price_per_kg": 35,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Onion",
+        "variant": "regular",
+        "quantity": "2 kg",
+        "quantity_kg": 2.0,
+        "price": 66,
+        "mrp": 76,
+        "price_per_kg": 33,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "carrot": {
+    "blinkit": [
+      {
+        "product_name": "Carrot",
+        "variant": "regular",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 25,
+        "mrp": 30,
+        "price_per_kg": 50,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Fresh Carrot",
+        "variant": "regular",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 24,
+        "mrp": 28,
+        "price_per_kg": 48,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "cucumber": {
+    "blinkit": [
+      {
+        "product_name": "Cucumber",
+        "variant": "regular",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 18,
+        "mrp": 22,
+        "price_per_kg": 36,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Fresh Cucumber",
+        "variant": "regular",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 17,
+        "mrp": 20,
+        "price_per_kg": 34,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "brinjal": {
+    "blinkit": [
+      {
+        "product_name": "Brinjal",
+        "variant": "regular",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 20,
+        "mrp": 25,
+        "price_per_kg": 40,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Fresh Brinjal",
+        "variant": "regular",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 19,
+        "mrp": 24,
+        "price_per_kg": 38,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "cauliflower": {
+    "blinkit": [
+      {
+        "product_name": "Cauliflower",
+        "variant": "regular",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 22,
+        "mrp": 28,
+        "price_per_kg": 44,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Fresh Cauliflower",
+        "variant": "regular",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 21,
+        "mrp": 26,
+        "price_per_kg": 42,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "cabbage": {
+    "blinkit": [
+      {
+        "product_name": "Green Cabbage",
+        "variant": "green",
+        "quantity": "1 kg",
+        "quantity_kg": 1.0,
+        "price": 30,
+        "mrp": 36,
+        "price_per_kg": 30,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Cabbage",
+        "variant": "regular",
+        "quantity": "1 kg",
+        "quantity_kg": 1.0,
+        "price": 28,
+        "mrp": 34,
+        "price_per_kg": 28,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "banana": {
+    "blinkit": [
+      {
+        "product_name": "Robusta Banana",
+        "variant": "robusta",
+        "quantity": "1 kg",
+        "quantity_kg": 1.0,
+        "price": 48,
+        "mrp": 55,
+        "price_per_kg": 48,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Banana",
+        "variant": "regular",
+        "quantity": "1 kg",
+        "quantity_kg": 1.0,
+        "price": 45,
+        "mrp": 52,
+        "price_per_kg": 45,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "papaya": {
+    "blinkit": [
+      {
+        "product_name": "Papaya",
+        "variant": "regular",
+        "quantity": "1 kg",
+        "quantity_kg": 1.0,
+        "price": 45,
+        "mrp": 55,
+        "price_per_kg": 45,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Fresh Papaya",
+        "variant": "regular",
+        "quantity": "1 kg",
+        "quantity_kg": 1.0,
+        "price": 42,
+        "mrp": 50,
+        "price_per_kg": 42,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "apple": {
+    "blinkit": [
+      {
+        "product_name": "Shimla Apple",
+        "variant": "shimla",
+        "quantity": "1 kg",
+        "quantity_kg": 1.0,
+        "price": 140,
+        "mrp": 160,
+        "price_per_kg": 140,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Apple",
+        "variant": "regular",
+        "quantity": "1 kg",
+        "quantity_kg": 1.0,
+        "price": 135,
+        "mrp": 155,
+        "price_per_kg": 135,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "mango": {
+    "blinkit": [
+      {
+        "product_name": "Alphonso Mango",
+        "variant": "alphonso",
+        "quantity": "1 kg",
+        "quantity_kg": 1.0,
+        "price": 180,
+        "mrp": 210,
+        "price_per_kg": 180,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Mango",
+        "variant": "regular",
+        "quantity": "1 kg",
+        "quantity_kg": 1.0,
+        "price": 120,
+        "mrp": 145,
+        "price_per_kg": 120,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "lemon": {
+    "blinkit": [
+      {
+        "product_name": "Lemon",
+        "variant": "regular",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 35,
+        "mrp": 40,
+        "price_per_kg": 70,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Fresh Lemon",
+        "variant": "regular",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 32,
+        "mrp": 38,
+        "price_per_kg": 64,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "capsicum": {
+    "blinkit": [
+      {
+        "product_name": "Green Capsicum",
+        "variant": "green",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 35,
+        "mrp": 42,
+        "price_per_kg": 70,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Capsicum",
+        "variant": "green",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 33,
+        "mrp": 40,
+        "price_per_kg": 66,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "lady_finger": {
+    "blinkit": [
+      {
+        "product_name": "Lady Finger",
+        "variant": "regular",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 28,
+        "mrp": 35,
+        "price_per_kg": 56,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Bhindi / Lady Finger",
+        "variant": "regular",
+        "quantity": "500 g",
+        "quantity_kg": 0.5,
+        "price": 26,
+        "mrp": 32,
+        "price_per_kg": 52,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
+  },
+  "spinach": {
+    "blinkit": [
+      {
+        "product_name": "Palak / Spinach",
+        "variant": "regular",
+        "quantity": "250 g",
+        "quantity_kg": 0.25,
+        "price": 20,
+        "mrp": 25,
+        "price_per_kg": 80,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:00:00"
+      }
+    ],
+    "zepto": [
+      {
+        "product_name": "Fresh Spinach",
+        "variant": "regular",
+        "quantity": "250 g",
+        "quantity_kg": 0.25,
+        "price": 18,
+        "mrp": 22,
+        "price_per_kg": 72,
+        "location": "Katpadi, Vellore",
+        "collected_at": "2026-08-19T10:30:00"
+      }
+    ]
   }
 }

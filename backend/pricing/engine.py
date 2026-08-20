@@ -21,17 +21,17 @@ def calculate_haggle_verdict(asking_price: float, fair_price_range: dict[str, fl
     deviation_pct = round(((asking_price - baseline) / baseline) * 100, 2) if baseline else 0.0
 
     if asking_price > fair_max:
-        verdict = "High"
+        verdict = "HIGH"
         suggested_price = round((fair_min + fair_max) / 2, 2)
-        reasoning = f"The asking price is {deviation_pct:.1f}% above the upper fair-price boundary."
+        explanation = f"The asking price is {deviation_pct:.1f}% above the upper fair-price boundary."
     elif asking_price < fair_min:
-        verdict = "Low"
+        verdict = "LOW"
         suggested_price = round(asking_price, 2)
-        reasoning = "The asking price is below the calculated fair-price range."
+        explanation = "The asking price is below the calculated fair-price range — a good deal."
     else:
-        verdict = "Fair"
+        verdict = "FAIR"
         suggested_price = round(asking_price, 2)
-        reasoning = "The asking price is within the calculated fair-price range."
+        explanation = "The asking price is within the verified fair-price range."
 
     return {
         "verdict": verdict,
@@ -39,5 +39,5 @@ def calculate_haggle_verdict(asking_price: float, fair_price_range: dict[str, fl
         "suggested_price": suggested_price,
         "suggested_price_min": round(fair_min, 2),
         "suggested_price_max": round(fair_max, 2),
-        "reasoning": reasoning,
+        "explanation": explanation,
     }

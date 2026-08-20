@@ -39,14 +39,17 @@ async def get_mandi_prices(
     records = raw_data.get("records", [])
     normalized_records = [normalize_record(r) for r in records]
     
-    # Filter by market if provided
+    # Filter by market if provided; fall back to district-level if market yields no records
     if market:
         market_lower = market.lower()
-        normalized_records = [
-            r for r in normalized_records 
+        market_filtered = [
+            r for r in normalized_records
             if r["market"] and market_lower in r["market"].lower()
         ]
-        
+        if market_filtered:
+            normalized_records = market_filtered
+        # else: keep district-level records (wider net for 10-day history)
+
     if not normalized_records:
         return {
             "commodity": commodity.lower(),

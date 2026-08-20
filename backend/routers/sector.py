@@ -82,30 +82,61 @@ async def sector_analysis(
             "supported_filters": config.filters,
         })
 
+    api_key = os.getenv("DATA_GOV_API_KEY", "").strip()
+    if not api_key:
+        raise HTTPException(status_code=503, detail="DATA_GOV_API_KEY is not configured on the server.")
+
+    # Fetch enough records to build a 10-distinct-period history
     params = {
-        "api-key": os.getenv("DATA_GOV_API_KEY", "").strip(),
+        "api-key": api_key,
         "format": "json",
-        "limit": 25,
+        "limit": 100,
     }
-    if not params["api-key"]:
-        raise HTTPException(status_code=503, detail="DATA_GOV_API_KEY is not configured.")
+
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0.0.0 Safari/537.36"
+        ),
+        "Accept": "application/json, text/plain, */*",
+    }
 
     try:
-        async with httpx.AsyncClient(timeout=30.0, headers={"Accept": "application/json"}) as client:
-            response = await client.get(f"{DATA_GOV_BASE_URL}/{config.resource_id}", params=params)
+        async with httpx.AsyncClient(timeout=60.0, headers=headers) as client:
+            response = await client.get(
+                f"{DATA_GOV_BASE_URL}/{config.resource_id}",
+                params=params,
+            )
             response.raise_for_status()
             payload = response.json()
     except httpx.HTTPStatusError as error:
-        raise HTTPException(status_code=502, detail="data.gov.in rejected the sector data request.") from error
+        raise HTTPException(
+            status_code=502,
+            detail=f"data.gov.in returned HTTP {error.response.status_code} for this sector resource.",
+        ) from error
     except httpx.RequestError as error:
-        raise HTTPException(status_code=502, detail="Unable to reach data.gov.in.") from error
+        raise HTTPException(
+            status_code=502,
+            detail="Unable to reach data.gov.in. Check network connectivity.",
+        ) from error
 
     records = payload.get("records", [])
-    history = analyze_distinct_history(records, config.date_field, config.value_field, aggregate=config.aggregation)
+    history = analyze_distinct_history(
+        records,
+        config.date_field,
+        config.value_field,
+        aggregate=config.aggregation,
+    )
     return _normalized_response(config, records, {
         "total": payload.get("total"),
         "count": len(records),
         "required_fields": list(config.fields),
         "supported_filters": config.filters,
-        "metric": {"name": config.metric_name, "unit": config.unit, **history},
+        "metric": {
+            "name": config.metric_name,
+            "unit": config.unit,
+            "periods_available": history.get("periods_available", 0),
+            **history,
+        },
     })

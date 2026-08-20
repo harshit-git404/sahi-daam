@@ -25,17 +25,22 @@ export interface SectorAnalysisResult {
     percentage_change: number | null;
     trend: string;
     history: { date: string; value: number }[];
+    periods_available?: number;
   };
 }
 
 export interface RetailProduct {
   platform: string;
+  commodity: string;
   product_name: string;
+  variant: string;
+  quantity: string;
   quantity_kg: number;
   price: number;
   mrp: number | null;
   price_per_kg: number;
   location?: string;
+  location_note?: string;
   collected_at?: string;
 }
 
@@ -44,10 +49,38 @@ export interface RetailResult {
   commodity: string;
   location?: string;
   products: RetailProduct[];
+  best_price_per_kg?: number;
+  best_platform?: string;
+  collected_at?: string;
   message?: string;
+  source?: string;
 }
 
 export type FreshnessLevel = 'fresh' | 'slightly_aged' | 'overripe';
+
+/** Market history block returned from /scan-produce */
+export interface MarketData {
+  status: 'AVAILABLE' | 'UNAVAILABLE';
+  today_price: number | null;
+  unit: string;
+  date?: string;
+  market_name?: string;
+  district?: string;
+  current_value: number | null;
+  average_10_days: number | null;
+  high_10_days: number | null;
+  low_10_days: number | null;
+  percentage_change: number | null;
+  trend: 'UP' | 'DOWN' | 'STABLE' | 'UNAVAILABLE';
+  history: { date: string; value: number }[];
+  periods_available: number;
+  error?: string;
+}
+
+export interface PricingData {
+  fair_price_min: number;
+  fair_price_max: number;
+}
 
 export interface ProduceItem {
   id: string;
@@ -68,7 +101,7 @@ export interface ProduceItem {
   unit: string;
   qualityAdjustment: number;
   qualityAdjustmentLabel: string;
-  dataConfidence: 'High' | 'Medium' | 'Estimated';
+  dataConfidence: 'High' | 'Medium' | 'Estimated' | 'Unavailable';
   category: 'Vegetables' | 'Fruits' | 'Leafy' | 'Spices';
   bargainPhrases: {
     hindi: string;
@@ -83,6 +116,13 @@ export interface ProduceItem {
   marketStatus?: 'AVAILABLE' | 'UNAVAILABLE';
   analysisProvider?: 'gemini' | 'local_fallback';
   retailComparison?: RetailResult;
+  /** Full market history block from backend */
+  market?: MarketData;
+  /** Calculated fair price range from backend */
+  pricing?: PricingData;
+  /** Online retail reference bounds for haggle context */
+  onlineReferenceMin?: number | null;
+  onlineReferenceMax?: number | null;
 }
 
 export interface PurchaseRecord {
@@ -101,7 +141,10 @@ export interface MandiLocation {
   id: string;
   name: string;
   state: string;
+  /** Display name of the mandi */
   mandiName: string;
+  /** District extracted from the name (used for API calls) */
+  district?: string;
   active: boolean;
 }
 
