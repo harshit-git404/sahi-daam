@@ -47,7 +47,7 @@ export const PriceBreakdownScreen: React.FC = () => {
           />
 
           <h2 className="text-[13px] font-bold text-[#594238] mb-2 uppercase tracking-widest">
-            FAIR PRICE RANGE
+            WHAT SHOULD IT COST?
           </h2>
 
           <div
@@ -70,7 +70,7 @@ export const PriceBreakdownScreen: React.FC = () => {
             >
               energy_savings_leaf
             </span>
-            <span>Verified Fair Deal</span>
+            <span>Estimated Fair Range</span>
           </div>
         </section>
 
@@ -93,7 +93,7 @@ export const PriceBreakdownScreen: React.FC = () => {
           />
 
           <h3 className="font-display text-[18px] font-bold text-[#1b1c1a] mb-5 border-b border-[#c1c8c2]/50 pb-3">
-            Price Breakdown
+            How We Got This
           </h3>
 
           <ul className="flex flex-col gap-3.5">
@@ -101,10 +101,7 @@ export const PriceBreakdownScreen: React.FC = () => {
             <li className="flex justify-between items-start border-b border-[#e5e0d8] pb-3">
               <div className="flex flex-col">
                 <span className="text-[15px] font-medium text-[#1b1c1a]">
-                  Today's wholesale price
-                </span>
-                <span className="text-[12px] text-[#594238]">
-                  {selectedLocation.mandiName}
+                  Local wholesale benchmark
                 </span>
               </div>
               <span className="font-semibold text-[15px] text-[#1b1c1a]">
@@ -116,14 +113,14 @@ export const PriceBreakdownScreen: React.FC = () => {
             <li className="flex justify-between items-start border-b border-[#e5e0d8] pb-3">
               <div className="flex flex-col">
                 <span className="text-[15px] font-medium text-[#1b1c1a]">
-                  Typical local markup
+                  Typical retail markup
                 </span>
                 <span className="text-[12px] text-[#594238]">
                   (+{selectedProduce.markupMinPercent}-{selectedProduce.markupMaxPercent}%)
                 </span>
               </div>
               <span className="font-semibold text-[15px] text-[#1b1c1a]">
-                ₹{Math.round(selectedProduce.wholesalePrice * (1 + selectedProduce.markupMinPercent / 100))}–{Math.round(selectedProduce.wholesalePrice * (1 + selectedProduce.markupMaxPercent / 100))}/{selectedProduce.unit}
+                +₹{Math.round(selectedProduce.wholesalePrice * (selectedProduce.markupMinPercent / 100))}–{Math.round(selectedProduce.wholesalePrice * (selectedProduce.markupMaxPercent / 100))}
               </span>
             </li>
 
@@ -134,7 +131,7 @@ export const PriceBreakdownScreen: React.FC = () => {
                   Quality adjustment
                 </span>
                 <span className="text-[12px] text-[#594238]">
-                  ({selectedProduce.qualityAdjustmentLabel})
+                  {selectedProduce.qualityAdjustment === 0 ? '(No quality adjustment applied)' : `(${selectedProduce.qualityAdjustmentLabel})`}
                 </span>
               </div>
               <span
@@ -147,27 +144,40 @@ export const PriceBreakdownScreen: React.FC = () => {
             </li>
           </ul>
 
-          {/* Status Confidence Indicator */}
-          <div className="mt-5 pt-3.5 border-t border-[#c1c8c2]/50 flex items-center justify-between">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold ${
-                selectedProduce.dataConfidence === 'High' ? 'bg-[#7bf8a1]/20 text-[#006d37]' :
-                selectedProduce.dataConfidence === 'Medium' ? 'bg-[#ffb595]/20 text-[#9e3d00]' :
-                'bg-[#a46700]/15 text-[#835100]'
-              }`}>
-                <span className="material-symbols-outlined text-[16px]">
-                  {selectedProduce.dataConfidence === 'High' ? 'verified' : 'info'}
+          {/* Status Confidence Indicator / Data Source */}
+          <div className="mt-5 pt-4 border-t border-[#c1c8c2]/50 flex flex-col gap-2.5">
+            <h4 className="text-[11px] font-bold text-[#594238] uppercase tracking-widest flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[15px]">database</span>
+              Data Source
+            </h4>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-start justify-between">
+                <span className="text-[13px] font-medium text-[#1b1c1a]">Market Reference</span>
+                <span className="text-[13px] text-[#594238] font-medium text-right max-w-[60%] leading-tight">
+                  {selectedProduce.priceSource ? selectedProduce.priceSource.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : 'Local Data'}
+                  <br/>
+                  <span className="text-[11.5px] opacity-80">{selectedLocation.mandiName}</span>
                 </span>
-                {selectedProduce.dataConfidence} Confidence
               </div>
               
-              {selectedProduce.priceSource && (
-                <div className="bg-[#e4e2de]/50 text-[#594238] px-2.5 py-1.5 rounded-full text-[11px] font-medium border border-[#e4e2de]">
-                  {selectedProduce.priceSource.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+              <div className="flex items-start justify-between">
+                <span className="text-[13px] font-medium text-[#1b1c1a]">Data Confidence</span>
+                <div className="flex flex-col items-end gap-1">
+                  <div className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold inline-block ${
+                    selectedProduce.dataConfidence === 'High' ? 'bg-[#7bf8a1]/20 text-[#006d37]' :
+                    selectedProduce.dataConfidence === 'Medium' ? 'bg-[#ffb595]/20 text-[#9e3d00]' :
+                    'bg-[#a46700]/15 text-[#835100]'
+                  }`}>
+                    {selectedProduce.dataConfidence}
+                  </div>
+                  <span className="text-[11px] text-[#594238] italic text-right leading-tight max-w-[150px]">
+                    {selectedProduce.dataConfidence === 'High' ? 'Based on highly localized, recent data.' :
+                     selectedProduce.dataConfidence === 'Medium' ? 'Based on available regional data.' :
+                     'Limited data — use as a rough estimate.'}
+                  </span>
                 </div>
-              )}
+              </div>
             </div>
-            <span className="text-[11px] text-[#594238]">Updated 6:30 AM</span>
           </div>
         </section>
 

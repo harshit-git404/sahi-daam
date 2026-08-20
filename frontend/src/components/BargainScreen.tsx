@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useApp } from '../context/AppContext';
 import { Header } from './Header';
 
@@ -96,101 +96,103 @@ export const BargainScreen: React.FC = () => {
               value={vendorAskingPrice} onChange={e => setVendorAskingPrice(Number(e.target.value))}
               className="w-full h-2 bg-[#e4e2de] rounded-lg appearance-none cursor-pointer accent-[#9e3d00]" />
             <div className="flex justify-between mt-1 text-[11px] font-medium text-[#594238]">
-              <span>â‚¹{minSlider}</span>
-              <span>Fair avg â‚¹{fairAvg}</span>
-              <span>â‚¹{maxSlider}</span>
+              <span>₹{minSlider}</span>
+              <span>Fair avg ₹{fairAvg}</span>
+              <span>₹{maxSlider}</span>
             </div>
           </div>
         </section>
 
-        {/* â”€â”€ DECISION + COMPARISON â”€â”€ */}
+        {/* ── DECISION ── */}
         {decision && cfg && (
           <>
-            <section id="decision-card" className={`rounded-[24px] p-5 border ${cfg.bgClass} ${cfg.borderClass}`}>
+            <section id="decision-card" className={`rounded-[24px] p-5 border shadow-xs ${cfg.bgClass} ${cfg.borderClass}`}>
+              <h3 className="text-[11px] font-bold text-[#594238] mb-3 uppercase tracking-widest opacity-80">
+                What's The Verdict?
+              </h3>
               <div className="flex items-center gap-2 mb-2 flex-wrap">
-                <span className={`material-symbols-outlined text-[22px] ${cfg.textClass}`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                <span className={`material-symbols-outlined text-[24px] ${cfg.textClass}`} style={{ fontVariationSettings: "'FILL' 1" }}>
                   {cfg.icon}
                 </span>
-                <h2 className={`font-display text-[20px] font-extrabold tracking-tight ${cfg.textClass}`}>
+                <h2 className={`font-display text-[22px] font-extrabold tracking-tight ${cfg.textClass}`}>
                   {cfg.label}
                 </h2>
                 {selectedProduce.severity && selectedProduce.severity !== 'NONE' && (
-                  <span className={`ml-auto text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${cfg.badgeBg} ${cfg.badgeText}`}>
+                  <span className={`ml-auto text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${cfg.badgeBg} ${cfg.badgeText}`}>
                     {selectedProduce.severity}
                   </span>
                 )}
               </div>
-
-              <p className="text-[14px] font-semibold text-[#1b1c1a] leading-snug mb-4">
+              <p className="text-[15px] font-medium text-[#1b1c1a] leading-snug">
                 {selectedProduce.recommendation?.headline}
               </p>
-
-              {/* Price Comparison */}
-              <div className="bg-white/70 rounded-xl p-3.5 border border-[#e4e2de]/50 space-y-2">
-                <div className="flex justify-between text-[12px] font-medium text-[#594238]">
-                  <span>Vendor asking</span>
-                  <span className="font-bold text-[#1b1c1a]">â‚¹{vendorAskingPrice}/{selectedProduce.unit}</span>
-                </div>
-                <div className="flex justify-between text-[12px] font-medium text-[#594238]">
-                  <span>Fair range</span>
-                  <span className="font-bold text-[#1b1c1a]">â‚¹{selectedProduce.retailFairMin}â€“{selectedProduce.retailFairMax}/{selectedProduce.unit}</span>
-                </div>
-                {selectedProduce.alternatives?.quickcommerce && (
-                  <div className="flex justify-between text-[12px] font-medium text-[#594238] pt-1.5 border-t border-[#e4e2de]/50">
-                    <span>ðŸ“± {selectedProduce.alternatives.quickcommerce.source} reference</span>
-                    <span className="font-bold text-[#1b1c1a]">â‚¹{selectedProduce.alternatives.quickcommerce.price}/{selectedProduce.alternatives.quickcommerce.unit}</span>
-                  </div>
-                )}
-              </div>
             </section>
 
-            {/* â”€â”€ NEGOTIATION STRATEGY (OVERPRICED / SLIGHTLY_HIGH) â”€â”€ */}
+            {/* ── NEGOTIATION STRATEGY (WHAT SHOULD I DO?) ── */}
             {showNegotiation && (
-              <section id="negotiation-strategy-card" className="bg-white rounded-[24px] p-5 border border-[#e4e2de] shadow-xs">
-                <p className="text-[11px] font-bold text-[#594238] mb-4 uppercase tracking-widest">Negotiation Strategy</p>
-                <div className="flex items-center justify-between gap-1">
+              <section id="negotiation-strategy-card" className="bg-white rounded-[24px] p-5 border border-[#e4e2de] shadow-sm">
+                <p className="text-[11px] font-bold text-[#594238] mb-4 uppercase tracking-widest">What Should I Do?</p>
+                <div className="flex items-center justify-between gap-1 px-1">
                   <PriceCell label="Start With" value={selectedProduce.startingOffer} accent terracotta={isTerracotta} />
-                  <div className="text-[#b0a89e] text-[18px] font-bold mb-1">â€º</div>
+                  <div className="text-[#e0c0b2] text-[20px] font-bold mb-1">›</div>
                   <PriceCell label="Target" value={selectedProduce.targetPrice} />
-                  <div className="text-[#b0a89e] text-[18px] font-bold mb-1">â€º</div>
+                  <div className="text-[#e0c0b2] text-[20px] font-bold mb-1">›</div>
                   <PriceCell label="Max Pay" value={selectedProduce.maximumReasonablePrice} />
                 </div>
                 {selectedProduce.potentialSaving ? (
-                  <div className="mt-4 bg-[#f0fdf4] border border-[#bbf7d0] text-[#166534] px-4 py-2.5 rounded-xl text-center font-bold text-[13px]">
-                    ðŸ’° Potential saving: â‚¹{selectedProduce.potentialSaving}/{selectedProduce.unit}
+                  <div className="mt-5 bg-[#f0fdf4] border border-[#bbf7d0] text-[#166534] px-4 py-2.5 rounded-xl text-center font-bold text-[13px]">
+                    💰 Potential saving: ₹{selectedProduce.potentialSaving}/{selectedProduce.unit}
                   </div>
                 ) : null}
               </section>
             )}
 
-            {/* â”€â”€ BELOW FAIR (GOOD_DEAL) â”€â”€ */}
+            {/* ── BELOW FAIR (GOOD_DEAL) ── */}
             {decision === 'GOOD_DEAL' && selectedProduce.belowFairAmount ? (
-              <section className="bg-[#f0fdf4] border border-[#bbf7d0] rounded-[24px] p-4 text-center">
+              <section className="bg-[#f0fdf4] border border-[#bbf7d0] rounded-[24px] p-4 text-center shadow-xs">
                 <p className="text-[13px] font-bold text-[#166534]">
-                  â‚¹{selectedProduce.belowFairAmount} below estimated fair minimum â€” already a good deal.
+                  ₹{selectedProduce.belowFairAmount} below estimated fair minimum — already a good deal.
                 </p>
               </section>
             ) : null}
 
-            {/* â”€â”€ QUALITY CAUTION â”€â”€ */}
+            {/* ── QUALITY CAUTION ── */}
             {selectedProduce.qualityContext?.caution && (
-              <section className="bg-[#fffbeb] border border-[#fde68a] rounded-[24px] p-4 flex items-start gap-2">
-                <span className="material-symbols-outlined text-[17px] text-[#92400e] mt-0.5 flex-shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>info</span>
+              <section className="bg-[#fffbeb] border border-[#fde68a] rounded-[24px] p-4 flex items-start gap-2 shadow-xs">
+                <span className="material-symbols-outlined text-[18px] text-[#92400e] mt-0.5 flex-shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>info</span>
                 <p className="text-[13px] font-semibold text-[#92400e] leading-snug">{selectedProduce.qualityContext.caution}</p>
               </section>
             )}
+            
+            {/* ── WHY ── */}
+            <section id="why-card" className="bg-white border border-[#e4e2de] rounded-[24px] p-5 shadow-xs">
+              <p className="text-[11px] font-bold text-[#594238] mb-3 uppercase tracking-widest">Why?</p>
+              
+              <div className="flex flex-col gap-2.5 mb-4 bg-[#f5f3ef] rounded-xl p-3 border border-[#e4e2de]/60">
+                <div className="flex items-center justify-between text-[13px] text-[#594238]">
+                  <span>Vendor asking:</span>
+                  <span className="font-bold text-[#1b1c1a]">₹{vendorAskingPrice}/{selectedProduce.unit}</span>
+                </div>
+                <div className="flex items-center justify-between text-[13px] text-[#594238]">
+                  <span>Fair range:</span>
+                  <span className="font-bold text-[#1b1c1a]">₹{selectedProduce.retailFairMin}–{selectedProduce.retailFairMax}/{selectedProduce.unit}</span>
+                </div>
+              </div>
 
-            {/* â”€â”€ WHY â”€â”€ */}
-            <section id="why-card" className="bg-[#f5f3ef] border border-[#e4e2de] rounded-[24px] p-4">
-              <p className="text-[11px] font-bold text-[#594238] mb-1.5 uppercase tracking-widest">Why?</p>
-              <p className="text-[13px] text-[#1b1c1a] leading-relaxed">
+              {selectedProduce.alternatives?.quickcommerce && (
+                <div className="mb-4 text-[13.5px] text-[#1b1c1a] leading-relaxed px-1">
+                  <span className="font-semibold">{selectedProduce.alternatives.quickcommerce.source} is ₹{selectedProduce.alternatives.quickcommerce.price}/{selectedProduce.unit}</span>, but your local fair range is ₹{selectedProduce.retailFairMin}–{selectedProduce.retailFairMax}/{selectedProduce.unit}.
+                </div>
+              )}
+              
+              <div className="text-[13.5px] text-[#1b1c1a] leading-relaxed px-1">
                 {selectedProduce.recommendation?.explanation ?? selectedProduce.haggleReasoning}
-              </p>
+              </div>
             </section>
           </>
         )}
 
-        {/* â”€â”€ PHRASEBOOK â”€â”€ */}
+        {/* ── PHRASEBOOK ── */}
         {phrases.length > 0 && (
           <section id="phrasebook-card" className="bg-[#f5f3ef] rounded-[20px] p-4 border border-[#e4e2de]">
             <div className="flex items-center justify-between mb-3">

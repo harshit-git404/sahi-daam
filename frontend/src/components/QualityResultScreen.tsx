@@ -45,21 +45,46 @@ export const QualityResultScreen: React.FC = () => {
             </div>
           </div>
 
-          {/* Subject Text */}
-          <h2
-            id="scanned-produce-title"
-            className="font-display text-[32px] font-bold text-[#1b1c1a] mb-2 text-center tracking-tight"
-          >
-            {selectedProduce.name}
-          </h2>
+          {/* Subject Text & Header */}
+          <div className="w-full text-left mb-2 px-1">
+            <h3 className="text-[11px] font-bold text-[#594238] mb-1 uppercase tracking-widest">
+              What Did We Find?
+            </h3>
+            <h2
+              id="scanned-produce-title"
+              className="font-display text-[32px] font-bold text-[#1b1c1a] tracking-tight leading-tight"
+            >
+              {selectedProduce.name}
+            </h2>
+          </div>
 
-          {/* Description */}
-          <p
-            id="quality-summary-text"
-            className="text-[16px] text-[#594238] text-center mb-8 px-2 leading-relaxed"
-          >
-            {selectedProduce.qualitySummary}
-          </p>
+          {/* Freshness Stats */}
+          <div className="w-full flex items-center justify-between px-4 mb-4 bg-[#f5f3ef] rounded-xl p-3 border border-[#e4e2de]/60">
+             <div className="flex flex-col">
+               <span className="text-[11px] font-bold text-[#594238] uppercase tracking-wider">Freshness</span>
+               <span className="font-display text-[24px] font-extrabold text-[#1b1c1a]">{selectedProduce.freshnessPercent}%</span>
+             </div>
+             <div className="w-[1px] h-10 bg-[#e4e2de]"></div>
+             <div className="flex flex-col text-right">
+               <span className="text-[11px] font-bold text-[#594238] uppercase tracking-wider">Label</span>
+               <span className={`font-display text-[20px] font-bold ${
+                 selectedProduce.freshness === 'fresh' ? (isTerracotta ? 'text-[#006d37]' : 'text-[#0e6c4a]') :
+                 selectedProduce.freshness === 'slightly_aged' ? 'text-[#9e3d00]' : 'text-[#806b00]'
+               }`}>
+                 {selectedProduce.freshness === 'fresh' ? 'Fresh' : selectedProduce.freshness === 'slightly_aged' ? 'Slightly Aged' : 'Overripe'}
+               </span>
+             </div>
+          </div>
+
+          {/* Concise Interpretation */}
+          <div className="w-full mb-6 px-1">
+            <p
+              id="quality-summary-text"
+              className="text-[15px] font-medium text-[#1b1c1a] leading-relaxed border-l-[3px] border-[#e0c0b2] pl-3 py-0.5"
+            >
+              {selectedProduce.qualitySummary}
+            </p>
+          </div>
 
           {/* Freshness Gauge */}
           <div id="freshness-gauge" className="w-full mb-3">
