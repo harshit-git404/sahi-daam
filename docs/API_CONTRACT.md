@@ -45,7 +45,9 @@ Validates user's asking price.
 ### Request Shape
 ```json
 {
-  "asking_price": 45.0
+  "asking_price": 45.0,
+  "fair_price_min": 29.25,
+  "fair_price_max": 32.63
 }
 ```
 
@@ -53,8 +55,14 @@ Validates user's asking price.
 ```json
 {
   "verdict": "Overpriced",
-  "deviation_pct": 32.0,
-  "suggested_price": 30.0,
-  "reasoning": "Vendor's asking price is significantly above today's fair range for this quality of tomato."
+  "deviation_pct": 37.9,
+  "suggested_price": 32.6,
+  "reasoning": "The vendor's asking price of ₹45.0 is 38% above the fair market maximum (₹32.63). You should counter-offer around ₹32.63."
 }
 ```
+
+**Fields**:
+- `verdict` (Enum): One of `"Fair Price"`, `"Overpriced"`, `"Suspiciously Cheap"`.
+- `deviation_pct` (float): The percentage difference from the relevant bound of the fair range.
+- `suggested_price` (float): Computed counter-offer or accepted price.
+- `reasoning` (str): Generative text explaining the math to the user.
