@@ -83,6 +83,18 @@ export const ScanScreen: React.FC = () => {
     if (navigator.vibrate) navigator.vibrate(25);
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Image = reader.result as string;
+        selectProduceById(selectedProduce.id, base64Image);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSwitchTarget = (id: string, idx: number) => {
     const item = allProduce.find(p => p.id === id) || allProduce[0];
     setSelectedProduce(item); // Just update locally for the viewfinder
@@ -121,15 +133,22 @@ export const ScanScreen: React.FC = () => {
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 p-6 text-center">
           <span className="material-symbols-outlined text-[48px] text-red-500 mb-4">videocam_off</span>
           <p className="text-white font-medium mb-6">{cameraError}</p>
-          <button
-            onClick={() => {
-              setCameraError(null);
-              setUseRealCamera(false);
-            }}
-            className="px-6 py-3 rounded-full bg-white text-black font-semibold active:scale-95 transition-all"
-          >
-            Use Market Simulation Instead
-          </button>
+          <div className="flex flex-col gap-3 w-full max-w-[250px]">
+            <label className="px-6 py-3 rounded-full bg-[#9e3d00] text-white font-semibold active:scale-95 transition-all cursor-pointer shadow-lg flex items-center justify-center gap-2">
+              <span className="material-symbols-outlined text-[20px]">upload</span>
+              Upload Image
+              <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+            </label>
+            <button
+              onClick={() => {
+                setCameraError(null);
+                setUseRealCamera(false);
+              }}
+              className="px-6 py-3 rounded-full bg-white/20 backdrop-blur-md text-white font-semibold border border-white/30 active:scale-95 transition-all"
+            >
+              Use Market Simulation
+            </button>
+          </div>
         </div>
       )}
 
@@ -151,12 +170,21 @@ export const ScanScreen: React.FC = () => {
         </button>
 
         {/* Quick Camera Mode Switcher (Simulated vs Live) */}
-        <button
-          onClick={() => setUseRealCamera(!useRealCamera)}
-          className="px-3 py-1 rounded-full bg-black/40 backdrop-blur-md text-white text-[11px] font-medium border border-white/20 active:scale-95 transition-transform"
-        >
-          {useRealCamera ? '📷 Live Camera' : '🖼 Market Simulation'}
-        </button>
+        <div className="flex flex-col gap-2 items-center">
+          <button
+            onClick={() => setUseRealCamera(!useRealCamera)}
+            className="px-3 py-1 rounded-full bg-black/40 backdrop-blur-md text-white text-[11px] font-medium border border-white/20 active:scale-95 transition-transform"
+          >
+            {useRealCamera ? '📷 Live Camera' : '🖼 Market Simulation'}
+          </button>
+          
+          {/* Always show an upload option to test real API easily without failing camera */}
+          <label className="px-3 py-1 rounded-full bg-[#9e3d00]/80 backdrop-blur-md text-white text-[11px] font-medium border border-white/20 active:scale-95 transition-transform cursor-pointer flex items-center gap-1">
+            <span className="material-symbols-outlined text-[12px]">upload</span>
+            Upload Photo
+            <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+          </label>
+        </div>
 
         {/* Flash Toggle */}
         <button
