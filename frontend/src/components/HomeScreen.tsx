@@ -163,8 +163,8 @@ export const HomeScreen: React.FC = () => {
             onClick={async () => {
               setRefreshing(true);
               try {
-                // Vite proxy will automatically forward /api to backend even on mobile devices!
-                const res = await fetch('/api/refresh-prices', { method: 'POST' });
+                const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+                const res = await fetch(`${API_BASE_URL}/refresh-prices`, { method: 'POST' });
                 if (!res.ok) {
                   const errData = await res.json();
                   alert(`Failed to refresh prices: ${errData.detail || res.statusText}`);

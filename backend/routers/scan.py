@@ -30,7 +30,7 @@ from data.agmarknet.service import refresh_all_mandi_prices
 
 from fastapi import HTTPException
 
-@router.post("/api/refresh-prices")
+@router.post("/refresh-prices")
 async def refresh_prices_endpoint():
     """
     Manually refreshes all flagship commodities and saves to today's cache file.
