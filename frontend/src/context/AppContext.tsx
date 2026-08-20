@@ -5,10 +5,16 @@ import { MANDI_LOCATIONS } from '../data/mandiLocations';
 import confetti from 'canvas-confetti';
 import { fetchScanResult, fetchHaggleCheck } from '../services/api';
 import { mergeProduceData } from '../services/adapter';
+import { SECTOR_OPTIONS, FOOD_SECTOR_ID, FRESH_PRODUCE_COMPONENT } from '../data/sectorData';
 
 interface AppContextType {
   currentScreen: Screen;
   setCurrentScreen: (screen: Screen) => void;
+  selectedSectorId: string | null;
+  selectedSectorName: string;
+  selectedComponent: string | null;
+  selectSector: (sectorId: string) => void;
+  selectComponent: (component: string) => void;
   selectedProduce: ProduceItem;
   setSelectedProduce: (item: ProduceItem) => void;
   selectProduceById: (id: string, imageBase64?: string) => void;
@@ -38,6 +44,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
+  const [selectedSectorId, setSelectedSectorId] = useState<string | null>(null);
+  const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [selectedProduce, setSelectedProduce] = useState<ProduceItem>(PRODUCE_DATABASE[0]);
   const [vendorAskingPrice, setVendorAskingPrice] = useState<number>(45);
   const [purchaseHistory, setPurchaseHistory] = useState<PurchaseRecord[]>(INITIAL_PURCHASE_HISTORY);
@@ -49,6 +57,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isScanning, setIsScanning] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
+
+  const selectedSectorName = SECTOR_OPTIONS.find((sector) => sector.id === selectedSectorId)?.name || '';
+
+  const selectSector = (sectorId: string) => {
+    setSelectedSectorId(sectorId);
+    setSelectedComponent(null);
+    setCurrentScreen('component_selection');
+  };
+
+  const selectComponent = (component: string) => {
+    setSelectedComponent(component);
+    if (selectedSectorId === FOOD_SECTOR_ID && component === FRESH_PRODUCE_COMPONENT) {
+      setCurrentScreen('scan');
+    } else {
+      setCurrentScreen('sector_analysis');
+    }
+  };
 
   const selectProduceById = async (id: string, imageBase64?: string) => {
     setIsScanning(true);
@@ -148,6 +173,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       value={{
         currentScreen,
         setCurrentScreen,
+        selectedSectorId,
+        selectedSectorName,
+        selectedComponent,
+        selectSector,
+        selectComponent,
         selectedProduce,
         setSelectedProduce,
         selectProduceById,

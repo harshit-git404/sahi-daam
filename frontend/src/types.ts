@@ -1,10 +1,19 @@
 export type Screen = 
   | 'home'
+  | 'sector_selection'
+  | 'component_selection'
+  | 'sector_analysis'
   | 'scan'
   | 'quality_result'
   | 'price_breakdown'
   | 'bargain'
   | 'history';
+
+export interface SectorAnalysisResult {
+  summary: string;
+  records: Record<string, unknown>[];
+  status?: 'API_AVAILABLE' | 'API_UNAVAILABLE' | 'NO_SUITABLE_DATA_SOURCE';
+}
 
 export type FreshnessLevel = 'fresh' | 'slightly_aged' | 'overripe';
 

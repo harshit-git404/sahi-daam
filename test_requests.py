@@ -1,9 +1,10 @@
 import requests
 import time
+import os
 
 url = "https://api.data.gov.in/resource/35985678-0d79-46b4-9ed6-6f13308a1d24"
 params = {
-    "api-key": "579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b",
+    "api-key": os.getenv("DATA_GOV_API_KEY", ""),
     "format": "json",
     "limit": 5
 }

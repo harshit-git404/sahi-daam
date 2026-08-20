@@ -1,13 +1,16 @@
-from typing import TypedDict, Literal
+import io
+import logging
 from pathlib import Path
+from typing import Literal, TypedDict
 
-import os
-import json
-from typing import TypedDict, Literal
-from dotenv import load_dotenv
+import numpy as np
+from PIL import Image
+from tf_keras.models import load_model
 
-# Load environment variables (GEMINI_API_KEY)
-load_dotenv()
+logger = logging.getLogger(__name__)
+MODEL_PATH = Path(__file__).resolve().parent / "models" / "rottenvsfresh98pval.h5"
+_model = None
+
 
 class FreshnessResult(TypedDict):
     freshness_label: Literal["Fresh", "Slightly Aged", "Overripe"]
@@ -16,89 +19,73 @@ class FreshnessResult(TypedDict):
     quality_adjustment: int
     quality_adjustment_label: str
 
-def analyze_produce_with_gemini(image_bytes: bytes) -> tuple[str, FreshnessResult]:
-    """
-    Sends the image to Gemini Vision API to detect the produce and assess freshness.
-    Returns (detected_produce_id, FreshnessResult).
-    """
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key or api_key == "your_gemini_api_key_here":
-        # MOCK FALLBACK for hackathon if no API key is provided
-        return ("coconut", {
-            "freshness_label": "Fresh",
-            "freshness_percent": 90,
-            "freshness_note": "Mocked by AI: The coconut husk looks intact with no visible cracks or mold. (Add your Vision API Key in .env for real analysis!)",
-            "quality_adjustment": 0,
-            "quality_adjustment_label": "Intact husk"
-        })
 
-    try:
-        from google import genai
-        from google.genai import types
-        
-        client = genai.Client(api_key=api_key)
-        
-        prompt = """
-        Analyze this image of produce.
-        Return ONLY a raw JSON object with the following structure (no markdown tags):
-        {
-          "detected_produce_id": "apple|banana|tomato|onion|potato|coconut|etc...",
-          "freshness_label": "Fresh|Slightly Aged|Overripe",
-          "freshness_percent": <number 0-100>,
-          "freshness_note": "<A short 1-sentence observation on its visual quality>",
-          "quality_adjustment": <number 0 to -10 depending on damage>,
-          "quality_adjustment_label": "<short 2-3 word reason for deduction, e.g. 'Bruised skin'>"
-        }
-        """
-        
-        # Try models in order of preference, fallback if 503 high demand
-        fallback_models = ['gemini-3.7-flash', 'gemini-3.5-flash', 'gemini-2.5-flash']
-        response = None
-        last_error = None
-        
-        for model_name in fallback_models:
-            try:
-                response = client.models.generate_content(
-                    model=model_name,
-                    contents=[
-                        types.Part.from_bytes(data=image_bytes, mime_type='image/jpeg'),
-                        prompt
-                    ]
+def _get_model():
+    global _model
+    if _model is None:
+        if not MODEL_PATH.is_file():
+            raise RuntimeError(f"Freshness model not found: {MODEL_PATH}")
+        try:
+            _model = load_model(MODEL_PATH, compile=False)
+            if _model.input_shape[-3:] != (100, 100, 3) or _model.output_shape[-1] != 1:
+                raise RuntimeError(
+                    f"Unexpected freshness model shape: input={_model.input_shape}, output={_model.output_shape}"
                 )
-                break # Success!
-            except Exception as e:
-                last_error = e
-                print(f"Model {model_name} failed: {e}")
-                continue
-                
-        if not response:
-            raise last_error
-        
-        # Clean the JSON response (strip markdown blocks if Gemini returns them)
-        text = response.text.strip()
-        if text.startswith("```json"):
-            text = text[7:-3].strip()
-        elif text.startswith("```"):
-            text = text[3:-3].strip()
-            
-        data = json.loads(text)
-        
-        result: FreshnessResult = {
-            "freshness_label": data.get("freshness_label", "Fresh"),
-            "freshness_percent": data.get("freshness_percent", 85),
-            "freshness_note": data.get("freshness_note", "Visual analysis complete."),
-            "quality_adjustment": data.get("quality_adjustment", 0),
-            "quality_adjustment_label": data.get("quality_adjustment_label", "No deductions")
-        }
-        
-        return (data.get("detected_produce_id", "unknown").lower(), result)
+            logger.info("Freshness model loaded: input_shape=%s output_shape=%s", _model.input_shape, _model.output_shape)
+        except Exception as exc:
+            _model = None
+            raise RuntimeError(f"Freshness model could not be loaded: {exc}") from exc
+    return _model
 
-    except Exception as e:
-        print(f"Gemini API Error: {e}")
-        return ("unknown", {
+
+def predict_freshness(image_bytes: bytes, produce_type: str) -> FreshnessResult:
+    """Run the H5 model. Its documented convention is 0=fresh and 1=not fresh."""
+    try:
+        with Image.open(io.BytesIO(image_bytes)) as image:
+            image = image.convert("RGB").resize((100, 100))
+            image_array = np.asarray(image, dtype=np.float32) / 255.0
+    except (OSError, ValueError) as exc:
+        raise ValueError("The uploaded image could not be decoded as an image.") from exc
+
+    input_batch = np.expand_dims(image_array, axis=0)
+    loaded_model = _get_model()
+    try:
+        raw_output = loaded_model.predict(input_batch, verbose=0)
+        not_fresh_score = float(raw_output[0][0])
+    except Exception as exc:
+        logger.exception("Freshness model inference failed")
+        raise RuntimeError(f"Freshness model inference failed: {exc}") from exc
+
+    logger.info("Freshness raw model output: %s", raw_output.tolist())
+    not_fresh_score = max(0.0, min(1.0, not_fresh_score))
+    freshness_percent = round((1.0 - not_fresh_score) * 100)
+    logger.info("Freshness result: %s | score=%d%%", produce_type, freshness_percent)
+
+    if not_fresh_score < 0.10:
+        return {
             "freshness_label": "Fresh",
-            "freshness_percent": 85,
-            "freshness_note": "Failed to analyze image due to API error.",
+            "freshness_percent": freshness_percent,
+            "freshness_note": f"{produce_type.capitalize()} appears fresh and suitable for sale.",
             "quality_adjustment": 0,
-            "quality_adjustment_label": "API Error"
-        })
+            "quality_adjustment_label": "No freshness deduction",
+        }
+    if not_fresh_score < 0.35:
+        return {
+            "freshness_label": "Slightly Aged",
+            "freshness_percent": freshness_percent,
+            "freshness_note": f"{produce_type.capitalize()} is still usable but should be consumed soon.",
+            "quality_adjustment": -2,
+            "quality_adjustment_label": "Slight freshness deduction",
+        }
+    return {
+        "freshness_label": "Overripe",
+        "freshness_percent": freshness_percent,
+        "freshness_note": f"{produce_type.capitalize()} appears spoiled or severely overripe and is not fit for sale.",
+        "quality_adjustment": -5,
+            "quality_adjustment_label": "Spoiled produce - do not buy",
+    }
+
+
+def load_freshness_model() -> None:
+    """Load the H5 model during application startup for visible diagnostics."""
+    _get_model()

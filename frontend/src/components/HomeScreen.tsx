@@ -31,7 +31,7 @@ export const HomeScreen: React.FC = () => {
         <section id="home-scan-action-section">
           <button
             id="home-scan-produce-button"
-            onClick={() => setCurrentScreen('scan')}
+            onClick={() => setCurrentScreen('sector_selection')}
             className={`w-full text-white rounded-[24px] py-6 px-5 flex flex-col items-center justify-center gap-3 transition-all duration-200 active:scale-[0.97] hover:opacity-95 ${
               isTerracotta
                 ? 'bg-[#9e3d00] shadow-[0px_8px_24px_rgba(158,61,0,0.22)]'
@@ -42,11 +42,13 @@ export const HomeScreen: React.FC = () => {
               className="material-symbols-outlined text-[48px]"
               style={{ fontVariationSettings: "'FILL' 1" }}
             >
-              camera_alt
+              grid_view
             </span>
-            <span className="font-display text-[24px] font-semibold tracking-tight">
-              Scan Produce
+            <span className="flex items-center gap-2 font-display text-[24px] font-semibold tracking-tight">
+              Explore &amp; Analyze
+              <span className="material-symbols-outlined text-[24px]">arrow_forward</span>
             </span>
+            <span className="-mt-1 text-[13px] font-medium text-white/80">Food, energy, water &amp; more</span>
           </button>
         </section>
 

@@ -1,10 +1,9 @@
-import os
-from google import genai
-from dotenv import load_dotenv
+import logging
 
-load_dotenv()
+from ml.freshness_model import load_freshness_model
+from ml.produce_classifier import load_produce_classifier
 
-client = genai.Client()
-for model in client.models.list():
-    if 'generateContent' in model.supported_actions:
-        print(model.name)
+logging.basicConfig(level=logging.INFO)
+load_produce_classifier()
+load_freshness_model()
+print("Local produce classifier and freshness model loaded.")

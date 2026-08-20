@@ -1,6 +1,9 @@
 import React from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { HomeScreen } from './components/HomeScreen';
+import { SectorSelectionScreen } from './components/SectorSelectionScreen';
+import { ComponentSelectionScreen } from './components/ComponentSelectionScreen';
+import { SectorAnalysisScreen } from './components/SectorAnalysisScreen';
 import { ScanScreen } from './components/ScanScreen';
 import { QualityResultScreen } from './components/QualityResultScreen';
 import { PriceBreakdownScreen } from './components/PriceBreakdownScreen';
@@ -37,6 +40,9 @@ const AppContent: React.FC = () => {
       {/* Screen Router */}
       <div key={currentScreen} className="flex-1 animate-in fade-in slide-in-from-bottom-2 duration-300 ease-out">
         {currentScreen === 'home' && <HomeScreen />}
+        {currentScreen === 'sector_selection' && <SectorSelectionScreen />}
+        {currentScreen === 'component_selection' && <ComponentSelectionScreen />}
+        {currentScreen === 'sector_analysis' && <SectorAnalysisScreen />}
         {currentScreen === 'scan' && <ScanScreen />}
         {currentScreen === 'quality_result' && <QualityResultScreen />}
         {currentScreen === 'price_breakdown' && <PriceBreakdownScreen />}

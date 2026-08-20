@@ -1,12 +1,14 @@
 import os
+from pathlib import Path
 import httpx
 from typing import Dict, Any, Optional
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+load_dotenv(Path(__file__).resolve().parents[3] / ".env")
 
 API_KEY = os.getenv("DATA_GOV_API_KEY")
-RESOURCE_ID = "35985678-0d79-46b4-9ed6-6f13308a1d24"
+RESOURCE_ID = os.getenv("AGMARKNET_RESOURCE_ID", "35985678-0d79-46b4-9ed6-6f13308a1d24").strip()
 BASE_URL = f"https://api.data.gov.in/resource/{RESOURCE_ID}"
 
 async def fetch_market_data(
@@ -43,11 +45,12 @@ async def fetch_market_data(
     }
 
     # Increase timeout significantly as data.gov.in can be slow
-    async with httpx.AsyncClient(timeout=60.0, verify=False, headers=headers) as client:
+    async with httpx.AsyncClient(timeout=60.0, headers=headers) as client:
         try:
             print(f"[AGMARKNET] Fetching data for {commodity} in {district}, {state}...")
             debug_url = BASE_URL + "?filters[Commodity]=" + commodity
-            print(f"[AGMARKNET] URL: {debug_url} (params: {params})")
+            safe_params = {key: value for key, value in params.items() if key != "api-key"}
+            print(f"[AGMARKNET] URL: {debug_url} (params: {safe_params})")
             
             response = await client.get(BASE_URL, params=params)
             response.raise_for_status()
