@@ -1,0 +1,32 @@
+{
+  "produce_type": "Tomato",
+  "detected_produce_id": "tomato",
+  "classification_confidence": 0.99,
+  "freshness_label": "Fresh",
+  "freshness_percent": 98,
+  "freshness_note": "The tomatoes are vibrant red, plump, and firm with healthy green stems and no visible blemishes.",
+  "quality_adjustment": 0,
+  "quality_adjustment_label": "Excellent condition",
+  "wholesale_price": 22.5,
+  "markup_range": {
+    "min_pct": 30,
+    "max_pct": 45
+  },
+  "fair_price_range": {
+    "min": 29.25,
+    "max": 32.62,
+    "unit": "kg"
+  },
+  "data_confidence": "High",
+  "price_source": "live_local",
+  "used_markets": [
+    "Katpadi(Uzhavar Santhai)"
+  ],
+  "location": "Katpadi, Vellore",
+  "date": "2026-08-20",
+  "quickcommerce_price": {
+    "source": "Blinkit",
+    "price": 40.5,
+    "unit": "kg"
+  }
+}
