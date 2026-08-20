@@ -101,10 +101,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           haggleReasoning: result.reasoning,
           hagglePhrases: result.phrases,
           decision: result.decision,
+          severity: result.severity,
           recommendation: result.recommendation,
           alternatives: result.alternatives,
+          startingOffer: result.starting_offer,
+          targetPrice: result.target_price,
           maximumReasonablePrice: result.maximum_reasonable_price,
-          potentialSaving: result.potential_saving
+          potentialSaving: result.potential_saving,
+          belowFairAmount: result.below_fair_amount,
+          qualityContext: result.quality_context,
         }));
       } catch (e) {
         console.error('Haggle check API failed:', e);

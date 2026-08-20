@@ -1,332 +1,241 @@
-import React from 'react';
+﻿import React from 'react';
 import { useApp } from '../context/AppContext';
 import { Header } from './Header';
 
-export const BargainScreen: React.FC = () => {
-  const {
-    setCurrentScreen,
-    selectedProduce,
-    vendorAskingPrice,
-    setVendorAskingPrice,
-    recordPurchase,
-    setIsAudioModalOpen,
-    theme
-  } = useApp();
+// â”€â”€â”€ Decision config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+type Decision = 'GOOD_DEAL' | 'FAIR_PRICE' | 'SLIGHTLY_HIGH' | 'OVERPRICED' | 'UNUSUALLY_CHEAP';
 
+const DECISION_CONFIG: Record<Decision, {
+  icon: string;
+  label: string;
+  bgClass: string;
+  borderClass: string;
+  textClass: string;
+  badgeBg: string;
+  badgeText: string;
+}> = {
+  GOOD_DEAL: { icon: 'thumb_up', label: 'Good Deal', bgClass: 'bg-[#f0fdf4]', borderClass: 'border-[#bbf7d0]', textClass: 'text-[#166534]', badgeBg: 'bg-[#dcfce7]', badgeText: 'text-[#166534]' },
+  FAIR_PRICE: { icon: 'check_circle', label: 'Fair Price', bgClass: 'bg-[#f2fcf5]', borderClass: 'border-[#c6efd6]', textClass: 'text-[#006d37]', badgeBg: 'bg-[#d1fae5]', badgeText: 'text-[#065f46]' },
+  SLIGHTLY_HIGH: { icon: 'arrow_upward', label: 'Slightly High', bgClass: 'bg-[#fffbeb]', borderClass: 'border-[#fde68a]', textClass: 'text-[#92400e]', badgeBg: 'bg-[#fef9c3]', badgeText: 'text-[#713f12]' },
+  OVERPRICED: { icon: 'trending_up', label: 'Overpriced', bgClass: 'bg-[#fff0ee]', borderClass: 'border-[#ffdad6]', textClass: 'text-[#93000a]', badgeBg: 'bg-[#ffe4e1]', badgeText: 'text-[#7f1d1d]' },
+  UNUSUALLY_CHEAP: { icon: 'warning', label: 'Unusually Cheap', bgClass: 'bg-[#fffae0]', borderClass: 'border-[#fde68a]', textClass: 'text-[#806b00]', badgeBg: 'bg-[#fef9c3]', badgeText: 'text-[#713f12]' },
+};
+
+// â”€â”€â”€ PriceCell â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+interface PriceCellProps { label: string; value?: number; accent?: boolean; terracotta?: boolean; }
+const PriceCell: React.FC<PriceCellProps> = ({ label, value, accent, terracotta }) => {
+  if (value === undefined) return null;
+  return (
+    <div className="flex flex-col items-center gap-0.5 min-w-0">
+      <span className="text-[9px] font-bold uppercase tracking-widest text-[#594238] text-center">{label}</span>
+      <span className={`font-display text-[24px] font-extrabold leading-none ${accent ? (terracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]') : 'text-[#1b1c1a]'}`}>
+        â‚¹{value}
+      </span>
+    </div>
+  );
+};
+
+// â”€â”€â”€ Main Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+export const BargainScreen: React.FC = () => {
+  const { setCurrentScreen, selectedProduce, vendorAskingPrice, setVendorAskingPrice, recordPurchase, setIsAudioModalOpen, theme } = useApp();
   const isTerracotta = theme === 'terracotta';
 
-  // Dynamic calculations
   const fairAvg = Math.round((selectedProduce.retailFairMin + selectedProduce.retailFairMax) / 2);
-  
-  // Calculate suggested counter offer: slightly above wholesale, fair middle
-  const targetOffer = Math.max(
-    selectedProduce.wholesalePrice + 5,
-    Math.round(fairAvg + (vendorAskingPrice > fairAvg ? (fairAvg * 0.05) : 0))
-  );
+  const fallbackBuyPrice = Math.max(selectedProduce.wholesalePrice + 5, Math.round(fairAvg + (vendorAskingPrice > fairAvg ? fairAvg * 0.05 : 0)));
 
-  // Overpriced percentage calculation
-  const overpricePct = Math.round(((vendorAskingPrice - fairAvg) / fairAvg) * 100);
+  const decision = selectedProduce.decision as Decision | undefined;
+  const cfg = decision ? DECISION_CONFIG[decision] : undefined;
+  const showNegotiation = decision === 'OVERPRICED' || decision === 'SLIGHTLY_HIGH';
 
-  const handleDecrease = () => {
-    setVendorAskingPrice(prev => Math.max(selectedProduce.wholesalePrice, prev - 5));
-    if (navigator.vibrate) navigator.vibrate(20);
-  };
+  const confirmedBuyPrice = selectedProduce.startingOffer ?? selectedProduce.suggestedOfferPrice ?? fallbackBuyPrice;
 
-  const handleIncrease = () => {
-    setVendorAskingPrice(prev => Math.min(150, prev + 5));
-    if (navigator.vibrate) navigator.vibrate(20);
-  };
+  const handleDecrease = () => { setVendorAskingPrice(prev => Math.max(selectedProduce.wholesalePrice || 5, prev - 5)); if (navigator.vibrate) navigator.vibrate(20); };
+  const handleIncrease = () => { setVendorAskingPrice(prev => Math.min(200, prev + 5)); if (navigator.vibrate) navigator.vibrate(20); };
+  const handleBuy = () => { recordPurchase(confirmedBuyPrice); setCurrentScreen('history'); };
+  const playPhrase = (text: string) => { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = 'hi-IN'; window.speechSynthesis.speak(u); } };
 
-  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVendorAskingPrice(Number(e.target.value));
-  };
-
-  const handleBuy = () => {
-    recordPurchase(targetOffer);
-    setCurrentScreen('history');
-  };
-
-  const playPhrase = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel(); // Cancel any ongoing speech
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'hi-IN';
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
-  // Slider percentage calculation (min 15, max 80 for scale)
-  const minSlider = 15;
-  const maxSlider = 80;
-  const sliderPercent = Math.min(
-    100,
-    Math.max(0, ((vendorAskingPrice - minSlider) / (maxSlider - minSlider)) * 100)
-  );
+  const minSlider = 10;
+  const maxSlider = Math.max(100, vendorAskingPrice + 10);
+  const phrases = selectedProduce.hagglePhrases ?? selectedProduce.bargainPhrases ?? [];
 
   return (
-    <div className="min-h-screen bg-[#fbf9f5] flex flex-col pb-10 antialiased relative overflow-x-hidden">
-      {/* TopAppBar */}
-      <Header
-        title={`${selectedProduce.name} Bargain`}
-        showBack
-        onBack={() => setCurrentScreen('price_breakdown')}
-      />
+    <div className="min-h-screen bg-[#fbf9f5] flex flex-col pb-12 antialiased relative overflow-x-hidden">
+      <Header title={`${selectedProduce.name} Bargain`} showBack onBack={() => setCurrentScreen('price_breakdown')} />
 
-      {/* Decorative Warm Backdrop Glow */}
-      <div
-        className={`absolute top-10 right-[-15%] w-72 h-72 rounded-full blur-[90px] opacity-35 pointer-events-none ${
-          isTerracotta ? 'bg-[#ffb595]' : 'bg-[#a5d0b9]'
-        }`}
-      />
+      {/* Decorative glow */}
+      <div className={`absolute top-10 right-[-15%] w-72 h-72 rounded-full blur-[90px] opacity-25 pointer-events-none ${isTerracotta ? 'bg-[#ffb595]' : 'bg-[#a5d0b9]'}`} />
 
-      {/* Main Content */}
-      <main className="flex-1 max-w-md mx-auto w-full px-5 py-4 flex flex-col gap-4 relative z-10">
-        
-        {/* Interactive Stepper & Slider Card */}
-        <section
-          id="vendor-price-stepper-card"
-          className="bg-white rounded-[24px] p-6 shadow-[0px_4px_20px_rgba(211,84,0,0.04)] border border-[#e4e2de]/70 flex flex-col gap-4"
-        >
-          <label className="font-semibold text-[14px] text-[#1b1c1a] text-center block">
-            What is the vendor asking?
-          </label>
+      <main className="flex-1 max-w-md mx-auto w-full px-4 py-4 flex flex-col gap-4 relative z-10">
 
-          {/* Stepper controls */}
-          <div className="flex items-center justify-between gap-4">
-            <button
-              id="decrease-price-btn"
-              aria-label="Decrease price"
-              onClick={handleDecrease}
-              className="w-14 h-14 rounded-full bg-[#f5f3ef] flex items-center justify-center text-[#1b1c1a] hover:bg-[#eae8e4] active:scale-90 transition-all shadow-xs border border-[#e0c0b2]/40"
-            >
-              <span className="material-symbols-outlined text-[24px]">remove</span>
+        {/* â”€â”€ PRICE STEPPER â”€â”€ */}
+        <section id="vendor-price-stepper-card" className="bg-white rounded-[24px] p-5 shadow-sm border border-[#e4e2de]/70 flex flex-col gap-4">
+          <label className="font-semibold text-[14px] text-[#1b1c1a] text-center block">What is the vendor asking?</label>
+          <div className="flex items-center justify-between gap-3">
+            <button id="decrease-price-btn" aria-label="Decrease price" onClick={handleDecrease}
+              className="w-12 h-12 rounded-full bg-[#f5f3ef] flex items-center justify-center text-[#1b1c1a] hover:bg-[#eae8e4] active:scale-90 transition-all border border-[#e0c0b2]/40">
+              <span className="material-symbols-outlined text-[22px]">remove</span>
             </button>
-
-            <div className="flex-1 relative text-center">
+            <div className="flex-1 text-center">
               <div className="flex items-center justify-center">
-                <span className="text-[24px] font-bold text-[#594238] mr-1">₹</span>
-                <input
-                  id="vendor-price-input"
-                  aria-label="Vendor asking price"
-                  type="number"
-                  value={vendorAskingPrice}
-                  onChange={(e) => setVendorAskingPrice(Math.max(1, Number(e.target.value)))}
-                  className="w-24 bg-transparent border-none text-center font-display text-[36px] font-extrabold text-[#1b1c1a] focus:ring-0 focus:outline-none p-0"
-                />
+                <span className="text-[22px] font-bold text-[#594238] mr-0.5">â‚¹</span>
+                <input id="vendor-price-input" aria-label="Vendor asking price" type="number" value={vendorAskingPrice}
+                  onChange={e => setVendorAskingPrice(Math.max(1, Number(e.target.value)))}
+                  className="w-24 bg-transparent border-none text-center font-display text-[34px] font-extrabold text-[#1b1c1a] focus:ring-0 focus:outline-none p-0" />
               </div>
-              {/* Visual active underline */}
-              <div className="w-full h-[2px] bg-[#e4e2de] rounded-full mt-1 relative overflow-hidden">
-                <div
-                  className={`h-full mx-auto w-2/3 rounded-full transition-all duration-300 ${
-                    isTerracotta ? 'bg-[#9e3d00]' : 'bg-[#012d1d]'
-                  }`}
-                />
+              <div className="w-full h-[2px] bg-[#e4e2de] rounded-full mt-1">
+                <div className={`h-full mx-auto w-2/3 rounded-full ${isTerracotta ? 'bg-[#9e3d00]' : 'bg-[#012d1d]'}`} />
               </div>
             </div>
-
-            <button
-              id="increase-price-btn"
-              aria-label="Increase price"
-              onClick={handleIncrease}
-              className="w-14 h-14 rounded-full bg-[#f5f3ef] flex items-center justify-center text-[#1b1c1a] hover:bg-[#eae8e4] active:scale-90 transition-all shadow-xs border border-[#e0c0b2]/40"
-            >
-              <span className="material-symbols-outlined text-[24px]">add</span>
+            <button id="increase-price-btn" aria-label="Increase price" onClick={handleIncrease}
+              className="w-12 h-12 rounded-full bg-[#f5f3ef] flex items-center justify-center text-[#1b1c1a] hover:bg-[#eae8e4] active:scale-90 transition-all border border-[#e0c0b2]/40">
+              <span className="material-symbols-outlined text-[22px]">add</span>
             </button>
           </div>
-
-          {/* Tactile Range Slider */}
-          <div className="mt-2 px-1">
-            <div className="relative flex items-center">
-              <input
-                id="vendor-price-slider"
-                aria-label="Price range slider"
-                type="range"
-                min={minSlider}
-                max={maxSlider}
-                value={vendorAskingPrice}
-                onChange={handleSliderChange}
-                className="w-full h-2 bg-[#e4e2de] rounded-lg appearance-none cursor-pointer accent-[#9e3d00]"
-              />
+          <div className="px-1">
+            <input id="vendor-price-slider" aria-label="Price range slider" type="range" min={minSlider} max={maxSlider}
+              value={vendorAskingPrice} onChange={e => setVendorAskingPrice(Number(e.target.value))}
+              className="w-full h-2 bg-[#e4e2de] rounded-lg appearance-none cursor-pointer accent-[#9e3d00]" />
+            <div className="flex justify-between mt-1 text-[11px] font-medium text-[#594238]">
+              <span>â‚¹{minSlider}</span>
+              <span>Fair avg â‚¹{fairAvg}</span>
+              <span>â‚¹{maxSlider}</span>
             </div>
           </div>
         </section>
 
-        {selectedProduce.decision && (
+        {/* â”€â”€ DECISION + COMPARISON â”€â”€ */}
+        {decision && cfg && (
           <>
-            {/* DECISION & COMPARISON CARD */}
-            <section
-              className={`glass-card rounded-[24px] p-6 shadow-sm relative overflow-hidden border ${
-                selectedProduce.decision === 'OVERPRICED' ? 'border-[#ffdad6] bg-[#fff0ee]' :
-                selectedProduce.decision === 'UNUSUALLY_CHEAP' ? 'border-[#fff8d6] bg-[#fffae0]' :
-                'border-[#c6efd6] bg-[#f2fcf5]'
-              }`}
-            >
-              {/* Decision Header */}
-              <div className="flex items-center gap-2 mb-2">
-                <span className={`material-symbols-outlined text-[24px] ${
-                  selectedProduce.decision === 'OVERPRICED' ? 'text-[#93000a]' :
-                  selectedProduce.decision === 'UNUSUALLY_CHEAP' ? 'text-[#806b00]' :
-                  'text-[#006d37]'
-                }`} style={{ fontVariationSettings: "'FILL' 1" }}>
-                  {selectedProduce.decision === 'OVERPRICED' ? 'trending_up' :
-                   selectedProduce.decision === 'UNUSUALLY_CHEAP' ? 'warning' : 'check_circle'}
+            <section id="decision-card" className={`rounded-[24px] p-5 border ${cfg.bgClass} ${cfg.borderClass}`}>
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <span className={`material-symbols-outlined text-[22px] ${cfg.textClass}`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                  {cfg.icon}
                 </span>
-                <h2 className={`font-display text-[22px] font-bold tracking-tight uppercase ${
-                  selectedProduce.decision === 'OVERPRICED' ? 'text-[#93000a]' :
-                  selectedProduce.decision === 'UNUSUALLY_CHEAP' ? 'text-[#806b00]' :
-                  'text-[#006d37]'
-                }`}>
-                  {selectedProduce.decision.replace('_', ' ')}
+                <h2 className={`font-display text-[20px] font-extrabold tracking-tight ${cfg.textClass}`}>
+                  {cfg.label}
                 </h2>
+                {selectedProduce.severity && selectedProduce.severity !== 'NONE' && (
+                  <span className={`ml-auto text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${cfg.badgeBg} ${cfg.badgeText}`}>
+                    {selectedProduce.severity}
+                  </span>
+                )}
               </div>
-              <p className="text-[15px] font-semibold text-[#1b1c1a] mb-5">
-                "{selectedProduce.recommendation?.headline}"
+
+              <p className="text-[14px] font-semibold text-[#1b1c1a] leading-snug mb-4">
+                {selectedProduce.recommendation?.headline}
               </p>
 
               {/* Price Comparison */}
-              <div className="bg-white/60 rounded-xl p-4 border border-[#e4e2de]/50 space-y-2">
-                <div className="flex justify-between text-[13px] font-semibold text-[#594238]">
-                  <span>Vendor asking:</span>
-                  <span className="text-[#1b1c1a] text-right">₹{vendorAskingPrice}/{selectedProduce.unit}</span>
+              <div className="bg-white/70 rounded-xl p-3.5 border border-[#e4e2de]/50 space-y-2">
+                <div className="flex justify-between text-[12px] font-medium text-[#594238]">
+                  <span>Vendor asking</span>
+                  <span className="font-bold text-[#1b1c1a]">â‚¹{vendorAskingPrice}/{selectedProduce.unit}</span>
                 </div>
-                <div className="flex justify-between text-[13px] font-semibold text-[#594238]">
-                  <span>Fair range:</span>
-                  <span className="text-[#1b1c1a] text-right">₹{selectedProduce.retailFairMin}–{selectedProduce.retailFairMax}/{selectedProduce.unit}</span>
+                <div className="flex justify-between text-[12px] font-medium text-[#594238]">
+                  <span>Fair range</span>
+                  <span className="font-bold text-[#1b1c1a]">â‚¹{selectedProduce.retailFairMin}â€“{selectedProduce.retailFairMax}/{selectedProduce.unit}</span>
                 </div>
                 {selectedProduce.alternatives?.quickcommerce && (
-                  <div className="flex justify-between text-[13px] font-semibold text-[#594238] pt-2 border-t border-[#e4e2de]/40">
-                    <span>{selectedProduce.alternatives.quickcommerce.source}:</span>
-                    <span className="text-[#1b1c1a] text-right">₹{selectedProduce.alternatives.quickcommerce.price}/{selectedProduce.alternatives.quickcommerce.unit}</span>
+                  <div className="flex justify-between text-[12px] font-medium text-[#594238] pt-1.5 border-t border-[#e4e2de]/50">
+                    <span>ðŸ“± {selectedProduce.alternatives.quickcommerce.source} reference</span>
+                    <span className="font-bold text-[#1b1c1a]">â‚¹{selectedProduce.alternatives.quickcommerce.price}/{selectedProduce.alternatives.quickcommerce.unit}</span>
                   </div>
                 )}
               </div>
             </section>
 
-            {/* WHAT SHOULD I DO? */}
-            <section className="bg-white rounded-[24px] p-6 border border-[#e4e2de] shadow-xs">
-              <p className="text-[12px] font-bold text-[#594238] mb-3 uppercase tracking-wider">
-                What Should I Do?
-              </p>
-              
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex flex-col">
-                  <span className="text-[11px] font-semibold text-[#594238] uppercase">Start With</span>
-                  <span className={`font-display text-[28px] font-extrabold ${isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'}`}>
-                    ₹{selectedProduce.suggestedOfferPrice}
-                  </span>
+            {/* â”€â”€ NEGOTIATION STRATEGY (OVERPRICED / SLIGHTLY_HIGH) â”€â”€ */}
+            {showNegotiation && (
+              <section id="negotiation-strategy-card" className="bg-white rounded-[24px] p-5 border border-[#e4e2de] shadow-xs">
+                <p className="text-[11px] font-bold text-[#594238] mb-4 uppercase tracking-widest">Negotiation Strategy</p>
+                <div className="flex items-center justify-between gap-1">
+                  <PriceCell label="Start With" value={selectedProduce.startingOffer} accent terracotta={isTerracotta} />
+                  <div className="text-[#b0a89e] text-[18px] font-bold mb-1">â€º</div>
+                  <PriceCell label="Target" value={selectedProduce.targetPrice} />
+                  <div className="text-[#b0a89e] text-[18px] font-bold mb-1">â€º</div>
+                  <PriceCell label="Max Pay" value={selectedProduce.maximumReasonablePrice} />
                 </div>
-                <div className="w-[1px] h-10 bg-[#e4e2de]"></div>
-                <div className="flex flex-col text-right">
-                  <span className="text-[11px] font-semibold text-[#594238] uppercase">Max Price</span>
-                  <span className="font-display text-[28px] font-extrabold text-[#1b1c1a]">
-                    ₹{selectedProduce.maximumReasonablePrice}
-                  </span>
-                </div>
-              </div>
+                {selectedProduce.potentialSaving ? (
+                  <div className="mt-4 bg-[#f0fdf4] border border-[#bbf7d0] text-[#166534] px-4 py-2.5 rounded-xl text-center font-bold text-[13px]">
+                    ðŸ’° Potential saving: â‚¹{selectedProduce.potentialSaving}/{selectedProduce.unit}
+                  </div>
+                ) : null}
+              </section>
+            )}
 
-              {selectedProduce.potentialSaving ? (
-                <div className="bg-[#e8f5e9] text-[#006d37] px-4 py-2.5 rounded-xl text-center font-semibold text-[14px]">
-                  Potential saving: ₹{selectedProduce.potentialSaving}/{selectedProduce.unit}
-                </div>
-              ) : null}
-            </section>
+            {/* â”€â”€ BELOW FAIR (GOOD_DEAL) â”€â”€ */}
+            {decision === 'GOOD_DEAL' && selectedProduce.belowFairAmount ? (
+              <section className="bg-[#f0fdf4] border border-[#bbf7d0] rounded-[24px] p-4 text-center">
+                <p className="text-[13px] font-bold text-[#166534]">
+                  â‚¹{selectedProduce.belowFairAmount} below estimated fair minimum â€” already a good deal.
+                </p>
+              </section>
+            ) : null}
 
-            {/* WHY? */}
-            <section className="bg-[#fbf9f5] border border-[#e4e2de] rounded-[24px] p-5 shadow-xs">
-              <p className="text-[12px] font-bold text-[#594238] mb-2 uppercase tracking-wider flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[16px]">info</span>
-                Why?
-              </p>
-              <p className="text-[14px] text-[#1b1c1a] leading-relaxed">
-                {selectedProduce.recommendation?.explanation || selectedProduce.haggleReasoning}
+            {/* â”€â”€ QUALITY CAUTION â”€â”€ */}
+            {selectedProduce.qualityContext?.caution && (
+              <section className="bg-[#fffbeb] border border-[#fde68a] rounded-[24px] p-4 flex items-start gap-2">
+                <span className="material-symbols-outlined text-[17px] text-[#92400e] mt-0.5 flex-shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>info</span>
+                <p className="text-[13px] font-semibold text-[#92400e] leading-snug">{selectedProduce.qualityContext.caution}</p>
+              </section>
+            )}
+
+            {/* â”€â”€ WHY â”€â”€ */}
+            <section id="why-card" className="bg-[#f5f3ef] border border-[#e4e2de] rounded-[24px] p-4">
+              <p className="text-[11px] font-bold text-[#594238] mb-1.5 uppercase tracking-widest">Why?</p>
+              <p className="text-[13px] text-[#1b1c1a] leading-relaxed">
+                {selectedProduce.recommendation?.explanation ?? selectedProduce.haggleReasoning}
               </p>
             </section>
           </>
         )}
 
-        {/* Suggested Verbal Bargaining Counter */}
-        <section className="bg-[#f5f3ef] rounded-2xl p-4 border border-[#e4e2de] shadow-xs">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[12px] font-bold uppercase tracking-wider text-[#594238] flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-[16px] text-[#9e3d00]">record_voice_over</span>
-              Suggested Dialogue
-            </span>
-            <span className="text-[11px] text-[#594238]">Hindi & English</span>
-          </div>
-
-          <div className="space-y-2">
-            {(selectedProduce.hagglePhrases || selectedProduce.bargainPhrases).slice(0, 2).map((phrase, idx) => (
-              <div
-                key={idx}
-                className="p-2.5 rounded-xl bg-white border border-[#e4e2de]/80 text-xs shadow-2xs relative pr-10"
-              >
-                <p className="font-semibold text-[#1b1c1a]">"{phrase.hindi}"</p>
-                <p className="text-[11px] text-[#594238] font-medium mt-0.5">{phrase.phonetic}</p>
-                <p className="text-[11px] text-[#594238] italic mt-0.5">"{phrase.english}"</p>
-                {'speechSynthesis' in window && (
-                  <button
-                    onClick={() => playPhrase(phrase.hindi)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-[#f5f3ef] text-[#1b1c1a] hover:bg-[#eae8e4] active:scale-95 transition-all"
-                    aria-label="Listen"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">volume_up</span>
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Action Area */}
-        <div className="flex flex-col gap-3 mt-2">
-          {/* Mic Assistant Button */}
-          <button
-            id="start-haggle-assistant-btn"
-            onClick={() => setIsAudioModalOpen(true)}
-            className="relative w-full bg-[#efeeea] border border-[#e4e2de] rounded-2xl py-3.5 px-4 flex items-center justify-center gap-3 overflow-hidden hover:bg-[#eae8e4] active:scale-[0.98] transition-all shadow-xs group"
-          >
-            <div className="absolute top-2 right-3 bg-[#ffddb9] text-[#663e00] px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider">
-              COMING SOON
-            </div>
-
-            <div
-              className={`w-11 h-11 rounded-full flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform ${
-                isTerracotta ? 'bg-[#c64f00]' : 'bg-[#1b4332]'
-              }`}
-            >
-              <span
-                className="material-symbols-outlined text-[22px]"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-              >
-                mic
+        {/* â”€â”€ PHRASEBOOK â”€â”€ */}
+        {phrases.length > 0 && (
+          <section id="phrasebook-card" className="bg-[#f5f3ef] rounded-[20px] p-4 border border-[#e4e2de]">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-[#594238] flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[15px] text-[#9e3d00]">record_voice_over</span>
+                What To Say
               </span>
+              <span className="text-[11px] text-[#594238]">Hindi & English</span>
             </div>
+            <div className="space-y-2">
+              {phrases.slice(0, 2).map((phrase, idx) => (
+                <div key={idx} className="p-3 rounded-xl bg-white border border-[#e4e2de]/70 relative pr-12">
+                  <p className="font-semibold text-[13px] text-[#1b1c1a] leading-snug">"{phrase.hindi}"</p>
+                  <p className="text-[11px] text-[#594238] font-medium mt-0.5">{phrase.phonetic}</p>
+                  <p className="text-[11px] text-[#594238] italic mt-0.5">"{phrase.english}"</p>
+                  {'speechSynthesis' in window && (
+                    <button onClick={() => playPhrase(phrase.hindi)}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-[#f5f3ef] hover:bg-[#eae8e4] active:scale-95 transition-all"
+                      aria-label="Listen">
+                      <span className="material-symbols-outlined text-[17px] text-[#1b1c1a]">volume_up</span>
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
-            <span className="font-display font-semibold text-[15px] text-[#1b1c1a]">
-              Start Haggle Assistant
-            </span>
+        {/* â”€â”€ ACTIONS â”€â”€ */}
+        <div className="flex flex-col gap-3 mt-1">
+          <button id="start-haggle-assistant-btn" onClick={() => setIsAudioModalOpen(true)}
+            className="relative w-full bg-[#efeeea] border border-[#e4e2de] rounded-2xl py-3.5 px-4 flex items-center justify-center gap-3 hover:bg-[#eae8e4] active:scale-[0.98] transition-all group">
+            <div className="absolute top-2 right-3 bg-[#ffddb9] text-[#663e00] px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider">SOON</div>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform ${isTerracotta ? 'bg-[#c64f00]' : 'bg-[#1b4332]'}`}>
+              <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>mic</span>
+            </div>
+            <span className="font-display font-semibold text-[15px] text-[#1b1c1a]">Start Haggle Assistant</span>
           </button>
 
-          {/* Primary Purchase Confirmation CTA */}
-          <button
-            id="i-bought-it-btn"
-            onClick={handleBuy}
-            className={`w-full text-white font-display text-[17px] font-bold rounded-2xl py-4 shadow-[0px_8px_24px_rgba(211,84,0,0.22)] active:scale-[0.98] transition-all flex items-center justify-center gap-2 hover:opacity-95 ${
-              isTerracotta ? 'bg-[#9e3d00]' : 'bg-[#012d1d]'
-            }`}
-          >
-            <span
-              className="material-symbols-outlined text-[22px]"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              check_circle
-            </span>
-            I Bought It at ₹{selectedProduce.suggestedOfferPrice || targetOffer}
+          <button id="i-bought-it-btn" onClick={handleBuy}
+            className={`w-full text-white font-display text-[17px] font-bold rounded-2xl py-4 shadow-[0px_8px_24px_rgba(211,84,0,0.22)] active:scale-[0.98] transition-all flex items-center justify-center gap-2 ${isTerracotta ? 'bg-[#9e3d00]' : 'bg-[#012d1d]'}`}>
+            <span className="material-symbols-outlined text-[21px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+            I Bought It at â‚¹{confirmedBuyPrice}
           </button>
-
-          <p className="text-center text-[12px] text-[#594238] font-normal">
-            Saves to your purchase history
-          </p>
+          <p className="text-center text-[12px] text-[#594238]">Saves to your purchase history</p>
         </div>
       </main>
     </div>

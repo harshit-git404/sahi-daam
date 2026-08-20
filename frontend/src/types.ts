@@ -30,14 +30,22 @@ export interface ProduceItem {
   retailFairMax: number;
   typicalVendorAsking: number;
   suggestedOfferPrice: number;
-  decision?: 'GOOD_DEAL' | 'FAIR_PRICE' | 'OVERPRICED' | 'UNUSUALLY_CHEAP';
+  decision?: 'GOOD_DEAL' | 'FAIR_PRICE' | 'SLIGHTLY_HIGH' | 'OVERPRICED' | 'UNUSUALLY_CHEAP';
+  severity?: 'NONE' | 'SLIGHT' | 'MODERATE' | 'SIGNIFICANT';
   recommendation?: {
     action: string;
     headline: string;
     explanation: string;
   };
+  startingOffer?: number;
+  targetPrice?: number;
   maximumReasonablePrice?: number;
   potentialSaving?: number;
+  belowFairAmount?: number;
+  qualityContext?: {
+    freshness_label: string | null;
+    caution: string | null;
+  };
   haggleVerdict?: 'Fair Price' | 'Overpriced' | 'Suspiciously Cheap';
   haggleReasoning?: string;
   hagglePhrases?: BargainPhrase[];

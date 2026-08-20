@@ -40,7 +40,132 @@ Analyzes produce and returns pricing and quality details.
 
 ## POST `/haggle-check`
 
-Analyzes a vendor's asking price against the fair market price and dynamically generates haggling strategy and Hindi phrasebook.
+Negotiation intelligence engine. Analyzes vendor asking price, fair market range, produce quality,
+and optional quick-commerce reference to return a structured buying decision and negotiation strategy.
+
+**Request:**
+```json
+{
+  "produce_type": "tomato",
+  "asking_price": 50,
+  "fair_price_min": 29,
+  "fair_price_max": 33,
+  "freshness_label": "Fresh",
+  "quickcommerce_price": { "source": "Blinkit", "price": 40, "unit": "kg" }
+}
+```
+
+**Response:**
+```json
+{
+  "verdict": "Overpriced",
+  "suggested_price": 29,
+  "decision": "OVERPRICED",
+  "severity": "SIGNIFICANT",
+  "deviation_pct": 51.5,
+  "starting_offer": 29,
+  "target_price": 31,
+  "maximum_reasonable_price": 33,
+  "potential_saving": 17,
+  "below_fair_amount": 0,
+  "reasoning": "Rs50/kg is 51.5% above the fair maximum (Rs33/kg)...",
+  "recommendation": {
+    "action": "NEGOTIATE",
+    "headline": "Rs17 above the estimated fair maximum.",
+    "explanation": "Rs50/kg is 51.5% above the fair maximum (Rs33/kg)... vendor more expensive than both fair range and quick-commerce."
+  },
+  "quality_context": {
+    "freshness_label": "Fresh",
+    "caution": null
+  },
+  "alternatives": {
+    "quickcommerce": { "source": "Blinkit", "price": 40, "unit": "kg" }
+  },
+  "phrases": [{ "hindi": "...", "english": "...", "phonetic": "..." }],
+  "phrases_source": "gemini"
+}
+```
+
+---
+
+### Decision States
+
+| `decision`        | User label       | Condition                                        |
+|-------------------|------------------|--------------------------------------------------|
+| `FAIR_PRICE`      | Fair Price       | `fair_min <= asking <= fair_max`                |
+| `SLIGHTLY_HIGH`   | Slightly High    | `asking > fair_max` AND deviation <= 10%        |
+| `OVERPRICED`      | Overpriced       | `asking > fair_max` AND deviation > 10%         |
+| `GOOD_DEAL`       | Good Deal        | `asking < fair_min` AND quality = "Fresh"       |
+| `UNUSUALLY_CHEAP` | Unusually Cheap  | `asking < fair_min` AND quality ≠ "Fresh"       |
+
+### Severity
+
+| `severity`    | Condition (deviation from fair boundary)  |
+|---------------|-------------------------------------------|
+| `NONE`        | 0% (within range)                         |
+| `SLIGHT`      | 0% < deviation ≤ 10%                     |
+| `MODERATE`    | 10% < deviation ≤ 30%                    |
+| `SIGNIFICANT` | deviation > 30%                           |
+
+**Threshold rationale**: 10% on a Rs30 item = Rs3 (tolerable daily fluctuation).
+30% on a Rs30 item = Rs9 (clearly worth negotiating). Based on observed mandi price volatility.
+
+### Negotiation Strategy Formulas
+
+| Price position  | `starting_offer`     | `target_price`      | `maximum_reasonable_price` |
+|-----------------|----------------------|---------------------|----------------------------|
+| WITHIN range    | asking               | asking              | fair_max                   |
+| SLIGHTLY above  | fair_mid             | fair_max            | asking (small give)        |
+| MODERATE above  | fair_min             | fair_mid            | fair_max                   |
+| SIGNIFICANT     | fair_min             | fair_mid            | fair_max                   |
+| BELOW range     | asking               | asking              | fair_max                   |
+
+`fair_mid = (fair_min + fair_max) / 2`
+
+### Savings Fields
+
+- `potential_saving`: `max(0, asking - fair_max)` — only non-zero when ABOVE range.
+- `below_fair_amount`: `max(0, fair_min - asking)` — only non-zero when BELOW range.
+- These fields are mutually exclusive and never both non-zero simultaneously.
+
+### Quality × Price Matrix
+
+| Quality         | Price position | Decision          | Notes                            |
+|-----------------|----------------|-------------------|----------------------------------|
+| Fresh           | Below range    | GOOD_DEAL         | `quality_context.caution` = note |
+| Fresh           | Within         | FAIR_PRICE        | —                                |
+| Fresh           | Slightly above | SLIGHTLY_HIGH     | —                                |
+| Overripe        | Below range    | UNUSUALLY_CHEAP   | caution: use today               |
+| Overripe        | Within         | FAIR_PRICE        | caution: note on quality         |
+| Unknown         | Slightly below | FAIR_PRICE        | severity=SLIGHT tolerated        |
+| Unknown         | Moderately below| UNUSUALLY_CHEAP  | —                                |
+
+### Quick-Commerce Comparison Logic
+
+- Vendor > QC and vendor > fair_max → "vendor more expensive than both"
+- Vendor <= QC and vendor > fair_max → "vendor still cheaper than QC but above fair"
+- Vendor <= fair_max and vendor <= fair_min → "vendor clearly cheaper than QC"
+- Vendor <= fair_max → "vendor cheaper than QC"
+
+QC comparisons use neutral language; they reflect price reference only, not delivery value.
+
+**Fields:**
+- `verdict` (str): Legacy — "Fair Price" | "Overpriced" | "Suspiciously Cheap"
+- `suggested_price` (float): Legacy alias for `starting_offer`
+- `decision` (str): Machine-readable state (see table above)
+- `severity` (str): NONE | SLIGHT | MODERATE | SIGNIFICANT
+- `deviation_pct` (float): % from relevant fair range boundary
+- `starting_offer` (float): Recommended opening offer
+- `target_price` (float): Ideal settlement price
+- `maximum_reasonable_price` (float): Do not pay more than this
+- `potential_saving` (float): Rs saved per kg if target met (only when ABOVE range)
+- `below_fair_amount` (float): Rs below fair min (only when BELOW range)
+- `recommendation` (dict): action, headline, explanation
+- `quality_context` (dict): freshness_label, caution (null if not applicable)
+- `alternatives` (dict): quickcommerce comparison
+- `phrases` (list): 2-3 Hindi/English/phonetic bargaining phrases
+- `phrases_source` (str): "gemini" | "fallback"
+
 
 **Request:**
 ```json
