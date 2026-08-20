@@ -15,13 +15,14 @@ export async function fetchScanResult(produceId: string, imageBase64?: string) {
   return response.json();
 }
 
-export async function fetchHaggleCheck(askingPrice: number, fairPriceMin: number, fairPriceMax: number) {
+export async function fetchHaggleCheck(produceType: string, askingPrice: number, fairPriceMin: number, fairPriceMax: number) {
   const response = await fetch(`${API_BASE_URL}/haggle-check`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ 
+    body: JSON.stringify({
+      produce_type: produceType,
       asking_price: askingPrice,
       fair_price_min: fairPriceMin,
       fair_price_max: fairPriceMax 
