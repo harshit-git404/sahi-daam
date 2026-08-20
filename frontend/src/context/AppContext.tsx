@@ -86,7 +86,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     const verifyPrice = async () => {
       try {
-        const result = await fetchHaggleCheck(vendorAskingPrice);
+        const result = await fetchHaggleCheck(
+          vendorAskingPrice,
+          selectedProduce.fairPriceRange.min,
+          selectedProduce.fairPriceRange.max
+        );
         setSelectedProduce(prev => ({ ...prev, suggestedOfferPrice: result.suggested_price }));
       } catch (e) {
         console.error('Haggle check API failed:', e);

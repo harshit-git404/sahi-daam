@@ -15,13 +15,17 @@ export async function fetchScanResult(produceId: string, imageBase64?: string) {
   return response.json();
 }
 
-export async function fetchHaggleCheck(askingPrice: number) {
+export async function fetchHaggleCheck(askingPrice: number, fairPriceMin: number, fairPriceMax: number) {
   const response = await fetch(`${API_BASE_URL}/haggle-check`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ asking_price: askingPrice }),
+    body: JSON.stringify({ 
+      asking_price: askingPrice,
+      fair_price_min: fairPriceMin,
+      fair_price_max: fairPriceMax 
+    }),
   });
   if (!response.ok) {
     throw new Error(`Failed to fetch haggle check: ${response.statusText}`);

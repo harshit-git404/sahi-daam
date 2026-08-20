@@ -1,17 +1,15 @@
 from fastapi import APIRouter
-
 from pydantic import BaseModel
+from pricing.engine import calculate_haggle_verdict
 
 router = APIRouter()
 
 class HaggleRequest(BaseModel):
     asking_price: float
+    fair_price_min: float
+    fair_price_max: float
 
 @router.post("/haggle-check")
 def haggle_check(request: HaggleRequest):
-    return {
-        "verdict": "Overpriced",
-        "deviation_pct": 32,
-        "suggested_price": 30,
-        "reasoning": "Vendor's asking price is significantly above today's fair range for this quality of tomato."
-    }
+    fair_range = {"min": request.fair_price_min, "max": request.fair_price_max}
+    return calculate_haggle_verdict(request.asking_price, fair_range)
