@@ -41,6 +41,8 @@ async def refresh_prices_endpoint():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+from pricing.engine import calculate_fair_price
+
 class ScanRequest(BaseModel):
     produce_type: Optional[str] = None
     image: Optional[str] = None
@@ -71,10 +73,13 @@ async def scan_produce(request: ScanRequest):
             # Analyze completely using Gemini VLM (in a thread since it's blocking)
             detected_type, gemini_freshness = await asyncio.to_thread(analyze_produce_with_gemini, image_bytes)
             produce_type = detected_type
+            if detected_type == "unknown":
+                confidence = 0.0
             freshness_data.update(gemini_freshness)
             
         except Exception as e:
             print(f"ML Model Error: {e}")
+            confidence = 0.0
             pass
             
     # Fetch real wholesale data based on detected produce_type
@@ -98,14 +103,19 @@ async def scan_produce(request: ScanRequest):
             except ValueError:
                 pass
                 
+    markup_min = 30
+    markup_max = 45
+    fair_price_range = calculate_fair_price(wholesale_price, markup_min, markup_max, freshness_data.get("quality_adjustment", 0))
+    fair_price_range["unit"] = "kg"
+                
     return {
         "produce_type": produce_type.capitalize(),
         "detected_produce_id": produce_type.lower(),
         "classification_confidence": confidence,
         **freshness_data,
         "wholesale_price": wholesale_price,
-        "markup_range": { "min_pct": 30, "max_pct": 45 },
-        "fair_price_range": { "min": wholesale_price * 1.3, "max": wholesale_price * 1.45, "unit": "kg" },
+        "markup_range": { "min_pct": markup_min, "max_pct": markup_max },
+        "fair_price_range": fair_price_range,
         "data_confidence": "Estimated" if not records else "High",
         "location": "Katpadi, Vellore",
         "date": data_date,
