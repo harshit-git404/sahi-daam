@@ -23,6 +23,7 @@ export function mergeProduceData(catalogEntry: ProduceItem, backendResponse: any
     qualityAdjustment: backendResponse.quality_adjustment ?? catalogEntry.qualityAdjustment,
     qualityAdjustmentLabel: backendResponse.quality_adjustment_label ?? catalogEntry.qualityAdjustmentLabel,
     dataConfidence: backendResponse.data_confidence ?? catalogEntry.dataConfidence,
+    priceSource: backendResponse.price_source,
     quickCommercePrice: backendResponse.quickcommerce_price ? {
       source: backendResponse.quickcommerce_price.source,
       price: backendResponse.quickcommerce_price.price,

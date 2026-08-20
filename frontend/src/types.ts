@@ -37,6 +37,7 @@ export interface ProduceItem {
   qualityAdjustment: number;
   qualityAdjustmentLabel: string;
   dataConfidence: 'High' | 'Medium' | 'Estimated';
+  priceSource?: string;
   category: 'Vegetables' | 'Fruits' | 'Leafy' | 'Spices';
   bargainPhrases: {
     hindi: string;

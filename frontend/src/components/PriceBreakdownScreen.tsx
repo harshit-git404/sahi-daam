@@ -149,9 +149,23 @@ export const PriceBreakdownScreen: React.FC = () => {
 
           {/* Status Confidence Indicator */}
           <div className="mt-5 pt-3.5 border-t border-[#c1c8c2]/50 flex items-center justify-between">
-            <div className="flex items-center gap-1.5 bg-[#a46700]/15 text-[#835100] px-3 py-1.5 rounded-full text-[12px] font-semibold">
-              <span className="material-symbols-outlined text-[16px]">info</span>
-              Data confidence: {selectedProduce.dataConfidence}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold ${
+                selectedProduce.dataConfidence === 'High' ? 'bg-[#7bf8a1]/20 text-[#006d37]' :
+                selectedProduce.dataConfidence === 'Medium' ? 'bg-[#ffb595]/20 text-[#9e3d00]' :
+                'bg-[#a46700]/15 text-[#835100]'
+              }`}>
+                <span className="material-symbols-outlined text-[16px]">
+                  {selectedProduce.dataConfidence === 'High' ? 'verified' : 'info'}
+                </span>
+                {selectedProduce.dataConfidence} Confidence
+              </div>
+              
+              {selectedProduce.priceSource && (
+                <div className="bg-[#e4e2de]/50 text-[#594238] px-2.5 py-1.5 rounded-full text-[11px] font-medium border border-[#e4e2de]">
+                  {selectedProduce.priceSource.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                </div>
+              )}
             </div>
             <span className="text-[11px] text-[#594238]">Updated 6:30 AM</span>
           </div>
