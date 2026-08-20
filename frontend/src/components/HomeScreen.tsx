@@ -163,9 +163,16 @@ export const HomeScreen: React.FC = () => {
             onClick={async () => {
               setRefreshing(true);
               try {
-                await fetch('http://localhost:8000/api/refresh-prices', { method: 'POST' });
-              } catch (e) {
+                const res = await fetch('http://localhost:8000/api/refresh-prices', { method: 'POST' });
+                if (!res.ok) {
+                  const errData = await res.json();
+                  alert(`Failed to refresh prices: ${errData.detail || res.statusText}`);
+                } else {
+                  alert('Prices successfully fetched and cached for Vellore!');
+                }
+              } catch (e: any) {
                 console.error(e);
+                alert(`Network error: ${e.message}`);
               }
               setRefreshing(false);
             }}

@@ -28,13 +28,18 @@ async def verify_market_price(
 
 from data.agmarknet.service import refresh_all_mandi_prices
 
+from fastapi import HTTPException
+
 @router.post("/api/refresh-prices")
 async def refresh_prices_endpoint():
     """
     Manually refreshes all flagship commodities and saves to today's cache file.
     """
-    await refresh_all_mandi_prices()
-    return {"status": "success", "message": "Daily prices refreshed successfully."}
+    try:
+        await refresh_all_mandi_prices()
+        return {"status": "success", "message": "Daily prices refreshed successfully."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 class ScanRequest(BaseModel):
     produce_type: Optional[str] = None

@@ -74,8 +74,12 @@ async def refresh_all_mandi_prices() -> Dict[str, Any]:
                     "records": comm_records,
                     "updated_at": datetime.now().isoformat()
                 }
+        else:
+            raise Exception(f"API Error: {raw_data.get('details', raw_data.get('error'))}")
+            
     except Exception as e:
         print(f"Error fetching bulk data for {district}: {e}")
+        raise e
         
     _save_cache(cache)
     return cache

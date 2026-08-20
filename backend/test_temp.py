@@ -9,8 +9,15 @@ from data.agmarknet.client import fetch_market_data
 
 async def main():
     load_dotenv()
-    res = await fetch_market_data("Tomato", state="Tamil Nadu", limit=5)
-    print(res)
+    # Fetch all commodities for Vellore
+    res = await fetch_market_data(commodity="", state="Tamil Nadu", district="Vellore", limit=100)
+    
+    if "records" in res:
+        commodities = set([r.get("Commodity") for r in res["records"]])
+        print(f"Found {len(res['records'])} records.")
+        print(f"Commodities available: {commodities}")
+    else:
+        print(res)
 
 if __name__ == "__main__":
     asyncio.run(main())
