@@ -82,9 +82,12 @@ and optional quick-commerce reference to return a structured buying decision and
   "fair_price_min": 29,
   "fair_price_max": 33,
   "freshness_label": "Fresh",
-  "quickcommerce_price": { "source": "Blinkit", "price": 40, "unit": "kg" }
+  "quickcommerce_price": { "source": "Blinkit", "price": 40, "unit": "kg" },
+  "language": "hi"
 }
 ```
+
+`language` is optional and defaults to `"hi"`. Supported values are `"hi"` (Hindi), `"ta"` (Tamil), and `"en"` (English). It tells the phrase generator which language the user selected for the current negotiation session.
 
 **Response:**
 ```json
@@ -194,7 +197,7 @@ QC comparisons use neutral language; they reflect price reference only, not deli
 - `recommendation` (dict): action, headline, explanation
 - `quality_context` (dict): freshness_label, caution (null if not applicable)
 - `alternatives` (dict): quickcommerce comparison
-- `phrases` (list): 2-3 multilingual bargaining phrases with `hindi`, `tamil`, `english`, and Hindi `phonetic` fields
+- `phrases` (list): 2-3 bargaining phrases with `hindi`, `tamil`, `english`, and Hindi `phonetic` fields. The request `language` guides the generated phrase intent and voice UI selection.
 - `phrases_source` (str): "gemini" | "fallback"
 
 
@@ -206,7 +209,8 @@ QC comparisons use neutral language; they reflect price reference only, not deli
   "fair_price_min": 28,
   "fair_price_max": 34,
   "freshness_label": "Fresh",
-  "quickcommerce_price": { "source": "Blinkit", "price": 40.0, "unit": "kg" }
+  "quickcommerce_price": { "source": "Blinkit", "price": 40.0, "unit": "kg" },
+  "language": "ta"
 }
 ```
 

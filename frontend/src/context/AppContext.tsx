@@ -1,10 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Screen, ProduceItem, PurchaseRecord, MandiLocation, AppTheme } from '../types';
-import { PRODUCE_DATABASE, INITIAL_PURCHASE_HISTORY } from '../data/produceData';
+import { Screen, ProduceItem, PurchaseRecord, MandiLocation, AppTheme, NegotiationLanguage, NegotiationState } from '../types';
+import { PRODUCE_DATABASE } from '../data/produceData';
 import { MANDI_LOCATIONS } from '../data/mandiLocations';
 import confetti from 'canvas-confetti';
 import { fetchScanResult, fetchHaggleCheck } from '../services/api';
 import { mergeProduceData } from '../services/adapter';
+import {
+  calculateHistoryStats,
+  createPurchaseRecord,
+  loadPurchaseHistory,
+  savePurchaseHistory,
+} from '../services/transactions';
 
 interface AppContextType {
   currentScreen: Screen;
@@ -14,6 +20,8 @@ interface AppContextType {
   selectProduceById: (id: string, imageBase64?: string) => void;
   vendorAskingPrice: number;
   setVendorAskingPrice: React.Dispatch<React.SetStateAction<number>>;
+  negotiationState: NegotiationState;
+  setNegotiationLanguage: (language: NegotiationLanguage) => void;
   purchaseHistory: PurchaseRecord[];
   totalSavings: number;
   recordPurchase: (paidPrice: number) => void;
@@ -36,12 +44,25 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+const DEFAULT_NEGOTIATION_LANGUAGE: NegotiationLanguage = 'hi';
+
+const createInitialNegotiationState = (vendorAskingPrice: number): NegotiationState => ({
+  status: 'idle',
+  language: DEFAULT_NEGOTIATION_LANGUAGE,
+  vendorAskingPrice,
+  latestVendorCounterOffer: null,
+  userCurrentOffer: null,
+  recommendedNextOffer: null,
+  error: null,
+  lastUpdatedAt: null,
+});
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
   const [selectedProduce, setSelectedProduce] = useState<ProduceItem>(PRODUCE_DATABASE[0]);
   const [vendorAskingPrice, setVendorAskingPrice] = useState<number>(45);
-  const [purchaseHistory, setPurchaseHistory] = useState<PurchaseRecord[]>(INITIAL_PURCHASE_HISTORY);
-  const [totalSavings, setTotalSavings] = useState<number>(340);
+  const [negotiationState, setNegotiationState] = useState<NegotiationState>(() => createInitialNegotiationState(45));
+  const [purchaseHistory, setPurchaseHistory] = useState<PurchaseRecord[]>(() => loadPurchaseHistory());
   const [selectedLocation, setSelectedLocation] = useState<MandiLocation>(MANDI_LOCATIONS[0]);
   const [theme, setTheme] = useState<AppTheme>('terracotta');
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
@@ -49,6 +70,39 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isScanning, setIsScanning] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const haggleRequestIdRef = React.useRef(0);
+  const historyStats = React.useMemo(() => calculateHistoryStats(purchaseHistory), [purchaseHistory]);
+  const totalSavings = historyStats.totalSavings;
+
+  const setVendorPriceAndMarkListening = React.useCallback<React.Dispatch<React.SetStateAction<number>>>((value) => {
+    setVendorAskingPrice((previousPrice) => {
+      const nextRaw = typeof value === 'function' ? value(previousPrice) : value;
+      const nextPrice = Math.max(1, Math.round(Number(nextRaw) || 1));
+
+      if (nextPrice !== previousPrice) {
+        setNegotiationState((previous) => ({
+          ...previous,
+          status: 'listening',
+          vendorAskingPrice: nextPrice,
+          latestVendorCounterOffer: nextPrice,
+          error: null,
+          lastUpdatedAt: Date.now(),
+        }));
+      }
+
+      return nextPrice;
+    });
+  }, []);
+
+  const setNegotiationLanguage = React.useCallback((language: NegotiationLanguage) => {
+    setNegotiationState((previous) => ({
+      ...previous,
+      language,
+      status: 'processing',
+      error: null,
+      lastUpdatedAt: Date.now(),
+    }));
+  }, []);
 
   const selectProduceById = async (id: string, imageBase64?: string) => {
     setIsScanning(true);
@@ -74,6 +128,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const mergedItem = mergeProduceData(detectedItem, backendResponse);
       setSelectedProduce(mergedItem);
       setVendorAskingPrice(mergedItem.typicalVendorAsking);
+      setNegotiationState((previous) => ({
+        ...createInitialNegotiationState(mergedItem.typicalVendorAsking),
+        language: previous.language,
+      }));
       setCurrentScreen('quality_result');
     } catch (e) {
       console.error('API failed:', e);
@@ -84,16 +142,43 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   useEffect(() => {
+    if (!['quality_result', 'price_breakdown', 'bargain'].includes(currentScreen)) {
+      return;
+    }
+
+    let activeController: AbortController | null = null;
+
     const verifyPrice = async () => {
+      const requestId = ++haggleRequestIdRef.current;
+      const controller = new AbortController();
+      activeController = controller;
+      const timeoutId = window.setTimeout(() => controller.abort(), 10000);
+
       try {
+        setNegotiationState((previous) => ({
+          ...previous,
+          status: 'processing',
+          vendorAskingPrice,
+          latestVendorCounterOffer: vendorAskingPrice,
+          error: null,
+          lastUpdatedAt: Date.now(),
+        }));
+
         const result = await fetchHaggleCheck(
           selectedProduce.name,
           vendorAskingPrice,
-          selectedProduce.fairPriceRange?.min ?? selectedProduce.retailFairMin,
-          selectedProduce.fairPriceRange?.max ?? selectedProduce.retailFairMax,
+          selectedProduce.retailFairMin,
+          selectedProduce.retailFairMax,
           selectedProduce.freshness,
-          selectedProduce.quickCommercePrice
+          selectedProduce.quickCommercePrice,
+          negotiationState.language,
+          controller.signal
         );
+
+        if (requestId !== haggleRequestIdRef.current) {
+          return;
+        }
+
         setSelectedProduce(prev => ({ 
           ...prev, 
           suggestedOfferPrice: result.suggested_price,
@@ -111,13 +196,57 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           belowFairAmount: result.below_fair_amount,
           qualityContext: result.quality_context,
         }));
+        setNegotiationState((previous) => ({
+          ...previous,
+          status: 'ready',
+          vendorAskingPrice,
+          latestVendorCounterOffer: vendorAskingPrice,
+          userCurrentOffer: result.starting_offer ?? result.suggested_price,
+          recommendedNextOffer: result.target_price ?? result.suggested_price,
+          error: null,
+          lastUpdatedAt: Date.now(),
+        }));
       } catch (e) {
+        if (requestId !== haggleRequestIdRef.current) {
+          return;
+        }
+
+        const isAbort = e instanceof DOMException && e.name === 'AbortError';
         console.error('Haggle check API failed:', e);
-        // We might not want a blocking error for just the haggle check update, but we can log it.
+        setNegotiationState((previous) => ({
+          ...previous,
+          status: isAbort ? 'timeout' : 'error',
+          error: isAbort
+            ? 'Price check is taking longer than expected. Try again in a moment.'
+            : 'Could not update the negotiation advice. The last recommendation is still shown.',
+          lastUpdatedAt: Date.now(),
+        }));
+      } finally {
+        window.clearTimeout(timeoutId);
       }
     };
-    verifyPrice();
-  }, [vendorAskingPrice]);
+
+    const debounceId = window.setTimeout(verifyPrice, 350);
+
+    return () => {
+      window.clearTimeout(debounceId);
+      activeController?.abort();
+      haggleRequestIdRef.current += 1;
+    };
+  }, [
+    currentScreen,
+    vendorAskingPrice,
+    selectedProduce.name,
+    selectedProduce.retailFairMin,
+    selectedProduce.retailFairMax,
+    selectedProduce.freshness,
+    selectedProduce.quickCommercePrice,
+    negotiationState.language,
+  ]);
+
+  useEffect(() => {
+    savePurchaseHistory(purchaseHistory);
+  }, [purchaseHistory]);
 
   const triggerCelebration = () => {
     try {
@@ -133,27 +262,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const recordPurchase = (paidPrice: number) => {
-    // calculate savings vs fair average
-    const fairAvg = Math.round((selectedProduce.retailFairMin + selectedProduce.retailFairMax) / 2);
-    const vendorDiff = vendorAskingPrice - paidPrice;
-    const actualSaved = vendorDiff > 0 ? vendorDiff : Math.max(1, selectedProduce.typicalVendorAsking - paidPrice);
-
-    const newRecord: PurchaseRecord = {
-      id: 'rec-' + Date.now(),
-      produceId: selectedProduce.id,
-      produceName: selectedProduce.name,
-      paidPrice: paidPrice,
-      fairPrice: fairAvg,
-      savedAmount: actualSaved,
-      date: 'Just now',
-      timestamp: Date.now(),
-      iconType: (selectedProduce.id === 'tomato' || selectedProduce.id === 'onion' || selectedProduce.id === 'potato')
-        ? (selectedProduce.id as 'tomato' | 'onion' | 'potato')
-        : 'general'
-    };
+    const newRecord = createPurchaseRecord({
+      produce: selectedProduce,
+      vendorAskingPrice,
+      finalPaidPrice: paidPrice,
+    });
 
     setPurchaseHistory(prev => [newRecord, ...prev]);
-    setTotalSavings(prev => prev + actualSaved);
     triggerCelebration();
   };
 
@@ -175,7 +290,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setSelectedProduce,
         selectProduceById,
         vendorAskingPrice,
-        setVendorAskingPrice,
+        setVendorAskingPrice: setVendorPriceAndMarkListening,
+        negotiationState,
+        setNegotiationLanguage,
         purchaseHistory,
         totalSavings,
         recordPurchase,

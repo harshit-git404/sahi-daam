@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { Header } from './Header';
+import { formatRupees } from '../services/format';
 
 export const HomeScreen: React.FC = () => {
   const { setCurrentScreen, selectProduceById, totalSavings, theme } = useApp();
@@ -74,11 +75,11 @@ export const HomeScreen: React.FC = () => {
                 </span>
               </div>
               <div>
-                <p className="text-[12px] font-medium text-[#594238]">Today's Savings</p>
+                <p className="text-[12px] font-medium text-[#594238]">Total Savings</p>
                 <p className="font-display text-[20px] font-bold text-[#1b1c1a] leading-snug">
-                  ₹{totalSavings}{' '}
+                  {formatRupees(totalSavings)}{' '}
                   <span className="text-[15px] font-normal text-[#594238]">
-                    saved this month
+                    saved from deals
                   </span>
                 </p>
               </div>
@@ -171,9 +172,10 @@ export const HomeScreen: React.FC = () => {
                 } else {
                   alert('Prices successfully fetched and cached for Vellore!');
                 }
-              } catch (e: any) {
+              } catch (e: unknown) {
                 console.error(e);
-                alert(`Network error: ${e.message}`);
+                const message = e instanceof Error ? e.message : 'Please try again.';
+                alert(`Network error: ${message}`);
               }
               setRefreshing(false);
             }}

@@ -1,6 +1,6 @@
-import type { BargainPhrase } from '../types';
+import type { BargainPhrase, NegotiationLanguage } from '../types';
 
-export type VoiceLanguage = 'hi' | 'ta' | 'en';
+export type VoiceLanguage = NegotiationLanguage;
 
 type PhraseField = 'hindi' | 'tamil' | 'english';
 
@@ -18,7 +18,7 @@ export interface VoiceLanguageConfig {
 }
 
 export interface VoiceAvailability {
-  status: 'unsupported' | 'loading' | 'available' | 'unavailable';
+  status: 'unsupported' | 'loading' | 'available' | 'fallback' | 'unavailable';
   language: VoiceLanguage;
   voice: SpeechSynthesisVoice | null;
   message: string | null;
@@ -34,8 +34,9 @@ export type SpeakResult =
   | {
       ok: true;
       status: 'speaking';
-      voice: SpeechSynthesisVoice;
+      voice: SpeechSynthesisVoice | null;
       utterance: SpeechSynthesisUtterance;
+      usedFallbackVoice: boolean;
     }
   | {
       ok: false;
@@ -54,7 +55,7 @@ export const VOICE_LANGUAGE_CONFIG: Record<VoiceLanguage, VoiceLanguageConfig> =
     pitch: 1,
     volume: 1,
     loadingMessage: 'Checking installed Hindi voice...',
-    unavailableMessage: "Hindi voice isn't available on this device.",
+    unavailableMessage: 'Hindi-specific voice is unavailable. Using the browser default voice.',
   },
   ta: {
     code: 'ta',
@@ -66,7 +67,7 @@ export const VOICE_LANGUAGE_CONFIG: Record<VoiceLanguage, VoiceLanguageConfig> =
     pitch: 1,
     volume: 1,
     loadingMessage: 'Checking installed Tamil voice...',
-    unavailableMessage: "Tamil voice isn't available on this device.",
+    unavailableMessage: 'Tamil-specific voice is unavailable. Using the browser default voice.',
   },
   en: {
     code: 'en',
@@ -78,7 +79,7 @@ export const VOICE_LANGUAGE_CONFIG: Record<VoiceLanguage, VoiceLanguageConfig> =
     pitch: 1,
     volume: 1,
     loadingMessage: 'Checking installed English voice...',
-    unavailableMessage: "English voice isn't available on this device.",
+    unavailableMessage: 'English-specific voice is unavailable. Using the browser default voice.',
   },
 };
 
@@ -200,7 +201,7 @@ export function getVoiceAvailability(language: VoiceLanguage): VoiceAvailability
   }
 
   return {
-    status: 'unavailable',
+    status: 'fallback',
     language,
     voice: null,
     message: config.unavailableMessage,
@@ -260,14 +261,6 @@ export function speak(text: string, language: VoiceLanguage, events: SpeakEvents
 
   const voice = getBestVoice(language);
 
-  if (!voice) {
-    return {
-      ok: false,
-      status: 'voice-unavailable',
-      message: config.unavailableMessage,
-    };
-  }
-
   try {
     synth.cancel();
 
@@ -288,6 +281,7 @@ export function speak(text: string, language: VoiceLanguage, events: SpeakEvents
       status: 'speaking',
       voice,
       utterance,
+      usedFallbackVoice: voice === null,
     };
   } catch {
     return {

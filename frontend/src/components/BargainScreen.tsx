@@ -13,8 +13,9 @@ import {
   type VoiceAvailability,
   type VoiceLanguage,
 } from '../services/voice';
+import { formatRupees, formatRupeesPerUnit } from '../services/format';
 
-// â”€â”€â”€ Decision config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Decision config
 type Decision = 'GOOD_DEAL' | 'FAIR_PRICE' | 'SLIGHTLY_HIGH' | 'OVERPRICED' | 'UNUSUALLY_CHEAP';
 
 const DECISION_CONFIG: Record<Decision, {
@@ -33,7 +34,7 @@ const DECISION_CONFIG: Record<Decision, {
   UNUSUALLY_CHEAP: { icon: 'warning', label: 'Unusually Cheap', bgClass: 'bg-[#fffae0]', borderClass: 'border-[#fde68a]', textClass: 'text-[#806b00]', badgeBg: 'bg-[#fef9c3]', badgeText: 'text-[#713f12]' },
 };
 
-// â”€â”€â”€ PriceCell â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// PriceCell
 interface PriceCellProps { label: string; value?: number; accent?: boolean; terracotta?: boolean; }
 const PriceCell: React.FC<PriceCellProps> = ({ label, value, accent, terracotta }) => {
   if (value === undefined) return null;
@@ -41,18 +42,28 @@ const PriceCell: React.FC<PriceCellProps> = ({ label, value, accent, terracotta 
     <div className="flex flex-col items-center gap-0.5 min-w-0">
       <span className="text-[9px] font-bold uppercase tracking-widest text-[#594238] text-center">{label}</span>
       <span className={`font-display text-[24px] font-extrabold leading-none ${accent ? (terracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]') : 'text-[#1b1c1a]'}`}>
-        â‚¹{value}
+        {formatRupees(value)}
       </span>
     </div>
   );
 };
 
-// â”€â”€â”€ Main Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Main component
 export const BargainScreen: React.FC = () => {
-  const { setCurrentScreen, selectedProduce, vendorAskingPrice, setVendorAskingPrice, recordPurchase, setIsAudioModalOpen, theme } = useApp();
+  const {
+    setCurrentScreen,
+    selectedProduce,
+    vendorAskingPrice,
+    setVendorAskingPrice,
+    negotiationState,
+    setNegotiationLanguage,
+    recordPurchase,
+    setIsAudioModalOpen,
+    theme,
+  } = useApp();
   const isTerracotta = theme === 'terracotta';
-  const [selectedLanguage, setSelectedLanguage] = React.useState<VoiceLanguage>('hi');
-  const [voiceAvailability, setVoiceAvailability] = React.useState<VoiceAvailability>(() => getVoiceAvailability('hi'));
+  const selectedLanguage = negotiationState.language;
+  const [voiceAvailability, setVoiceAvailability] = React.useState<VoiceAvailability>(() => getVoiceAvailability(selectedLanguage));
   const [playingPhraseIndex, setPlayingPhraseIndex] = React.useState<number | null>(null);
   const [voiceMessage, setVoiceMessage] = React.useState<string | null>(null);
   const playbackTokenRef = React.useRef(0);
@@ -65,7 +76,20 @@ export const BargainScreen: React.FC = () => {
   const cfg = decision ? DECISION_CONFIG[decision] : undefined;
   const showNegotiation = decision === 'OVERPRICED' || decision === 'SLIGHTLY_HIGH';
 
-  const confirmedBuyPrice = selectedProduce.startingOffer ?? selectedProduce.suggestedOfferPrice ?? fallbackBuyPrice;
+  const confirmedBuyPrice = negotiationState.recommendedNextOffer ?? selectedProduce.targetPrice ?? selectedProduce.startingOffer ?? selectedProduce.suggestedOfferPrice ?? fallbackBuyPrice;
+  const currentOffer = negotiationState.userCurrentOffer ?? selectedProduce.startingOffer ?? selectedProduce.suggestedOfferPrice;
+  const latestVendorCounter = negotiationState.latestVendorCounterOffer ?? vendorAskingPrice;
+  const isNegotiationUpdating = negotiationState.status === 'listening' || negotiationState.status === 'processing';
+  const statusLabel =
+    negotiationState.status === 'listening'
+      ? 'Listening...'
+      : negotiationState.status === 'processing'
+        ? 'Processing vendor response...'
+        : negotiationState.status === 'timeout'
+          ? 'Still waiting for advice'
+          : negotiationState.status === 'error'
+            ? 'Using last recommendation'
+            : 'Live negotiation';
 
   const handleDecrease = () => { setVendorAskingPrice(prev => Math.max(selectedProduce.wholesalePrice || 5, prev - 5)); if (navigator.vibrate) navigator.vibrate(20); };
   const handleIncrease = () => { setVendorAskingPrice(prev => Math.min(200, prev + 5)); if (navigator.vibrate) navigator.vibrate(20); };
@@ -108,7 +132,7 @@ export const BargainScreen: React.FC = () => {
   }, []);
 
   const handleLanguageChange = (language: VoiceLanguage) => {
-    setSelectedLanguage(language);
+    setNegotiationLanguage(language);
   };
 
   const handleSpeakPhrase = (phrase: (typeof phrases)[number], phraseIndex: number) => {
@@ -171,7 +195,7 @@ export const BargainScreen: React.FC = () => {
 
       <main className="flex-1 max-w-md mx-auto w-full px-4 py-4 flex flex-col gap-4 relative z-10">
 
-        {/* â”€â”€ PRICE STEPPER â”€â”€ */}
+        {/* Price stepper */}
         <section id="vendor-price-stepper-card" className="bg-white rounded-[24px] p-5 shadow-sm border border-[#e4e2de]/70 flex flex-col gap-4">
           <label className="font-semibold text-[14px] text-[#1b1c1a] text-center block">What is the vendor asking?</label>
           <div className="flex items-center justify-between gap-3">
@@ -181,7 +205,7 @@ export const BargainScreen: React.FC = () => {
             </button>
             <div className="flex-1 text-center">
               <div className="flex items-center justify-center">
-                <span className="text-[22px] font-bold text-[#594238] mr-0.5">â‚¹</span>
+                <span className="text-[22px] font-bold text-[#594238] mr-0.5">{formatRupees(0).charAt(0)}</span>
                 <input id="vendor-price-input" aria-label="Vendor asking price" type="number" value={vendorAskingPrice}
                   onChange={e => setVendorAskingPrice(Math.max(1, Number(e.target.value)))}
                   className="w-24 bg-transparent border-none text-center font-display text-[34px] font-extrabold text-[#1b1c1a] focus:ring-0 focus:outline-none p-0" />
@@ -200,11 +224,34 @@ export const BargainScreen: React.FC = () => {
               value={vendorAskingPrice} onChange={e => setVendorAskingPrice(Number(e.target.value))}
               className="w-full h-2 bg-[#e4e2de] rounded-lg appearance-none cursor-pointer accent-[#9e3d00]" />
             <div className="flex justify-between mt-1 text-[11px] font-medium text-[#594238]">
-              <span>₹{minSlider}</span>
-              <span>Fair avg ₹{fairAvg}</span>
-              <span>₹{maxSlider}</span>
+              <span>{formatRupees(minSlider)}</span>
+              <span>Fair avg {formatRupees(fairAvg)}</span>
+              <span>{formatRupees(maxSlider)}</span>
             </div>
           </div>
+          <div
+            className={`rounded-xl border px-3 py-2 text-[12px] font-semibold flex items-center justify-between gap-2 ${
+              negotiationState.status === 'error' || negotiationState.status === 'timeout'
+                ? 'bg-[#fff7f5] border-[#fecaca] text-[#7f1d1d]'
+                : isNegotiationUpdating
+                  ? 'bg-[#fffbeb] border-[#fde68a] text-[#713f12]'
+                  : 'bg-[#f0fdf4] border-[#bbf7d0] text-[#166534]'
+            }`}
+            aria-live="polite"
+          >
+            <span className="flex items-center gap-1.5">
+              <span className={`material-symbols-outlined text-[16px] ${isNegotiationUpdating ? 'animate-spin' : ''}`}>
+                {negotiationState.status === 'listening' ? 'hearing' : negotiationState.status === 'processing' ? 'sync' : negotiationState.status === 'ready' ? 'check_circle' : 'info'}
+              </span>
+              {statusLabel}
+            </span>
+            <span className="text-[11px] opacity-80">{selectedLanguageConfig.label}</span>
+          </div>
+          {negotiationState.error && (
+            <p className="text-[11px] font-medium text-[#7f1d1d]" aria-live="polite">
+              {negotiationState.error}
+            </p>
+          )}
         </section>
 
         {/* ── DECISION ── */}
@@ -236,16 +283,23 @@ export const BargainScreen: React.FC = () => {
             {showNegotiation && (
               <section id="negotiation-strategy-card" className="bg-white rounded-[24px] p-5 border border-[#e4e2de] shadow-sm">
                 <p className="text-[11px] font-bold text-[#594238] mb-4 uppercase tracking-widest">What Should I Do?</p>
-                <div className="flex items-center justify-between gap-1 px-1">
-                  <PriceCell label="Start With" value={selectedProduce.startingOffer} accent terracotta={isTerracotta} />
-                  <div className="text-[#e0c0b2] text-[20px] font-bold mb-1">›</div>
-                  <PriceCell label="Target" value={selectedProduce.targetPrice} />
-                  <div className="text-[#e0c0b2] text-[20px] font-bold mb-1">›</div>
-                  <PriceCell label="Max Pay" value={selectedProduce.maximumReasonablePrice} />
+                <div className="grid grid-cols-2 gap-2 px-1">
+                  <div key={`vendor-${vendorAskingPrice}`} className="rounded-xl bg-[#f5f3ef] border border-[#e4e2de]/70 p-3 animate-in fade-in zoom-in-95 duration-200">
+                    <PriceCell label="Vendor Asking" value={vendorAskingPrice} />
+                  </div>
+                  <div key={`offer-${currentOffer}`} className="rounded-xl bg-[#f5f3ef] border border-[#e4e2de]/70 p-3 animate-in fade-in zoom-in-95 duration-200">
+                    <PriceCell label="Your Offer" value={currentOffer} accent terracotta={isTerracotta} />
+                  </div>
+                  <div key={`counter-${latestVendorCounter}`} className="rounded-xl bg-[#f5f3ef] border border-[#e4e2de]/70 p-3 animate-in fade-in zoom-in-95 duration-200">
+                    <PriceCell label="Vendor Counter" value={latestVendorCounter} />
+                  </div>
+                  <div key={`next-${confirmedBuyPrice}`} className="rounded-xl bg-[#fff7f2] border border-[#e0c0b2]/70 p-3 animate-in fade-in zoom-in-95 duration-200">
+                    <PriceCell label="Next Offer" value={confirmedBuyPrice} accent terracotta={isTerracotta} />
+                  </div>
                 </div>
                 {selectedProduce.potentialSaving ? (
                   <div className="mt-5 bg-[#f0fdf4] border border-[#bbf7d0] text-[#166534] px-4 py-2.5 rounded-xl text-center font-bold text-[13px]">
-                    💰 Potential saving: ₹{selectedProduce.potentialSaving}/{selectedProduce.unit}
+                    Potential saving: {formatRupeesPerUnit(selectedProduce.potentialSaving, selectedProduce.unit)}
                   </div>
                 ) : null}
               </section>
@@ -255,7 +309,7 @@ export const BargainScreen: React.FC = () => {
             {decision === 'GOOD_DEAL' && selectedProduce.belowFairAmount ? (
               <section className="bg-[#f0fdf4] border border-[#bbf7d0] rounded-[24px] p-4 text-center shadow-xs">
                 <p className="text-[13px] font-bold text-[#166534]">
-                  ₹{selectedProduce.belowFairAmount} below estimated fair minimum — already a good deal.
+                  {formatRupees(selectedProduce.belowFairAmount)} below estimated fair minimum - already a good deal.
                 </p>
               </section>
             ) : null}
@@ -275,17 +329,17 @@ export const BargainScreen: React.FC = () => {
               <div className="flex flex-col gap-2.5 mb-4 bg-[#f5f3ef] rounded-xl p-3 border border-[#e4e2de]/60">
                 <div className="flex items-center justify-between text-[13px] text-[#594238]">
                   <span>Vendor asking:</span>
-                  <span className="font-bold text-[#1b1c1a]">₹{vendorAskingPrice}/{selectedProduce.unit}</span>
+                  <span className="font-bold text-[#1b1c1a]">{formatRupeesPerUnit(vendorAskingPrice, selectedProduce.unit)}</span>
                 </div>
                 <div className="flex items-center justify-between text-[13px] text-[#594238]">
                   <span>Fair range:</span>
-                  <span className="font-bold text-[#1b1c1a]">₹{selectedProduce.retailFairMin}–{selectedProduce.retailFairMax}/{selectedProduce.unit}</span>
+                  <span className="font-bold text-[#1b1c1a]">{formatRupees(selectedProduce.retailFairMin)}-{formatRupeesPerUnit(selectedProduce.retailFairMax, selectedProduce.unit)}</span>
                 </div>
               </div>
 
               {selectedProduce.alternatives?.quickcommerce && (
                 <div className="mb-4 text-[13.5px] text-[#1b1c1a] leading-relaxed px-1">
-                  <span className="font-semibold">{selectedProduce.alternatives.quickcommerce.source} is ₹{selectedProduce.alternatives.quickcommerce.price}/{selectedProduce.unit}</span>, but your local fair range is ₹{selectedProduce.retailFairMin}–{selectedProduce.retailFairMax}/{selectedProduce.unit}.
+                  <span className="font-semibold">{selectedProduce.alternatives.quickcommerce.source} is {formatRupeesPerUnit(selectedProduce.alternatives.quickcommerce.price, selectedProduce.unit)}</span>, but your local fair range is {formatRupees(selectedProduce.retailFairMin)}-{formatRupeesPerUnit(selectedProduce.retailFairMax, selectedProduce.unit)}.
                 </div>
               )}
               
@@ -336,7 +390,7 @@ export const BargainScreen: React.FC = () => {
             {voiceMessage && (
               <p
                 className={`mb-3 rounded-xl border px-3 py-2 text-[11px] font-semibold ${
-                  voiceAvailability.status === 'loading'
+                  voiceAvailability.status === 'loading' || voiceAvailability.status === 'fallback'
                     ? 'border-[#e4e2de] bg-white text-[#594238]'
                     : 'border-[#fecaca] bg-[#fff7f5] text-[#7f1d1d]'
                 }`}
@@ -349,7 +403,7 @@ export const BargainScreen: React.FC = () => {
               {phrases.slice(0, 2).map((phrase, idx) => {
                 const primaryText = getPhraseText(phrase, selectedLanguage);
                 const isPlaying = playingPhraseIndex === idx;
-                const canSpeak = voiceAvailability.status === 'available' && primaryText.length > 0;
+                const canSpeak = (voiceAvailability.status === 'available' || voiceAvailability.status === 'fallback') && primaryText.length > 0;
                 const disabledReason = primaryText
                   ? voiceAvailability.message ?? `${selectedLanguageConfig.label} voice is not ready.`
                   : `No ${selectedLanguageConfig.label} phrase is available for this line.`;
@@ -392,7 +446,7 @@ export const BargainScreen: React.FC = () => {
           </section>
         )}
 
-        {/* â”€â”€ ACTIONS â”€â”€ */}
+        {/* Actions */}
         <div className="flex flex-col gap-3 mt-1">
           <button id="start-haggle-assistant-btn" onClick={() => setIsAudioModalOpen(true)}
             className="relative w-full bg-[#efeeea] border border-[#e4e2de] rounded-2xl py-3.5 px-4 flex items-center justify-center gap-3 hover:bg-[#eae8e4] active:scale-[0.98] transition-all group">
@@ -406,7 +460,7 @@ export const BargainScreen: React.FC = () => {
           <button id="i-bought-it-btn" onClick={handleBuy}
             className={`w-full text-white font-display text-[17px] font-bold rounded-2xl py-4 shadow-[0px_8px_24px_rgba(211,84,0,0.22)] active:scale-[0.98] transition-all flex items-center justify-center gap-2 ${isTerracotta ? 'bg-[#9e3d00]' : 'bg-[#012d1d]'}`}>
             <span className="material-symbols-outlined text-[21px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-            I Bought It at â‚¹{confirmedBuyPrice}
+            I Bought It at {formatRupees(confirmedBuyPrice)}
           </button>
           <p className="text-center text-[12px] text-[#594238]">Saves to your purchase history</p>
         </div>

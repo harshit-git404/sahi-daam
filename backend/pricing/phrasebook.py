@@ -29,6 +29,12 @@ LEGACY_VERDICT_TO_DECISION = {
 }
 
 REQUIRED_PHRASE_FIELDS = ("hindi", "tamil", "english", "phonetic")
+SUPPORTED_LANGUAGES = ("hi", "ta", "en")
+LANGUAGE_LABELS = {
+    "hi": "Hindi",
+    "ta": "Tamil",
+    "en": "English",
+}
 
 
 def _normalise_decision(verdict_or_decision: str, decision: Optional[str] = None) -> str:
@@ -191,12 +197,14 @@ def generate_bargain_phrases(
     verdict: str,
     suggested_price: float,
     decision: Optional[str] = None,
+    language: str = "hi",
 ) -> tuple[List[Phrase], str]:
     """
     Generates 2-3 bargain phrases dynamically using Gemini based on context.
     Returns (phrases, source) where source is 'gemini' or 'fallback'.
     """
     resolved_decision = _normalise_decision(verdict, decision)
+    selected_language = language if language in SUPPORTED_LANGUAGES else "hi"
     api_key = os.environ.get("GEMINI_API_KEY")
 
     if not api_key or api_key == "your_gemini_api_key_here":
@@ -212,6 +220,7 @@ def generate_bargain_phrases(
         The user is trying to buy {produce_type}.
         The market analysis verdict is "{verdict}".
         The machine decision state is "{resolved_decision}".
+        The user's selected negotiation language is {LANGUAGE_LABELS[selected_language]}.
         The target suggested price is ₹{suggested_price}.
 
         Generate exactly 2 short, polite, practical phrases the user can say to the vendor.

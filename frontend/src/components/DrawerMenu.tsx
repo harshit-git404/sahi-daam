@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { MANDI_LOCATIONS } from '../data/mandiLocations';
+import { formatRupees } from '../services/format';
 
 export const DrawerMenu: React.FC = () => {
   const {
@@ -58,7 +59,7 @@ export const DrawerMenu: React.FC = () => {
           <div className="p-3.5 rounded-2xl bg-white border border-[#e4e2de] shadow-xs">
             <p className="text-xs text-[#594238] font-medium">Your Total Savings</p>
             <p className={`font-display text-2xl font-bold mt-0.5 ${isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'}`}>
-              ₹{totalSavings}
+              {formatRupees(totalSavings)}
             </p>
           </div>
 

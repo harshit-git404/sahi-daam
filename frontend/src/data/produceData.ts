@@ -260,28 +260,3 @@ export const PRODUCE_DATABASE: ProduceItem[] = [
     ]
   }
 ];
-
-export const INITIAL_PURCHASE_HISTORY = [
-  {
-    id: 'rec-1',
-    produceId: 'tomato',
-    produceName: 'Tomato',
-    paidPrice: 32,
-    fairPrice: 30,
-    savedAmount: 2,
-    date: 'Today',
-    timestamp: Date.now() - 3600000 * 2,
-    iconType: 'tomato' as const
-  },
-  {
-    id: 'rec-2',
-    produceId: 'onion',
-    produceName: 'Onion',
-    paidPrice: 20,
-    fairPrice: 25,
-    savedAmount: 5,
-    date: 'Yesterday',
-    timestamp: Date.now() - 86400000,
-    iconType: 'onion' as const
-  }
-];

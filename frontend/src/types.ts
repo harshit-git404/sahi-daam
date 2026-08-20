@@ -7,12 +7,25 @@ export type Screen =
   | 'history';
 
 export type FreshnessLevel = 'fresh' | 'slightly_aged' | 'overripe';
+export type NegotiationLanguage = 'hi' | 'ta' | 'en';
+export type HaggleStatus = 'idle' | 'listening' | 'processing' | 'ready' | 'timeout' | 'error';
 
 export interface BargainPhrase {
   hindi: string;
   tamil?: string;
   english: string;
   phonetic: string;
+}
+
+export interface NegotiationState {
+  status: HaggleStatus;
+  language: NegotiationLanguage;
+  vendorAskingPrice: number;
+  latestVendorCounterOffer: number | null;
+  userCurrentOffer: number | null;
+  recommendedNextOffer: number | null;
+  error: string | null;
+  lastUpdatedAt: number | null;
 }
 
 export type PriceTrend = 'UP' | 'DOWN' | 'STABLE' | 'INSUFFICIENT_DATA';
@@ -88,11 +101,14 @@ export interface PurchaseRecord {
   id: string;
   produceId: string;
   produceName: string;
+  vendorAskingPrice: number;
   paidPrice: number;
   fairPrice: number;
   savedAmount: number;
-  date: string; // e.g. "Today", "Yesterday", "3 days ago"
+  unit: string;
   timestamp: number;
+  decision?: ProduceItem['decision'];
+  outcome?: 'BOUGHT' | 'SKIPPED';
   iconType: 'tomato' | 'onion' | 'potato' | 'leaf' | 'general';
 }
 

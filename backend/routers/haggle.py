@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Literal
 from pricing.engine import analyze_purchase_decision
 from pricing.phrasebook import generate_bargain_phrases
 
@@ -13,6 +13,7 @@ class HaggleRequest(BaseModel):
     fair_price_max: float
     freshness_label: Optional[str] = None
     quickcommerce_price: Optional[Dict[str, Any]] = None
+    language: Literal["hi", "ta", "en"] = "hi"
 
 @router.post("/haggle-check")
 def haggle_check(request: HaggleRequest):
@@ -29,6 +30,7 @@ def haggle_check(request: HaggleRequest):
         verdict=result["verdict"],
         suggested_price=result["suggested_price"],
         decision=result["decision"],
+        language=request.language,
     )
     
     result["phrases"] = phrases

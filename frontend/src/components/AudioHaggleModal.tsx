@@ -7,14 +7,18 @@ import {
   speak,
   stop,
   subscribeToVoiceChanges,
+  VOICE_LANGUAGE_CONFIG,
   type VoiceAvailability,
 } from '../services/voice';
+import { formatRupees } from '../services/format';
 
 export const AudioHaggleModal: React.FC = () => {
-  const { isAudioModalOpen, setIsAudioModalOpen, selectedProduce, vendorAskingPrice, theme } = useApp();
+  const { isAudioModalOpen, setIsAudioModalOpen, selectedProduce, vendorAskingPrice, negotiationState, theme } = useApp();
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [activePhraseIndex, setActivePhraseIndex] = useState(0);
-  const [voiceAvailability, setVoiceAvailability] = useState<VoiceAvailability>(() => getVoiceAvailability('hi'));
+  const selectedLanguage = negotiationState.language;
+  const languageConfig = VOICE_LANGUAGE_CONFIG[selectedLanguage];
+  const [voiceAvailability, setVoiceAvailability] = useState<VoiceAvailability>(() => getVoiceAvailability(selectedLanguage));
   const [voiceMessage, setVoiceMessage] = useState<string | null>(null);
   const playbackTokenRef = React.useRef(0);
   const isTerracotta = theme === 'terracotta';
@@ -22,10 +26,10 @@ export const AudioHaggleModal: React.FC = () => {
   const activePhrase = phrases[activePhraseIndex] ?? phrases[0];
 
   const updateVoiceAvailability = React.useCallback(() => {
-    const nextAvailability = getVoiceAvailability('hi');
+    const nextAvailability = getVoiceAvailability(selectedLanguage);
     setVoiceAvailability(nextAvailability);
     setVoiceMessage(nextAvailability.message);
-  }, []);
+  }, [selectedLanguage]);
 
   React.useEffect(() => {
     if (!isAudioModalOpen) {
@@ -53,20 +57,20 @@ export const AudioHaggleModal: React.FC = () => {
 
   const playVoice = (phraseIndex: number) => {
     const phrase = phrases[phraseIndex];
-    const phraseText = phrase ? getPhraseText(phrase, 'hi') : '';
+    const phraseText = phrase ? getPhraseText(phrase, selectedLanguage) : '';
 
     if (!phraseText) {
       playbackTokenRef.current += 1;
       stop();
       setIsPlayingAudio(false);
-      setVoiceMessage('No Hindi phrase is available for this line.');
+      setVoiceMessage(`No ${languageConfig.label} phrase is available for this line.`);
       return;
     }
 
     const playbackToken = playbackTokenRef.current + 1;
     playbackTokenRef.current = playbackToken;
 
-    const result = speak(phraseText, 'hi', {
+    const result = speak(phraseText, selectedLanguage, {
       onStart: () => {
         if (playbackTokenRef.current === playbackToken) {
           setIsPlayingAudio(true);
@@ -151,7 +155,7 @@ export const AudioHaggleModal: React.FC = () => {
             Current Negotiation Target
           </p>
           <p className="font-display text-[18px] font-bold text-[#1b1c1a] mt-0.5">
-            {selectedProduce.name} · Asking ₹{vendorAskingPrice} → Offer ₹{selectedProduce.suggestedOfferPrice}
+            {selectedProduce.name} · Asking {formatRupees(vendorAskingPrice)} → Offer {formatRupees(negotiationState.recommendedNextOffer ?? selectedProduce.suggestedOfferPrice)}
           </p>
         </div>
 
@@ -160,7 +164,7 @@ export const AudioHaggleModal: React.FC = () => {
           {voiceMessage && (
             <p
               className={`rounded-xl border px-3 py-2 text-[11px] font-semibold ${
-                voiceAvailability.status === 'loading'
+                voiceAvailability.status === 'loading' || voiceAvailability.status === 'fallback'
                   ? 'border-[#e4e2de] bg-white text-[#594238]'
                   : 'border-[#fecaca] bg-[#fff7f5] text-[#7f1d1d]'
               }`}
@@ -186,7 +190,7 @@ export const AudioHaggleModal: React.FC = () => {
             >
               <div className="flex items-start justify-between gap-2">
                 <p className="font-semibold text-[14px] text-[#1b1c1a] leading-snug">
-                  "{phrase.hindi}"
+                  "{getPhraseText(phrase, selectedLanguage) || phrase.english}"
                 </p>
                 <button
                   className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
@@ -214,9 +218,9 @@ export const AudioHaggleModal: React.FC = () => {
         {/* Pronunciation & Speak Action */}
         <button
           onClick={() => playVoice(activePhraseIndex)}
-          disabled={voiceAvailability.status !== 'available' || !activePhrase}
+          disabled={!['available', 'fallback'].includes(voiceAvailability.status) || !activePhrase}
           className={`w-full py-3.5 rounded-xl font-display font-semibold text-[15px] text-white flex items-center justify-center gap-2 shadow-md active:scale-95 transition-transform ${
-            voiceAvailability.status !== 'available' || !activePhrase
+            !['available', 'fallback'].includes(voiceAvailability.status) || !activePhrase
               ? 'bg-[#9b9089] cursor-not-allowed'
               : isTerracotta
                 ? 'bg-[#9e3d00]'
@@ -226,7 +230,7 @@ export const AudioHaggleModal: React.FC = () => {
           <span className="material-symbols-outlined text-[20px]">
             {isPlayingAudio ? 'graphic_eq' : voiceAvailability.status === 'loading' ? 'hourglass_empty' : 'play_arrow'}
           </span>
-          {isPlayingAudio ? 'Speaking in Hindi...' : 'Play Spoken Audio Tip'}
+          {isPlayingAudio ? `Speaking in ${languageConfig.label}...` : 'Play Spoken Audio Tip'}
         </button>
       </div>
     </div>

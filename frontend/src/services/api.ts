@@ -1,5 +1,5 @@
 // Use environment variable if set (for local network override without ngrok), otherwise default to the Vite proxy (/api)
-import type { BargainPhrase, ProduceItem } from '../types';
+import type { BargainPhrase, NegotiationLanguage, ProduceItem } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
@@ -67,20 +67,24 @@ export async function fetchHaggleCheck(
   fairPriceMin: number, 
   fairPriceMax: number,
   freshnessLabel?: string,
-  quickCommercePrice?: QuickCommercePrice
+  quickCommercePrice?: QuickCommercePrice,
+  language: NegotiationLanguage = 'hi',
+  signal?: AbortSignal
 ): Promise<HaggleCheckResponse> {
   const response = await fetch(`${API_BASE_URL}/haggle-check`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
+    signal,
     body: JSON.stringify({
       produce_type: produceType,
       asking_price: askingPrice,
       fair_price_min: fairPriceMin,
       fair_price_max: fairPriceMax,
       freshness_label: freshnessLabel,
-      quickcommerce_price: quickCommercePrice
+      quickcommerce_price: quickCommercePrice,
+      language
     }),
   });
   if (!response.ok) {

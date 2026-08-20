@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { Header } from './Header';
+import { formatRupees, formatRupeesPerUnit } from '../services/format';
 
 export const PriceBreakdownScreen: React.FC = () => {
   const { setCurrentScreen, selectedProduce, selectedLocation, theme } = useApp();
@@ -56,7 +57,7 @@ export const PriceBreakdownScreen: React.FC = () => {
               isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'
             }`}
           >
-            ₹{selectedProduce.retailFairMin}–{selectedProduce.retailFairMax}/{selectedProduce.unit}
+            {formatRupees(selectedProduce.retailFairMin)}-{formatRupeesPerUnit(selectedProduce.retailFairMax, selectedProduce.unit)}
           </div>
 
           <div
@@ -105,7 +106,7 @@ export const PriceBreakdownScreen: React.FC = () => {
                 </span>
               </div>
               <span className="font-semibold text-[15px] text-[#1b1c1a]">
-                ₹{selectedProduce.wholesalePrice}/{selectedProduce.unit}
+                {formatRupeesPerUnit(selectedProduce.wholesalePrice, selectedProduce.unit)}
               </span>
             </li>
 
@@ -120,7 +121,7 @@ export const PriceBreakdownScreen: React.FC = () => {
                 </span>
               </div>
               <span className="font-semibold text-[15px] text-[#1b1c1a]">
-                +₹{Math.round(selectedProduce.wholesalePrice * (selectedProduce.markupMinPercent / 100))}–{Math.round(selectedProduce.wholesalePrice * (selectedProduce.markupMaxPercent / 100))}
+                +{formatRupees(Math.round(selectedProduce.wholesalePrice * (selectedProduce.markupMinPercent / 100)))}-{formatRupees(Math.round(selectedProduce.wholesalePrice * (selectedProduce.markupMaxPercent / 100)))}
               </span>
             </li>
 
@@ -139,7 +140,7 @@ export const PriceBreakdownScreen: React.FC = () => {
                   isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'
                 }`}
               >
-                {selectedProduce.qualityAdjustment < 0 ? `-₹${Math.abs(selectedProduce.qualityAdjustment)}` : selectedProduce.qualityAdjustment > 0 ? `+₹${selectedProduce.qualityAdjustment}` : '₹0'}
+                {selectedProduce.qualityAdjustment < 0 ? `-${formatRupees(Math.abs(selectedProduce.qualityAdjustment))}` : selectedProduce.qualityAdjustment > 0 ? `+${formatRupees(selectedProduce.qualityAdjustment)}` : formatRupees(0)}
               </span>
             </li>
           </ul>
@@ -202,7 +203,7 @@ export const PriceBreakdownScreen: React.FC = () => {
                 <div className="flex items-end justify-between">
                   <div>
                     <p className="text-[28px] font-extrabold text-[#1b1c1a] font-display leading-none">
-                      ₹{selectedProduce.marketContext.current_price}
+                      {formatRupees(selectedProduce.marketContext.current_price)}
                       <span className="text-[14px] font-medium text-[#594238] ml-1">/{selectedProduce.unit}</span>
                     </p>
                     <p className="text-[12px] text-[#594238] mt-0.5">Today's local wholesale reference</p>
@@ -225,7 +226,7 @@ export const PriceBreakdownScreen: React.FC = () => {
                 <div className="grid grid-cols-2 gap-2 mt-1">
                   <div className="bg-[#f5f3ef] rounded-xl p-3">
                     <p className="text-[10px] font-bold text-[#594238] uppercase tracking-wider mb-0.5">Recent Average</p>
-                    <p className="text-[16px] font-bold text-[#1b1c1a]">₹{selectedProduce.marketContext.recent_average}/{selectedProduce.unit}</p>
+                    <p className="text-[16px] font-bold text-[#1b1c1a]">{formatRupeesPerUnit(selectedProduce.marketContext.recent_average, selectedProduce.unit)}</p>
                   </div>
                   <div className="bg-[#f5f3ef] rounded-xl p-3">
                     <p className="text-[10px] font-bold text-[#594238] uppercase tracking-wider mb-0.5">History</p>
