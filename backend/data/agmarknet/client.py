@@ -25,9 +25,10 @@ async def fetch_market_data(
     params = {
         "api-key": API_KEY.strip() if API_KEY else "",
         "format": "json",
-        "limit": limit,
-        "filters[Commodity]": commodity
+        "limit": limit
     }
+    if commodity:
+        params["filters[Commodity]"] = commodity
     
     if state:
         params["filters[State]"] = state

@@ -30,46 +30,52 @@ def _save_cache(data: Dict[str, Any]):
         json.dump(data, f, indent=2)
 
 async def refresh_all_mandi_prices() -> Dict[str, Any]:
-    """Force fetch live data for all flagship commodities and update the daily cache."""
-    commodities = ["tomato", "onion", "potato", "banana", "coconut", "coriander", "ginger"]
-    results = {}
-    
+    """Force fetch live data for all commodities in the default region and update the daily cache."""
     # We load existing cache to not overwrite anything else if we want, but usually we just overwrite
     cache = _load_cache()
     
-    for comm in commodities:
-        try:
-            # We fetch with default state/district configs
-            raw_data = await fetch_market_data(
-                commodity=comm.capitalize(),
-                state=DEFAULT_STATE,
-                district=None,
-                limit=100
-            )
+    district = os.getenv("DEFAULT_DISTRICT", "Vellore")
+    
+    try:
+        # Fetch 500 records for the district to get as many commodities as possible
+        raw_data = await fetch_market_data(
+            commodity="", # Empty string means fetch all
+            state=DEFAULT_STATE,
+            district=district,
+            limit=500
+        )
+        
+        if "error" not in raw_data:
+            records = raw_data.get("records", [])
+            normalized_records = [normalize_record(r) for r in records]
             
-            if "error" not in raw_data:
-                records = raw_data.get("records", [])
-                normalized_records = [normalize_record(r) for r in records]
+            # Group records by commodity
+            grouped_records = {}
+            for r in normalized_records:
+                comm = r.get("commodity", "").lower()
+                if not comm:
+                    continue
+                if comm not in grouped_records:
+                    grouped_records[comm] = []
+                grouped_records[comm].append(r)
                 
-                # Sort records by date to find the latest
-                def parse_date(date_str: str) -> datetime:
-                    try:
-                        return datetime.strptime(date_str, "%d/%m/%Y")
-                    except ValueError:
-                        return datetime.min
+            def parse_date(date_str: str) -> datetime:
+                try:
+                    return datetime.strptime(date_str, "%d/%m/%Y")
+                except ValueError:
+                    return datetime.min
+            
+            for comm, comm_records in grouped_records.items():
+                comm_records.sort(key=lambda r: parse_date(r["arrival_date"]), reverse=True)
                 
-                normalized_records.sort(key=lambda r: parse_date(r["arrival_date"]), reverse=True)
-                cache[comm.lower()] = {
-                    "commodity": comm.lower(),
+                cache[comm] = {
+                    "commodity": comm,
                     "source": "data.gov.in/agmarknet",
-                    "records": normalized_records,
+                    "records": comm_records,
                     "updated_at": datetime.now().isoformat()
                 }
-        except Exception as e:
-            print(f"Error fetching {comm}: {e}")
-            
-        # tiny sleep to prevent hammering the API concurrently
-        await asyncio.sleep(0.5)
+    except Exception as e:
+        print(f"Error fetching bulk data for {district}: {e}")
         
     _save_cache(cache)
     return cache
