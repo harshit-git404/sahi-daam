@@ -1,27 +1,113 @@
 import os
+import json
+import asyncio
 from typing import Dict, Any, Optional, List
-from datetime import datetime
+from datetime import datetime, date
 
 from .client import fetch_market_data
 from .parser import normalize_record
 
 DEFAULT_STATE = os.getenv("DEFAULT_STATE", "Tamil Nadu")
+CACHE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def _get_cache_path() -> str:
+    today_str = date.today().isoformat()
+    return os.path.join(CACHE_DIR, f"prices_{today_str}.json")
+
+def _load_cache() -> Dict[str, Any]:
+    cache_path = _get_cache_path()
+    if os.path.exists(cache_path):
+        try:
+            with open(cache_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+def _save_cache(data: Dict[str, Any]):
+    cache_path = _get_cache_path()
+    with open(cache_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+
+async def refresh_all_mandi_prices() -> Dict[str, Any]:
+    """Force fetch live data for all flagship commodities and update the daily cache."""
+    commodities = ["tomato", "onion", "potato", "banana", "coconut", "coriander", "ginger"]
+    results = {}
+    
+    # We load existing cache to not overwrite anything else if we want, but usually we just overwrite
+    cache = _load_cache()
+    
+    for comm in commodities:
+        try:
+            # We fetch with default state/district configs
+            raw_data = await fetch_market_data(
+                commodity=comm.capitalize(),
+                state=DEFAULT_STATE,
+                district=None,
+                limit=100
+            )
+            
+            if "error" not in raw_data:
+                records = raw_data.get("records", [])
+                normalized_records = [normalize_record(r) for r in records]
+                
+                # Sort records by date to find the latest
+                def parse_date(date_str: str) -> datetime:
+                    try:
+                        return datetime.strptime(date_str, "%d/%m/%Y")
+                    except ValueError:
+                        return datetime.min
+                
+                normalized_records.sort(key=lambda r: parse_date(r["arrival_date"]), reverse=True)
+                cache[comm.lower()] = {
+                    "commodity": comm.lower(),
+                    "source": "data.gov.in/agmarknet",
+                    "records": normalized_records,
+                    "updated_at": datetime.now().isoformat()
+                }
+        except Exception as e:
+            print(f"Error fetching {comm}: {e}")
+            
+        # tiny sleep to prevent hammering the API concurrently
+        await asyncio.sleep(0.5)
+        
+    _save_cache(cache)
+    return cache
 
 async def get_mandi_prices(
     commodity: str,
     state: Optional[str] = None,
     district: Optional[str] = None,
-    market: Optional[str] = None
+    market: Optional[str] = None,
+    force_refresh: bool = False
 ) -> Dict[str, Any]:
     """
     Fetch, normalize, filter and return the latest mandi price data.
+    Uses daily JSON cache to prevent excessive live calls.
     """
-    # Only default state if neither state nor district is provided, to avoid overly broad queries
-    # But if state is explicitly provided, we don't need a default.
+    comm_lower = commodity.lower()
+    
+    if not force_refresh:
+        cache = _load_cache()
+        if comm_lower in cache:
+            cached_data = cache[comm_lower]
+            # We can still apply market filtering dynamically
+            records = cached_data.get("records", [])
+            if market:
+                market_lower = market.lower()
+                records = [r for r in records if r["market"] and market_lower in r["market"].lower()]
+                
+            return {
+                "commodity": comm_lower,
+                "source": "data.gov.in/agmarknet (cached)",
+                "records": records
+            }
+
+    # If not in cache or forced refresh, fetch live
     actual_state = state if state else (DEFAULT_STATE if not district else None)
     
     raw_data = await fetch_market_data(
-        commodity=commodity,
+        commodity=commodity.capitalize(),
         state=actual_state,
         district=district,
         limit=100
@@ -29,7 +115,7 @@ async def get_mandi_prices(
     
     if "error" in raw_data:
         return {
-            "commodity": commodity.lower(),
+            "commodity": comm_lower,
             "source": "data.gov.in/agmarknet",
             "error": raw_data["error"],
             "details": raw_data.get("details", ""),
@@ -39,6 +125,24 @@ async def get_mandi_prices(
     records = raw_data.get("records", [])
     normalized_records = [normalize_record(r) for r in records]
     
+    def parse_date(date_str: str) -> datetime:
+        try:
+            return datetime.strptime(date_str, "%d/%m/%Y")
+        except ValueError:
+            return datetime.min
+
+    normalized_records.sort(key=lambda r: parse_date(r["arrival_date"]), reverse=True)
+    
+    # Save to cache so next time it's fast
+    cache = _load_cache()
+    cache[comm_lower] = {
+        "commodity": comm_lower,
+        "source": "data.gov.in/agmarknet",
+        "records": normalized_records,
+        "updated_at": datetime.now().isoformat()
+    }
+    _save_cache(cache)
+    
     # Filter by market if provided
     if market:
         market_lower = market.lower()
@@ -47,29 +151,8 @@ async def get_mandi_prices(
             if r["market"] and market_lower in r["market"].lower()
         ]
         
-    if not normalized_records:
-        return {
-            "commodity": commodity.lower(),
-            "source": "data.gov.in/agmarknet",
-            "records": []
-        }
-        
-    # Sort records by date to find the latest
-    # Arrival_Date format is typically DD/MM/YYYY
-    def parse_date(date_str: str) -> datetime:
-        try:
-            return datetime.strptime(date_str, "%d/%m/%Y")
-        except ValueError:
-            # Fallback for unexpected date formats
-            return datetime.min
-
-    # Sort descending by date
-    normalized_records.sort(key=lambda r: parse_date(r["arrival_date"]), reverse=True)
-    
-    # After sorting, we may just return all sorted records or group them.
-    # The requirement is just to return the records so the router can pick the latest.
     return {
-        "commodity": commodity.lower(),
+        "commodity": comm_lower,
         "source": "data.gov.in/agmarknet",
         "records": normalized_records
     }

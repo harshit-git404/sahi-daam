@@ -5,6 +5,7 @@ import { Header } from './Header';
 export const HomeScreen: React.FC = () => {
   const { setCurrentScreen, selectProduceById, totalSavings, theme } = useApp();
   const isTerracotta = theme === 'terracotta';
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const handleSelectProduce = (id: string) => {
     selectProduceById(id);
@@ -149,11 +150,35 @@ export const HomeScreen: React.FC = () => {
         </section>
 
         {/* Live Mandi Ticker / Tip */}
-        <section className="bg-white/80 rounded-2xl p-4 border border-[#e4e2de] shadow-xs text-xs text-[#594238] flex items-center gap-3">
+        <section className="bg-white/80 rounded-2xl p-4 border border-[#e4e2de] shadow-xs text-xs text-[#594238] flex items-center gap-3 mb-2">
           <span className="text-xl">💡</span>
           <div>
             <span className="font-semibold text-[#1b1c1a]">Mandi Bargain Rule:</span> Wholesale prices updated this morning. Always offer 20-30% below initial vendor quote for high volume produce.
           </div>
+        </section>
+
+        {/* Refresh Prices Action */}
+        <section id="home-refresh-section">
+          <button
+            onClick={async () => {
+              setRefreshing(true);
+              try {
+                await fetch('http://localhost:8000/api/refresh-prices', { method: 'POST' });
+              } catch (e) {
+                console.error(e);
+              }
+              setRefreshing(false);
+            }}
+            disabled={refreshing}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#eae8e4] text-[#1b1c1a] font-medium text-[14px] active:scale-[0.98] transition-all disabled:opacity-50"
+          >
+            <span
+              className={`material-symbols-outlined text-[18px] ${refreshing ? 'animate-spin' : ''}`}
+            >
+              sync
+            </span>
+            {refreshing ? 'Fetching Latest Mandi Prices...' : 'Refresh Daily Prices'}
+          </button>
         </section>
       </main>
     </div>

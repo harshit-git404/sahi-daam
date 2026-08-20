@@ -26,6 +26,16 @@ async def verify_market_price(
     )
     return result
 
+from data.agmarknet.service import refresh_all_mandi_prices
+
+@router.post("/api/refresh-prices")
+async def refresh_prices_endpoint():
+    """
+    Manually refreshes all flagship commodities and saves to today's cache file.
+    """
+    await refresh_all_mandi_prices()
+    return {"status": "success", "message": "Daily prices refreshed successfully."}
+
 class ScanRequest(BaseModel):
     produce_type: Optional[str] = None
     image: Optional[str] = None
