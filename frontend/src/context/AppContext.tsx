@@ -88,10 +88,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const result = await fetchHaggleCheck(
           vendorAskingPrice,
-          selectedProduce.fairPriceRange.min,
-          selectedProduce.fairPriceRange.max
+          selectedProduce.fairPriceRange?.min ?? selectedProduce.retailFairMin,
+          selectedProduce.fairPriceRange?.max ?? selectedProduce.retailFairMax
         );
-        setSelectedProduce(prev => ({ ...prev, suggestedOfferPrice: result.suggested_price }));
+        setSelectedProduce(prev => ({ 
+          ...prev, 
+          suggestedOfferPrice: result.suggested_price,
+          haggleVerdict: result.verdict,
+          haggleReasoning: result.reasoning
+        }));
       } catch (e) {
         console.error('Haggle check API failed:', e);
         // We might not want a blocking error for just the haggle check update, but we can log it.

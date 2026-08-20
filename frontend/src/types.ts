@@ -24,6 +24,8 @@ export interface ProduceItem {
   retailFairMax: number;
   typicalVendorAsking: number;
   suggestedOfferPrice: number;
+  haggleVerdict?: 'Fair Price' | 'Overpriced' | 'Suspiciously Cheap';
+  haggleReasoning?: string;
   unit: string;
   qualityAdjustment: number;
   qualityAdjustmentLabel: string;

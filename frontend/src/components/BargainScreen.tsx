@@ -113,17 +113,28 @@ export const BargainScreen: React.FC = () => {
             </span>
           </div>
 
-          {/* Overprice badge or Fair badge */}
-          {overpricePct > 5 ? (
+          {/* Verdict badge */}
+          {selectedProduce.haggleVerdict === 'Suspiciously Cheap' ? (
+            <div className="inline-flex items-center gap-1.5 bg-[#fff8d6] text-[#806b00] px-3.5 py-1 rounded-full mt-2 font-semibold text-[12px]">
+              <span className="material-symbols-outlined text-[16px]">warning</span>
+              <span>Suspiciously Cheap</span>
+            </div>
+          ) : selectedProduce.haggleVerdict === 'Overpriced' ? (
             <div className="inline-flex items-center gap-1.5 bg-[#ffdad6] text-[#93000a] px-3.5 py-1 rounded-full mt-2 font-semibold text-[12px]">
               <span className="material-symbols-outlined text-[16px]">trending_up</span>
-              <span>Overpriced by {overpricePct}%</span>
+              <span>Overpriced</span>
             </div>
           ) : (
             <div className="inline-flex items-center gap-1.5 bg-[#7bf8a1]/60 text-[#006d37] px-3.5 py-1 rounded-full mt-2 font-semibold text-[12px]">
               <span className="material-symbols-outlined text-[16px]">check_circle</span>
-              <span>Near Fair Price Deal</span>
+              <span>Fair Price</span>
             </div>
+          )}
+          
+          {selectedProduce.haggleReasoning && (
+            <p className="text-[12px] text-[#594238] mt-3 leading-tight font-medium">
+              {selectedProduce.haggleReasoning}
+            </p>
           )}
         </section>
 
@@ -196,8 +207,12 @@ export const BargainScreen: React.FC = () => {
 
             <div className="flex justify-between mt-2 text-[12px] font-medium text-[#594238]">
               <span>Avg: ₹{fairAvg}</span>
-              <span className={overpricePct > 15 ? 'text-[#ba1a1a] font-semibold' : 'text-[#006d37]'}>
-                {overpricePct > 15 ? 'High Quote' : 'Fair Quote'}
+              <span className={
+                selectedProduce.haggleVerdict === 'Suspiciously Cheap' ? 'text-[#806b00] font-semibold' :
+                selectedProduce.haggleVerdict === 'Overpriced' ? 'text-[#ba1a1a] font-semibold' : 'text-[#006d37]'
+              }>
+                {selectedProduce.haggleVerdict === 'Suspiciously Cheap' ? 'Low Quote' :
+                 selectedProduce.haggleVerdict === 'Overpriced' ? 'High Quote' : 'Fair Quote'}
               </span>
             </div>
           </div>
