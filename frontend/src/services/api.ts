@@ -15,7 +15,14 @@ export async function fetchScanResult(produceId: string, imageBase64?: string) {
   return response.json();
 }
 
-export async function fetchHaggleCheck(produceType: string, askingPrice: number, fairPriceMin: number, fairPriceMax: number) {
+export async function fetchHaggleCheck(
+  produceType: string, 
+  askingPrice: number, 
+  fairPriceMin: number, 
+  fairPriceMax: number,
+  freshnessLabel?: string,
+  quickCommercePrice?: any
+) {
   const response = await fetch(`${API_BASE_URL}/haggle-check`, {
     method: 'POST',
     headers: {
@@ -25,7 +32,9 @@ export async function fetchHaggleCheck(produceType: string, askingPrice: number,
       produce_type: produceType,
       asking_price: askingPrice,
       fair_price_min: fairPriceMin,
-      fair_price_max: fairPriceMax 
+      fair_price_max: fairPriceMax,
+      freshness_label: freshnessLabel,
+      quickcommerce_price: quickCommercePrice
     }),
   });
   if (!response.ok) {

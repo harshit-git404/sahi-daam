@@ -48,7 +48,9 @@ Analyzes a vendor's asking price against the fair market price and dynamically g
   "produce_type": "tomato",
   "asking_price": 45,
   "fair_price_min": 28,
-  "fair_price_max": 34
+  "fair_price_max": 34,
+  "freshness_label": "Fresh",
+  "quickcommerce_price": { "source": "Blinkit", "price": 40.0, "unit": "kg" }
 }
 ```
 
@@ -56,8 +58,24 @@ Analyzes a vendor's asking price against the fair market price and dynamically g
 ```json
 {
   "verdict": "Overpriced",
-  "reasoning": "Vendor is asking 45.16% above the fair market maximum. Strong haggling recommended.",
-  "suggested_price": 31.0,
+  "decision": "OVERPRICED",
+  "deviation_pct": 32.4,
+  "suggested_price": 28.0,
+  "maximum_reasonable_price": 34.0,
+  "potential_saving": 11.0,
+  "reasoning": "Vendor is asking ₹45/kg, while the estimated fair range for this produce is ₹28–34/kg. The asking price is about 32% above the fair maximum. Blinkit is cheaper at ₹40.0/kg, making the vendor the worst option.",
+  "recommendation": {
+    "action": "NEGOTIATE",
+    "headline": "You're paying above the fair range.",
+    "explanation": "Vendor is asking ₹45/kg, while the estimated fair range for this produce is ₹28–34/kg. The asking price is about 32% above the fair maximum. Blinkit is cheaper at ₹40.0/kg, making the vendor the worst option."
+  },
+  "alternatives": {
+    "quickcommerce": {
+      "source": "Blinkit",
+      "price": 40.0,
+      "unit": "kg"
+    }
+  },
   "phrases": [
     {
       "hindi": "भैया, यह तो बहुत महंगा है। थोड़ा कम कीजिए।",
@@ -70,7 +88,12 @@ Analyzes a vendor's asking price against the fair market price and dynamically g
 ```
 
 **Fields**:
-- `verdict` (Enum): One of `"Fair Price"`, `"Overpriced"`, `"Suspiciously Cheap"`.
+- `decision` (str): One of `"GOOD_DEAL"`, `"FAIR_PRICE"`, `"OVERPRICED"`, `"UNUSUALLY_CHEAP"`.
+- `verdict` (str): Legacy verdict fallback.
 - `deviation_pct` (float): The percentage difference from the relevant bound of the fair range.
 - `suggested_price` (float): Computed counter-offer or accepted price.
-- `reasoning` (str): Generative text explaining the math to the user.
+- `maximum_reasonable_price` (float): Maximum price to accept.
+- `potential_saving` (float): Savings if target price is achieved.
+- `reasoning` (str): Text explaining the math to the user.
+- `recommendation` (dict): `action`, `headline`, and `explanation` for the UI decision card.
+- `alternatives` (dict): Comparison against other sources (e.g. quickcommerce).

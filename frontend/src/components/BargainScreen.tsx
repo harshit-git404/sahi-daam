@@ -81,72 +81,7 @@ export const BargainScreen: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-1 max-w-md mx-auto w-full px-5 py-4 flex flex-col gap-4 relative z-10">
-        {/* Suggestion Card (Glassmorphism) */}
-        <section
-          id="market-analysis-suggestion-card"
-          className="glass-card rounded-[24px] p-6 shadow-[0px_4px_24px_rgba(211,84,0,0.06)] relative overflow-hidden border border-[#e4e2de]"
-        >
-          <div className="absolute top-4 right-4">
-            <span
-              className={`material-symbols-outlined text-[32px] ${
-                isTerracotta ? 'text-[#006d37]' : 'text-[#0e6c4a]'
-              }`}
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              eco
-            </span>
-          </div>
-
-          <p className="text-[12px] font-bold text-[#594238] mb-1.5 uppercase tracking-wider">
-            MARKET ANALYSIS
-          </p>
-
-          <h2
-            id="vendor-asking-heading"
-            className="font-display text-[24px] font-bold text-[#1b1c1a] mb-1 tracking-tight"
-          >
-            Vendor asking ₹{vendorAskingPrice}?
-          </h2>
-
-          <div className="flex items-baseline gap-2.5 mt-3 mb-1.5">
-            <span className="text-[15px] font-medium text-[#594238]">
-              Try offering
-            </span>
-            <span
-              id="suggested-offer-price-value"
-              className={`font-display text-[36px] font-extrabold tracking-tight ${
-                isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'
-              }`}
-            >
-              ₹{targetOffer}
-            </span>
-          </div>
-
-          {/* Verdict badge */}
-          {selectedProduce.haggleVerdict === 'Suspiciously Cheap' ? (
-            <div className="inline-flex items-center gap-1.5 bg-[#fff8d6] text-[#806b00] px-3.5 py-1 rounded-full mt-2 font-semibold text-[12px]">
-              <span className="material-symbols-outlined text-[16px]">warning</span>
-              <span>Suspiciously Cheap</span>
-            </div>
-          ) : selectedProduce.haggleVerdict === 'Overpriced' ? (
-            <div className="inline-flex items-center gap-1.5 bg-[#ffdad6] text-[#93000a] px-3.5 py-1 rounded-full mt-2 font-semibold text-[12px]">
-              <span className="material-symbols-outlined text-[16px]">trending_up</span>
-              <span>Overpriced</span>
-            </div>
-          ) : (
-            <div className="inline-flex items-center gap-1.5 bg-[#7bf8a1]/60 text-[#006d37] px-3.5 py-1 rounded-full mt-2 font-semibold text-[12px]">
-              <span className="material-symbols-outlined text-[16px]">check_circle</span>
-              <span>Fair Price</span>
-            </div>
-          )}
-          
-          {selectedProduce.haggleReasoning && (
-            <p className="text-[12px] text-[#594238] mt-3 leading-tight font-medium">
-              {selectedProduce.haggleReasoning}
-            </p>
-          )}
-        </section>
-
+        
         {/* Interactive Stepper & Slider Card */}
         <section
           id="vendor-price-stepper-card"
@@ -213,19 +148,101 @@ export const BargainScreen: React.FC = () => {
                 className="w-full h-2 bg-[#e4e2de] rounded-lg appearance-none cursor-pointer accent-[#9e3d00]"
               />
             </div>
-
-            <div className="flex justify-between mt-2 text-[12px] font-medium text-[#594238]">
-              <span>Avg: ₹{fairAvg}</span>
-              <span className={
-                selectedProduce.haggleVerdict === 'Suspiciously Cheap' ? 'text-[#806b00] font-semibold' :
-                selectedProduce.haggleVerdict === 'Overpriced' ? 'text-[#ba1a1a] font-semibold' : 'text-[#006d37]'
-              }>
-                {selectedProduce.haggleVerdict === 'Suspiciously Cheap' ? 'Low Quote' :
-                 selectedProduce.haggleVerdict === 'Overpriced' ? 'High Quote' : 'Fair Quote'}
-              </span>
-            </div>
           </div>
         </section>
+
+        {selectedProduce.decision && (
+          <>
+            {/* DECISION & COMPARISON CARD */}
+            <section
+              className={`glass-card rounded-[24px] p-6 shadow-sm relative overflow-hidden border ${
+                selectedProduce.decision === 'OVERPRICED' ? 'border-[#ffdad6] bg-[#fff0ee]' :
+                selectedProduce.decision === 'UNUSUALLY_CHEAP' ? 'border-[#fff8d6] bg-[#fffae0]' :
+                'border-[#c6efd6] bg-[#f2fcf5]'
+              }`}
+            >
+              {/* Decision Header */}
+              <div className="flex items-center gap-2 mb-2">
+                <span className={`material-symbols-outlined text-[24px] ${
+                  selectedProduce.decision === 'OVERPRICED' ? 'text-[#93000a]' :
+                  selectedProduce.decision === 'UNUSUALLY_CHEAP' ? 'text-[#806b00]' :
+                  'text-[#006d37]'
+                }`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                  {selectedProduce.decision === 'OVERPRICED' ? 'trending_up' :
+                   selectedProduce.decision === 'UNUSUALLY_CHEAP' ? 'warning' : 'check_circle'}
+                </span>
+                <h2 className={`font-display text-[22px] font-bold tracking-tight uppercase ${
+                  selectedProduce.decision === 'OVERPRICED' ? 'text-[#93000a]' :
+                  selectedProduce.decision === 'UNUSUALLY_CHEAP' ? 'text-[#806b00]' :
+                  'text-[#006d37]'
+                }`}>
+                  {selectedProduce.decision.replace('_', ' ')}
+                </h2>
+              </div>
+              <p className="text-[15px] font-semibold text-[#1b1c1a] mb-5">
+                "{selectedProduce.recommendation?.headline}"
+              </p>
+
+              {/* Price Comparison */}
+              <div className="bg-white/60 rounded-xl p-4 border border-[#e4e2de]/50 space-y-2">
+                <div className="flex justify-between text-[13px] font-semibold text-[#594238]">
+                  <span>Vendor asking:</span>
+                  <span className="text-[#1b1c1a] text-right">₹{vendorAskingPrice}/{selectedProduce.unit}</span>
+                </div>
+                <div className="flex justify-between text-[13px] font-semibold text-[#594238]">
+                  <span>Fair range:</span>
+                  <span className="text-[#1b1c1a] text-right">₹{selectedProduce.retailFairMin}–{selectedProduce.retailFairMax}/{selectedProduce.unit}</span>
+                </div>
+                {selectedProduce.alternatives?.quickcommerce && (
+                  <div className="flex justify-between text-[13px] font-semibold text-[#594238] pt-2 border-t border-[#e4e2de]/40">
+                    <span>{selectedProduce.alternatives.quickcommerce.source}:</span>
+                    <span className="text-[#1b1c1a] text-right">₹{selectedProduce.alternatives.quickcommerce.price}/{selectedProduce.alternatives.quickcommerce.unit}</span>
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {/* WHAT SHOULD I DO? */}
+            <section className="bg-white rounded-[24px] p-6 border border-[#e4e2de] shadow-xs">
+              <p className="text-[12px] font-bold text-[#594238] mb-3 uppercase tracking-wider">
+                What Should I Do?
+              </p>
+              
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex flex-col">
+                  <span className="text-[11px] font-semibold text-[#594238] uppercase">Start With</span>
+                  <span className={`font-display text-[28px] font-extrabold ${isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'}`}>
+                    ₹{selectedProduce.suggestedOfferPrice}
+                  </span>
+                </div>
+                <div className="w-[1px] h-10 bg-[#e4e2de]"></div>
+                <div className="flex flex-col text-right">
+                  <span className="text-[11px] font-semibold text-[#594238] uppercase">Max Price</span>
+                  <span className="font-display text-[28px] font-extrabold text-[#1b1c1a]">
+                    ₹{selectedProduce.maximumReasonablePrice}
+                  </span>
+                </div>
+              </div>
+
+              {selectedProduce.potentialSaving ? (
+                <div className="bg-[#e8f5e9] text-[#006d37] px-4 py-2.5 rounded-xl text-center font-semibold text-[14px]">
+                  Potential saving: ₹{selectedProduce.potentialSaving}/{selectedProduce.unit}
+                </div>
+              ) : null}
+            </section>
+
+            {/* WHY? */}
+            <section className="bg-[#fbf9f5] border border-[#e4e2de] rounded-[24px] p-5 shadow-xs">
+              <p className="text-[12px] font-bold text-[#594238] mb-2 uppercase tracking-wider flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px]">info</span>
+                Why?
+              </p>
+              <p className="text-[14px] text-[#1b1c1a] leading-relaxed">
+                {selectedProduce.recommendation?.explanation || selectedProduce.haggleReasoning}
+              </p>
+            </section>
+          </>
+        )}
 
         {/* Suggested Verbal Bargaining Counter */}
         <section className="bg-[#f5f3ef] rounded-2xl p-4 border border-[#e4e2de] shadow-xs">
@@ -304,7 +321,7 @@ export const BargainScreen: React.FC = () => {
             >
               check_circle
             </span>
-            I Bought It at ₹{targetOffer}
+            I Bought It at ₹{selectedProduce.suggestedOfferPrice || targetOffer}
           </button>
 
           <p className="text-center text-[12px] text-[#594238] font-normal">

@@ -30,6 +30,14 @@ export interface ProduceItem {
   retailFairMax: number;
   typicalVendorAsking: number;
   suggestedOfferPrice: number;
+  decision?: 'GOOD_DEAL' | 'FAIR_PRICE' | 'OVERPRICED' | 'UNUSUALLY_CHEAP';
+  recommendation?: {
+    action: string;
+    headline: string;
+    explanation: string;
+  };
+  maximumReasonablePrice?: number;
+  potentialSaving?: number;
   haggleVerdict?: 'Fair Price' | 'Overpriced' | 'Suspiciously Cheap';
   haggleReasoning?: string;
   hagglePhrases?: BargainPhrase[];
@@ -48,6 +56,13 @@ export interface ProduceItem {
     source: string;
     price: number;
     unit: string;
+  };
+  alternatives?: {
+    quickcommerce?: {
+      source: string;
+      price: number;
+      unit: string;
+    };
   };
 }
 

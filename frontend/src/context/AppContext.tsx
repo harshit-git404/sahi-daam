@@ -90,14 +90,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           selectedProduce.name,
           vendorAskingPrice,
           selectedProduce.fairPriceRange?.min ?? selectedProduce.retailFairMin,
-          selectedProduce.fairPriceRange?.max ?? selectedProduce.retailFairMax
+          selectedProduce.fairPriceRange?.max ?? selectedProduce.retailFairMax,
+          selectedProduce.freshness,
+          selectedProduce.quickCommercePrice
         );
         setSelectedProduce(prev => ({ 
           ...prev, 
           suggestedOfferPrice: result.suggested_price,
           haggleVerdict: result.verdict,
           haggleReasoning: result.reasoning,
-          hagglePhrases: result.phrases
+          hagglePhrases: result.phrases,
+          decision: result.decision,
+          recommendation: result.recommendation,
+          alternatives: result.alternatives,
+          maximumReasonablePrice: result.maximum_reasonable_price,
+          potentialSaving: result.potential_saving
         }));
       } catch (e) {
         console.error('Haggle check API failed:', e);
