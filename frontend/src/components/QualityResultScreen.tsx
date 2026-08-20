@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { Header } from './Header';
+import { getQualityTip } from '../data/qualityTips';
 
 export const QualityResultScreen: React.FC = () => {
   const { setCurrentScreen, selectedProduce, capturedImage, theme } = useApp();
@@ -109,6 +110,19 @@ export const QualityResultScreen: React.FC = () => {
               <div className="absolute left-2/3 top-0 w-1 h-2 bg-[#e0c0b2] -ml-[2px] rounded-full" />
             </div>
           </div>
+          
+          {/* Best Used For Tip */}
+          {getQualityTip(selectedProduce.id, selectedProduce.freshness) && (
+            <div className="w-full bg-[#fdfaf5] rounded-xl p-3 border border-[#e4e2de] text-[13px] text-[#594238] flex items-start gap-2.5 mt-1">
+              <span className={`material-symbols-outlined text-[18px] mt-0.5 ${isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'}`}>
+                lightbulb
+              </span>
+              <div>
+                <span className="font-semibold block mb-0.5 text-[#1b1c1a]">Best used for:</span>
+                <span>{getQualityTip(selectedProduce.id, selectedProduce.freshness)}</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* AI Insight Pill */}
