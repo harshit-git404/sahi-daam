@@ -46,6 +46,15 @@ export const BargainScreen: React.FC = () => {
     setCurrentScreen('history');
   };
 
+  const playPhrase = (text: string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel(); // Cancel any ongoing speech
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'hi-IN';
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   // Slider percentage calculation (min 15, max 80 for scale)
   const minSlider = 15;
   const maxSlider = 80;
@@ -229,13 +238,23 @@ export const BargainScreen: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            {selectedProduce.bargainPhrases.slice(0, 2).map((phrase, idx) => (
+            {(selectedProduce.hagglePhrases || selectedProduce.bargainPhrases).slice(0, 2).map((phrase, idx) => (
               <div
                 key={idx}
-                className="p-2.5 rounded-xl bg-white border border-[#e4e2de]/80 text-xs shadow-2xs"
+                className="p-2.5 rounded-xl bg-white border border-[#e4e2de]/80 text-xs shadow-2xs relative pr-10"
               >
                 <p className="font-semibold text-[#1b1c1a]">"{phrase.hindi}"</p>
+                <p className="text-[11px] text-[#594238] font-medium mt-0.5">{phrase.phonetic}</p>
                 <p className="text-[11px] text-[#594238] italic mt-0.5">"{phrase.english}"</p>
+                {'speechSynthesis' in window && (
+                  <button
+                    onClick={() => playPhrase(phrase.hindi)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-[#f5f3ef] text-[#1b1c1a] hover:bg-[#eae8e4] active:scale-95 transition-all"
+                    aria-label="Listen"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">volume_up</span>
+                  </button>
+                )}
               </div>
             ))}
           </div>

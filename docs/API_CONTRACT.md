@@ -40,24 +40,32 @@ Analyzes produce and returns pricing and quality details.
 
 ## POST `/haggle-check`
 
-Validates user's asking price.
+Analyzes a vendor's asking price against the fair market price and dynamically generates haggling strategy and Hindi phrasebook.
 
-### Request Shape
+**Request:**
 ```json
 {
-  "asking_price": 45.0,
-  "fair_price_min": 29.25,
-  "fair_price_max": 32.63
+  "produce_type": "tomato",
+  "asking_price": 45,
+  "fair_price_min": 28,
+  "fair_price_max": 34
 }
 ```
 
-### Response Shape
+**Response:**
 ```json
 {
   "verdict": "Overpriced",
-  "deviation_pct": 37.9,
-  "suggested_price": 32.6,
-  "reasoning": "The vendor's asking price of ₹45.0 is 38% above the fair market maximum (₹32.63). You should counter-offer around ₹32.63."
+  "reasoning": "Vendor is asking 45.16% above the fair market maximum. Strong haggling recommended.",
+  "suggested_price": 31.0,
+  "phrases": [
+    {
+      "hindi": "भैया, यह तो बहुत महंगा है। थोड़ा कम कीजिए।",
+      "english": "Brother, this is too expensive. Please reduce the price a bit.",
+      "phonetic": "Bhaiya, yeh toh bahut mehanga hai. Thoda kam kijiye."
+    }
+  ],
+  "phrases_source": "gemini"
 }
 ```
 

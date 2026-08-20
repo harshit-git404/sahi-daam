@@ -8,6 +8,12 @@ export type Screen =
 
 export type FreshnessLevel = 'fresh' | 'slightly_aged' | 'overripe';
 
+export interface BargainPhrase {
+  hindi: string;
+  english: string;
+  phonetic: string;
+}
+
 export interface ProduceItem {
   id: string;
   name: string;
@@ -26,6 +32,7 @@ export interface ProduceItem {
   suggestedOfferPrice: number;
   haggleVerdict?: 'Fair Price' | 'Overpriced' | 'Suspiciously Cheap';
   haggleReasoning?: string;
+  hagglePhrases?: BargainPhrase[];
   unit: string;
   qualityAdjustment: number;
   qualityAdjustmentLabel: string;
