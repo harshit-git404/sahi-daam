@@ -1,6 +1,7 @@
 import { ProduceItem, FreshnessLevel } from '../types';
+import type { ScanResultResponse } from './api';
 
-export function mergeProduceData(catalogEntry: ProduceItem, backendResponse: any): ProduceItem {
+export function mergeProduceData(catalogEntry: ProduceItem, backendResponse: ScanResultResponse): ProduceItem {
   // Map freshness label to enum
   let mappedFreshness: FreshnessLevel = 'fresh';
   const label = backendResponse.freshness_label?.toLowerCase() || '';

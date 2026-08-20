@@ -1,29 +1,97 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import {
+  getPhraseText,
+  getVoiceAvailability,
+  markVoiceLoadAttempted,
+  speak,
+  stop,
+  subscribeToVoiceChanges,
+  type VoiceAvailability,
+} from '../services/voice';
 
 export const AudioHaggleModal: React.FC = () => {
   const { isAudioModalOpen, setIsAudioModalOpen, selectedProduce, vendorAskingPrice, theme } = useApp();
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [activePhraseIndex, setActivePhraseIndex] = useState(0);
+  const [voiceAvailability, setVoiceAvailability] = useState<VoiceAvailability>(() => getVoiceAvailability('hi'));
+  const [voiceMessage, setVoiceMessage] = useState<string | null>(null);
+  const playbackTokenRef = React.useRef(0);
   const isTerracotta = theme === 'terracotta';
+  const phrases = selectedProduce.hagglePhrases ?? selectedProduce.bargainPhrases;
+  const activePhrase = phrases[activePhraseIndex] ?? phrases[0];
+
+  const updateVoiceAvailability = React.useCallback(() => {
+    const nextAvailability = getVoiceAvailability('hi');
+    setVoiceAvailability(nextAvailability);
+    setVoiceMessage(nextAvailability.message);
+  }, []);
+
+  React.useEffect(() => {
+    if (!isAudioModalOpen) {
+      playbackTokenRef.current += 1;
+      stop();
+      setIsPlayingAudio(false);
+      return;
+    }
+
+    updateVoiceAvailability();
+
+    const unsubscribe = subscribeToVoiceChanges(updateVoiceAvailability);
+    const voiceLoadTimer = window.setTimeout(() => {
+      markVoiceLoadAttempted();
+      updateVoiceAvailability();
+    }, 1200);
+
+    return () => {
+      unsubscribe();
+      window.clearTimeout(voiceLoadTimer);
+    };
+  }, [isAudioModalOpen, updateVoiceAvailability]);
 
   if (!isAudioModalOpen) return null;
 
-  const phrases = selectedProduce.bargainPhrases;
+  const playVoice = (phraseIndex: number) => {
+    const phrase = phrases[phraseIndex];
+    const phraseText = phrase ? getPhraseText(phrase, 'hi') : '';
 
-  const playVoice = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.95;
-      utterance.pitch = 1.0;
-      utterance.onstart = () => setIsPlayingAudio(true);
-      utterance.onend = () => setIsPlayingAudio(false);
-      utterance.onerror = () => setIsPlayingAudio(false);
-      window.speechSynthesis.speak(utterance);
-    } else {
+    if (!phraseText) {
+      playbackTokenRef.current += 1;
+      stop();
+      setIsPlayingAudio(false);
+      setVoiceMessage('No Hindi phrase is available for this line.');
+      return;
+    }
+
+    const playbackToken = playbackTokenRef.current + 1;
+    playbackTokenRef.current = playbackToken;
+
+    const result = speak(phraseText, 'hi', {
+      onStart: () => {
+        if (playbackTokenRef.current === playbackToken) {
+          setIsPlayingAudio(true);
+        }
+      },
+      onEnd: () => {
+        if (playbackTokenRef.current === playbackToken) {
+          setIsPlayingAudio(false);
+        }
+      },
+      onError: () => {
+        if (playbackTokenRef.current === playbackToken) {
+          setIsPlayingAudio(false);
+          setVoiceMessage('Speech playback stopped before finishing.');
+        }
+      },
+    });
+
+    if (result.ok) {
       setIsPlayingAudio(true);
-      setTimeout(() => setIsPlayingAudio(false), 2000);
+      setVoiceMessage(null);
+    } else {
+      setIsPlayingAudio(false);
+      setVoiceMessage(result.message);
+      updateVoiceAvailability();
     }
   };
 
@@ -33,7 +101,8 @@ export const AudioHaggleModal: React.FC = () => {
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in"
         onClick={() => {
-          if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+          playbackTokenRef.current += 1;
+          stop();
           setIsAudioModalOpen(false);
         }}
       />
@@ -66,7 +135,8 @@ export const AudioHaggleModal: React.FC = () => {
           </div>
           <button
             onClick={() => {
-              if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+              playbackTokenRef.current += 1;
+              stop();
               setIsAudioModalOpen(false);
             }}
             className="p-1 rounded-full text-[#594238] hover:bg-[#f5f3ef]"
@@ -87,12 +157,24 @@ export const AudioHaggleModal: React.FC = () => {
 
         {/* Audio Phrases List */}
         <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+          {voiceMessage && (
+            <p
+              className={`rounded-xl border px-3 py-2 text-[11px] font-semibold ${
+                voiceAvailability.status === 'loading'
+                  ? 'border-[#e4e2de] bg-white text-[#594238]'
+                  : 'border-[#fecaca] bg-[#fff7f5] text-[#7f1d1d]'
+              }`}
+              aria-live="polite"
+            >
+              {voiceMessage}
+            </p>
+          )}
           {phrases.map((phrase, idx) => (
             <div
               key={idx}
               onClick={() => {
                 setActivePhraseIndex(idx);
-                playVoice(phrase.hindi);
+                playVoice(idx);
               }}
               className={`p-3.5 rounded-2xl border cursor-pointer transition-all active:scale-[0.98] ${
                 activePhraseIndex === idx
@@ -131,13 +213,18 @@ export const AudioHaggleModal: React.FC = () => {
 
         {/* Pronunciation & Speak Action */}
         <button
-          onClick={() => playVoice(phrases[activePhraseIndex].hindi)}
+          onClick={() => playVoice(activePhraseIndex)}
+          disabled={voiceAvailability.status !== 'available' || !activePhrase}
           className={`w-full py-3.5 rounded-xl font-display font-semibold text-[15px] text-white flex items-center justify-center gap-2 shadow-md active:scale-95 transition-transform ${
-            isTerracotta ? 'bg-[#9e3d00]' : 'bg-[#012d1d]'
+            voiceAvailability.status !== 'available' || !activePhrase
+              ? 'bg-[#9b9089] cursor-not-allowed'
+              : isTerracotta
+                ? 'bg-[#9e3d00]'
+                : 'bg-[#012d1d]'
           }`}
         >
           <span className="material-symbols-outlined text-[20px]">
-            {isPlayingAudio ? 'graphic_eq' : 'play_arrow'}
+            {isPlayingAudio ? 'graphic_eq' : voiceAvailability.status === 'loading' ? 'hourglass_empty' : 'play_arrow'}
           </span>
           {isPlayingAudio ? 'Speaking in Hindi...' : 'Play Spoken Audio Tip'}
         </button>

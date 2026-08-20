@@ -10,6 +10,7 @@ export type FreshnessLevel = 'fresh' | 'slightly_aged' | 'overripe';
 
 export interface BargainPhrase {
   hindi: string;
+  tamil?: string;
   english: string;
   phonetic: string;
 }
@@ -67,11 +68,7 @@ export interface ProduceItem {
   dataConfidence: 'High' | 'Medium' | 'Estimated';
   priceSource?: string;
   category: 'Vegetables' | 'Fruits' | 'Leafy' | 'Spices';
-  bargainPhrases: {
-    hindi: string;
-    english: string;
-    phonetic: string;
-  }[];
+  bargainPhrases: BargainPhrase[];
   quickCommercePrice?: {
     source: string;
     price: number;

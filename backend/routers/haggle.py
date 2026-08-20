@@ -27,7 +27,8 @@ def haggle_check(request: HaggleRequest):
     phrases, source = generate_bargain_phrases(
         produce_type=request.produce_type,
         verdict=result["verdict"],
-        suggested_price=result["suggested_price"]
+        suggested_price=result["suggested_price"],
+        decision=result["decision"],
     )
     
     result["phrases"] = phrases

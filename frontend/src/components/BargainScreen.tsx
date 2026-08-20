@@ -1,6 +1,18 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { Header } from './Header';
+import {
+  getPhraseText,
+  getVoiceAvailability,
+  markVoiceLoadAttempted,
+  speak,
+  stop,
+  subscribeToVoiceChanges,
+  SUPPORTED_VOICE_LANGUAGES,
+  VOICE_LANGUAGE_CONFIG,
+  type VoiceAvailability,
+  type VoiceLanguage,
+} from '../services/voice';
 
 // â”€â”€â”€ Decision config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 type Decision = 'GOOD_DEAL' | 'FAIR_PRICE' | 'SLIGHTLY_HIGH' | 'OVERPRICED' | 'UNUSUALLY_CHEAP';
@@ -39,6 +51,12 @@ const PriceCell: React.FC<PriceCellProps> = ({ label, value, accent, terracotta 
 export const BargainScreen: React.FC = () => {
   const { setCurrentScreen, selectedProduce, vendorAskingPrice, setVendorAskingPrice, recordPurchase, setIsAudioModalOpen, theme } = useApp();
   const isTerracotta = theme === 'terracotta';
+  const [selectedLanguage, setSelectedLanguage] = React.useState<VoiceLanguage>('hi');
+  const [voiceAvailability, setVoiceAvailability] = React.useState<VoiceAvailability>(() => getVoiceAvailability('hi'));
+  const [playingPhraseIndex, setPlayingPhraseIndex] = React.useState<number | null>(null);
+  const [voiceMessage, setVoiceMessage] = React.useState<string | null>(null);
+  const playbackTokenRef = React.useRef(0);
+  const selectedLanguageConfig = VOICE_LANGUAGE_CONFIG[selectedLanguage];
 
   const fairAvg = Math.round((selectedProduce.retailFairMin + selectedProduce.retailFairMax) / 2);
   const fallbackBuyPrice = Math.max(selectedProduce.wholesalePrice + 5, Math.round(fairAvg + (vendorAskingPrice > fairAvg ? fairAvg * 0.05 : 0)));
@@ -52,11 +70,97 @@ export const BargainScreen: React.FC = () => {
   const handleDecrease = () => { setVendorAskingPrice(prev => Math.max(selectedProduce.wholesalePrice || 5, prev - 5)); if (navigator.vibrate) navigator.vibrate(20); };
   const handleIncrease = () => { setVendorAskingPrice(prev => Math.min(200, prev + 5)); if (navigator.vibrate) navigator.vibrate(20); };
   const handleBuy = () => { recordPurchase(confirmedBuyPrice); setCurrentScreen('history'); };
-  const playPhrase = (text: string) => { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = 'hi-IN'; window.speechSynthesis.speak(u); } };
 
   const minSlider = 10;
   const maxSlider = Math.max(100, vendorAskingPrice + 10);
   const phrases = selectedProduce.hagglePhrases ?? selectedProduce.bargainPhrases ?? [];
+
+  const updateVoiceAvailability = React.useCallback(() => {
+    const nextAvailability = getVoiceAvailability(selectedLanguage);
+    setVoiceAvailability(nextAvailability);
+    setVoiceMessage(nextAvailability.message);
+  }, [selectedLanguage]);
+
+  React.useEffect(() => {
+    updateVoiceAvailability();
+
+    const unsubscribe = subscribeToVoiceChanges(updateVoiceAvailability);
+    const voiceLoadTimer = window.setTimeout(() => {
+      markVoiceLoadAttempted();
+      updateVoiceAvailability();
+    }, 1200);
+
+    return () => {
+      unsubscribe();
+      window.clearTimeout(voiceLoadTimer);
+    };
+  }, [updateVoiceAvailability]);
+
+  React.useEffect(() => {
+    playbackTokenRef.current += 1;
+    stop();
+    setPlayingPhraseIndex(null);
+  }, [selectedLanguage]);
+
+  React.useEffect(() => () => {
+    playbackTokenRef.current += 1;
+    stop();
+  }, []);
+
+  const handleLanguageChange = (language: VoiceLanguage) => {
+    setSelectedLanguage(language);
+  };
+
+  const handleSpeakPhrase = (phrase: (typeof phrases)[number], phraseIndex: number) => {
+    const phraseText = getPhraseText(phrase, selectedLanguage);
+
+    if (!phraseText) {
+      playbackTokenRef.current += 1;
+      stop();
+      setPlayingPhraseIndex(null);
+      setVoiceMessage(`No ${selectedLanguageConfig.label} phrase is available for this line.`);
+      return;
+    }
+
+    if (playingPhraseIndex === phraseIndex) {
+      playbackTokenRef.current += 1;
+      stop();
+      setPlayingPhraseIndex(null);
+      setVoiceMessage(null);
+      return;
+    }
+
+    const playbackToken = playbackTokenRef.current + 1;
+    playbackTokenRef.current = playbackToken;
+
+    const result = speak(phraseText, selectedLanguage, {
+      onStart: () => {
+        if (playbackTokenRef.current === playbackToken) {
+          setPlayingPhraseIndex(phraseIndex);
+        }
+      },
+      onEnd: () => {
+        if (playbackTokenRef.current === playbackToken) {
+          setPlayingPhraseIndex(null);
+        }
+      },
+      onError: () => {
+        if (playbackTokenRef.current === playbackToken) {
+          setPlayingPhraseIndex(null);
+          setVoiceMessage('Speech playback stopped before finishing.');
+        }
+      },
+    });
+
+    if (result.ok) {
+      setPlayingPhraseIndex(phraseIndex);
+      setVoiceMessage(null);
+    } else {
+      setPlayingPhraseIndex(null);
+      setVoiceMessage(result.message);
+      updateVoiceAvailability();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#fbf9f5] flex flex-col pb-12 antialiased relative overflow-x-hidden">
@@ -195,28 +299,95 @@ export const BargainScreen: React.FC = () => {
         {/* ── PHRASEBOOK ── */}
         {phrases.length > 0 && (
           <section id="phrasebook-card" className="bg-[#f5f3ef] rounded-[20px] p-4 border border-[#e4e2de]">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-start justify-between gap-3 mb-3">
               <span className="text-[11px] font-bold uppercase tracking-widest text-[#594238] flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[15px] text-[#9e3d00]">record_voice_over</span>
                 What To Say
               </span>
-              <span className="text-[11px] text-[#594238]">Hindi & English</span>
-            </div>
-            <div className="space-y-2">
-              {phrases.slice(0, 2).map((phrase, idx) => (
-                <div key={idx} className="p-3 rounded-xl bg-white border border-[#e4e2de]/70 relative pr-12">
-                  <p className="font-semibold text-[13px] text-[#1b1c1a] leading-snug">"{phrase.hindi}"</p>
-                  <p className="text-[11px] text-[#594238] font-medium mt-0.5">{phrase.phonetic}</p>
-                  <p className="text-[11px] text-[#594238] italic mt-0.5">"{phrase.english}"</p>
-                  {'speechSynthesis' in window && (
-                    <button onClick={() => playPhrase(phrase.hindi)}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-[#f5f3ef] hover:bg-[#eae8e4] active:scale-95 transition-all"
-                      aria-label="Listen">
-                      <span className="material-symbols-outlined text-[17px] text-[#1b1c1a]">volume_up</span>
+              <div
+                className="flex rounded-full bg-white border border-[#e4e2de] p-0.5 shrink-0"
+                role="radiogroup"
+                aria-label="Phrase language"
+              >
+                {SUPPORTED_VOICE_LANGUAGES.map((language) => {
+                  const isSelected = selectedLanguage === language.code;
+
+                  return (
+                    <button
+                      key={language.code}
+                      type="button"
+                      role="radio"
+                      aria-checked={isSelected}
+                      onClick={() => handleLanguageChange(language.code)}
+                      className={`min-w-[58px] rounded-full px-2.5 py-1 text-[11px] font-bold transition-all ${
+                        isSelected
+                          ? isTerracotta
+                            ? 'bg-[#9e3d00] text-white shadow-xs'
+                            : 'bg-[#012d1d] text-white shadow-xs'
+                          : 'text-[#594238] hover:bg-[#f5f3ef]'
+                      }`}
+                    >
+                      {language.selectorLabel}
                     </button>
-                  )}
-                </div>
-              ))}
+                  );
+                })}
+              </div>
+            </div>
+            {voiceMessage && (
+              <p
+                className={`mb-3 rounded-xl border px-3 py-2 text-[11px] font-semibold ${
+                  voiceAvailability.status === 'loading'
+                    ? 'border-[#e4e2de] bg-white text-[#594238]'
+                    : 'border-[#fecaca] bg-[#fff7f5] text-[#7f1d1d]'
+                }`}
+                aria-live="polite"
+              >
+                {voiceMessage}
+              </p>
+            )}
+            <div className="space-y-2">
+              {phrases.slice(0, 2).map((phrase, idx) => {
+                const primaryText = getPhraseText(phrase, selectedLanguage);
+                const isPlaying = playingPhraseIndex === idx;
+                const canSpeak = voiceAvailability.status === 'available' && primaryText.length > 0;
+                const disabledReason = primaryText
+                  ? voiceAvailability.message ?? `${selectedLanguageConfig.label} voice is not ready.`
+                  : `No ${selectedLanguageConfig.label} phrase is available for this line.`;
+
+                return (
+                  <div key={idx} className="p-3 rounded-xl bg-white border border-[#e4e2de]/70 relative pr-12">
+                    <p className={`font-semibold text-[#1b1c1a] leading-snug ${selectedLanguage === 'en' ? 'text-[14px]' : 'text-[15px]'}`}>
+                      {primaryText ? `"${primaryText}"` : `${selectedLanguageConfig.label} phrase unavailable`}
+                    </p>
+                    {selectedLanguage !== 'en' && phrase.english && (
+                      <p className="text-[11px] text-[#594238] italic mt-1">"{phrase.english}"</p>
+                    )}
+                    {selectedLanguage === 'hi' && phrase.phonetic && (
+                      <p className="text-[11px] text-[#594238] font-medium mt-0.5">{phrase.phonetic}</p>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => handleSpeakPhrase(phrase, idx)}
+                      disabled={!canSpeak}
+                      className={`absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full transition-all ${
+                        isPlaying
+                          ? isTerracotta
+                            ? 'bg-[#9e3d00] text-white animate-pulse'
+                            : 'bg-[#012d1d] text-white animate-pulse'
+                          : canSpeak
+                            ? 'bg-[#f5f3ef] text-[#1b1c1a] hover:bg-[#eae8e4] active:scale-95'
+                            : 'bg-[#efeeea] text-[#9b9089] cursor-not-allowed'
+                      }`}
+                      aria-label={isPlaying ? `Stop ${selectedLanguageConfig.label} phrase` : `Listen in ${selectedLanguageConfig.label}`}
+                      title={canSpeak ? `Listen in ${selectedLanguageConfig.label}` : disabledReason}
+                    >
+                      <span className="material-symbols-outlined text-[17px]">
+                        {isPlaying ? 'stop_circle' : voiceAvailability.status === 'loading' ? 'hourglass_empty' : 'volume_up'}
+                      </span>
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           </section>
         )}

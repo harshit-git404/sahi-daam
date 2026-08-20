@@ -112,7 +112,7 @@ and optional quick-commerce reference to return a structured buying decision and
   "alternatives": {
     "quickcommerce": { "source": "Blinkit", "price": 40, "unit": "kg" }
   },
-  "phrases": [{ "hindi": "...", "english": "...", "phonetic": "..." }],
+  "phrases": [{ "hindi": "...", "tamil": "...", "english": "...", "phonetic": "..." }],
   "phrases_source": "gemini"
 }
 ```
@@ -194,7 +194,7 @@ QC comparisons use neutral language; they reflect price reference only, not deli
 - `recommendation` (dict): action, headline, explanation
 - `quality_context` (dict): freshness_label, caution (null if not applicable)
 - `alternatives` (dict): quickcommerce comparison
-- `phrases` (list): 2-3 Hindi/English/phonetic bargaining phrases
+- `phrases` (list): 2-3 multilingual bargaining phrases with `hindi`, `tamil`, `english`, and Hindi `phonetic` fields
 - `phrases_source` (str): "gemini" | "fallback"
 
 
@@ -235,6 +235,7 @@ QC comparisons use neutral language; they reflect price reference only, not deli
   "phrases": [
     {
       "hindi": "भैया, यह तो बहुत महंगा है। थोड़ा कम कीजिए।",
+      "tamil": "அண்ணா, இது ரொம்ப அதிகம். கொஞ்சம் குறையுங்கள்.",
       "english": "Brother, this is too expensive. Please reduce the price a bit.",
       "phonetic": "Bhaiya, yeh toh bahut mehanga hai. Thoda kam kijiye."
     }
