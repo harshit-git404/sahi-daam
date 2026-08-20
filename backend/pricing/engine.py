@@ -30,7 +30,7 @@ def calculate_haggle_verdict(asking_price: float, fair_price_range: Dict[str, fl
         verdict = "Suspiciously Cheap"
         deviation_pct = ((f_min - asking_price) / f_min) * 100
         suggested = asking_price
-        reasoning = f"The price is {round(deviation_pct)}% below the wholesale baseline. Check for hidden rot or short-weighting, but if good, it's a steal!"
+        reasoning = f"The price is {round(deviation_pct)}% below the fair market minimum (₹{f_min}). Check for hidden rot or short-weighting, but if good, it's a steal!"
     else:
         verdict = "Fair Price"
         deviation_pct = 0.0
