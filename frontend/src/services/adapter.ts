@@ -31,5 +31,6 @@ export function mergeProduceData(catalogEntry: ProduceItem, backendResponse: any
     } : undefined,
     marketStatus: backendResponse.market_status,
     analysisProvider: backendResponse.analysis_provider,
+    retailComparison: backendResponse.retail,
   };
 }

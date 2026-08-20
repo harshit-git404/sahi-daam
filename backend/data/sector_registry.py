@@ -26,6 +26,11 @@ class SectorDataConfig:
     api_available: bool
     fields: tuple[str, ...]
     filters: dict[str, str]
+    metric_name: str
+    unit: str
+    date_field: str
+    value_field: str
+    aggregation: Any
     verification_note: str
 
     def as_dict(self) -> dict[str, Any]:
@@ -78,6 +83,11 @@ def _configured_pending(sector_id: str, sector: str, component: str, resource_en
         api_available=False,
         fields=(),
         filters={},
+        metric_name="",
+        unit="",
+        date_field="",
+        value_field="",
+        aggregation=lambda values: sum(values) / len(values),
         verification_note=verification_note,
     )
 
@@ -95,6 +105,11 @@ SECTOR_DATA_CONFIGS: tuple[SectorDataConfig, ...] = (
         api_available=True,
         fields=_AGMARKNET_FIELDS,
         filters=_AGMARKNET_FILTERS,
+        metric_name="Price",
+        unit="kg",
+        date_field="arrival_date",
+        value_field="modal_price_per_kg",
+        aggregation=lambda values: sum(values) / len(values),
         verification_note="Verified existing Agmarknet Resource API. The photo/classifier/freshness workflow remains on /scan-produce.",
     ),
     _configured_pending("food-agriculture", "Food & Agriculture", "Agricultural fertilizers and pesticides", "FERTILIZER_RESOURCE_ID"),

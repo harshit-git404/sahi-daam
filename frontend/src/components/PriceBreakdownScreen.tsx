@@ -160,6 +160,20 @@ export const PriceBreakdownScreen: React.FC = () => {
         </section>
 
         {/* Location Context */}
+        {selectedProduce.retailComparison?.products?.length ? (
+          <section className="rounded-2xl border border-[#d8e6dc] bg-[#e9f8ef] p-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-[#315b48]">Online retail reference</p>
+            <div className="mt-3 flex flex-col gap-2">
+              {selectedProduce.retailComparison.products.map((product) => (
+                <div key={`${product.platform}-${product.product_name}`} className="flex items-center justify-between text-sm">
+                  <span className="capitalize text-[#315b48]">{product.platform}</span>
+                  <span className="font-semibold text-[#1b4332]">₹{product.price_per_kg}/kg</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
         <div className="flex items-center justify-center gap-1.5 text-[#594238] text-[13px] font-medium my-1">
           <span className="material-symbols-outlined text-[18px] text-[#9e3d00]">
             location_on

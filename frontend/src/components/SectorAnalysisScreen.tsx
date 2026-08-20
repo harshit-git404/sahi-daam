@@ -38,13 +38,24 @@ export const SectorAnalysisScreen: React.FC = () => {
         {result && result.status === 'API_AVAILABLE' && (
           <>
             <div className="rounded-2xl bg-[#e9f8ef] p-5 mb-4">
-              <p className="font-display font-bold text-[#1b4332]">Analysis ready</p>
+              <p className="font-display font-bold text-[#1b4332]">{result.metric?.name || 'Analysis'} ready</p>
               <p className="text-sm text-[#315b48] mt-1">{result.summary}</p>
             </div>
+            {result.metric && (
+              <section className="mb-4 grid grid-cols-2 gap-3">
+                {[
+                  ['Current', result.metric.current_value],
+                  ['10-period average', result.metric.average_10_days],
+                  ['High', result.metric.high_10_days],
+                  ['Low', result.metric.low_10_days],
+                ].map(([label, value]) => <div key={String(label)} className="rounded-2xl border border-[#d8e6dc] bg-white p-4"><p className="text-xs text-[#6b7f72]">{label}</p><p className="mt-1 font-display text-xl font-bold text-[#1b1c1a]">{value == null ? 'Unavailable' : `${value} ${result.metric?.unit || ''}`}</p></div>)}
+                <div className="col-span-2 rounded-2xl border border-[#d8e6dc] bg-white p-4 flex justify-between"><span className="text-sm text-[#594238]">Change / trend</span><span className="font-bold text-[#0e6c4a]">{result.metric.percentage_change == null ? 'Unavailable' : `${result.metric.percentage_change}% · ${result.metric.trend}`}</span></div>
+              </section>
+            )}
             <div className="flex flex-col gap-3">
-              {result.records.slice(0, 10).map((record, index) => (
+              {(result.metric?.history || result.records.slice(0, 10)).map((record, index) => (
                 <div key={index} className="rounded-2xl border border-[#d8e6dc] bg-white p-4">
-                  <p className="text-xs text-[#6b7f72] mb-2">Record {index + 1}</p>
+                  <p className="text-xs text-[#6b7f72] mb-2">{'date' in record ? `${record.date} · ${record.value}` : `Record ${index + 1}`}</p>
                   <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
                     {Object.entries(record).slice(0, 8).map(([key, value]) => (
                       <div key={key}>

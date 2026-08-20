@@ -15,6 +15,36 @@ export interface SectorAnalysisResult {
   summary: string;
   records: Record<string, unknown>[];
   status?: 'API_AVAILABLE' | 'API_UNAVAILABLE' | 'NO_SUITABLE_DATA_SOURCE';
+  metric?: {
+    name: string;
+    unit: string;
+    current_value: number | null;
+    average_10_days: number | null;
+    high_10_days: number | null;
+    low_10_days: number | null;
+    percentage_change: number | null;
+    trend: string;
+    history: { date: string; value: number }[];
+  };
+}
+
+export interface RetailProduct {
+  platform: string;
+  product_name: string;
+  quantity_kg: number;
+  price: number;
+  mrp: number | null;
+  price_per_kg: number;
+  location?: string;
+  collected_at?: string;
+}
+
+export interface RetailResult {
+  status: 'AVAILABLE' | 'UNAVAILABLE';
+  commodity: string;
+  location?: string;
+  products: RetailProduct[];
+  message?: string;
 }
 
 export type FreshnessLevel = 'fresh' | 'slightly_aged' | 'overripe';
@@ -52,6 +82,7 @@ export interface ProduceItem {
   };
   marketStatus?: 'AVAILABLE' | 'UNAVAILABLE';
   analysisProvider?: 'gemini' | 'local_fallback';
+  retailComparison?: RetailResult;
 }
 
 export interface PurchaseRecord {

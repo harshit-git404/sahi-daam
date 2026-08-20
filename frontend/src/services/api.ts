@@ -1,4 +1,4 @@
-import { SectorAnalysisResult } from '../types';
+import { RetailResult, SectorAnalysisResult } from '../types';
 
 // Use environment variable if set (for local network override without ngrok), otherwise default to the Vite proxy (/api)
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
@@ -38,5 +38,13 @@ export async function fetchSectorAnalysis(sector: string, component: string): Pr
     const body = await response.json().catch(() => null);
     throw new Error(body?.detail || `Failed to fetch sector analysis: ${response.statusText}`);
   }
+  return response.json();
+}
+
+export async function fetchRetailPrices(commodity: string, location?: string): Promise<RetailResult> {
+  const params = new URLSearchParams({ commodity });
+  if (location) params.set('location', location);
+  const response = await fetch(`${API_BASE_URL}/retail-prices?${params.toString()}`);
+  if (!response.ok) throw new Error(`Failed to fetch retail prices: ${response.statusText}`);
   return response.json();
 }

@@ -6,6 +6,10 @@ import httpx
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException, Query
 try:
+    from ..data.history import analyze_distinct_history
+except ImportError:
+    from data.history import analyze_distinct_history
+try:
     from ..data.sector_registry import get_all_sector_configs, get_sector_config
 except ImportError:
     from data.sector_registry import get_all_sector_configs, get_sector_config
@@ -26,6 +30,7 @@ def _normalized_response(config: Any, records: list[dict[str, Any]], metadata: d
         "source": "data.gov.in",
         "records": records,
         "metadata": metadata,
+        "metric": metadata.get("metric"),
         "summary": metadata.get("message", f"{len(records)} public record(s) found for this component."),
         "fields": list(config.fields),
         "filters": config.filters,
@@ -36,6 +41,15 @@ def _normalized_response(config: Any, records: list[dict[str, Any]], metadata: d
 def sector_status() -> dict[str, Any]:
     """Return the verified data-source status for every app component."""
     return {"components": get_all_sector_configs()}
+
+
+@router.get("/retail-prices")
+def retail_prices(commodity: str, location: str | None = None) -> dict[str, Any]:
+    try:
+        from ..data.retail_service import get_retail_prices
+    except ImportError:
+        from data.retail_service import get_retail_prices
+    return get_retail_prices(commodity, location)
 
 
 @router.get("/sector-analysis")
@@ -87,9 +101,11 @@ async def sector_analysis(
         raise HTTPException(status_code=502, detail="Unable to reach data.gov.in.") from error
 
     records = payload.get("records", [])
+    history = analyze_distinct_history(records, config.date_field, config.value_field, aggregate=config.aggregation)
     return _normalized_response(config, records, {
         "total": payload.get("total"),
         "count": len(records),
         "required_fields": list(config.fields),
         "supported_filters": config.filters,
+        "metric": {"name": config.metric_name, "unit": config.unit, **history},
     })

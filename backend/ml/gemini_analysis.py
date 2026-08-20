@@ -5,6 +5,8 @@ from typing import Any
 
 from dotenv import load_dotenv
 from pathlib import Path
+from PIL import Image
+import io
 
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 load_dotenv(Path(__file__).resolve().parents[3] / ".env")
@@ -26,11 +28,15 @@ def analyze_with_gemini(image_bytes: bytes) -> dict[str, Any]:
         from google import genai
         from google.genai import types
 
+        with Image.open(io.BytesIO(image_bytes)) as image:
+            format_name = (image.format or "JPEG").lower()
+        mime_type = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "webp": "image/webp"}.get(format_name, "image/jpeg")
+
         client = genai.Client(api_key=api_key)
         response = client.models.generate_content(
             model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
             contents=[
-                types.Part.from_bytes(data=image_bytes, mime_type="image/jpeg"),
+                types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
                 """Analyze this fruit or vegetable image. Return only JSON with keys:
                 produce_type (string), produce_confidence (number 0-100),
                 freshness_percent (number 0-100), freshness_label (Fresh, Slightly Aged, or Overripe),

@@ -13,12 +13,16 @@ try:
     from ..ml.produce_classifier import identify_produce
     from ..ml.gemini_analysis import analyze_with_gemini, GeminiUnavailable
     from ..pricing.engine import calculate_fair_price
+    from ..data.history import analyze_distinct_history
+    from ..data.retail_service import get_retail_prices
 except ImportError:
     from data.agmarknet.service import get_mandi_prices
     from ml.freshness_model import predict_freshness
     from ml.produce_classifier import identify_produce
     from ml.gemini_analysis import analyze_with_gemini, GeminiUnavailable
     from pricing.engine import calculate_fair_price
+    from data.history import analyze_distinct_history
+    from data.retail_service import get_retail_prices
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -129,6 +133,8 @@ async def scan_produce(request: ScanRequest):
     pricing = calculate_fair_price(
         wholesale_price, markup_min, markup_max, int(freshness_data.get("quality_adjustment", 0))
     ) if wholesale_price is not None else None
+    market_history = analyze_distinct_history(records, "arrival_date", "modal_price_per_kg")
+    retail = get_retail_prices(detected_produce_id, f"{request.district or ''}, {request.state or ''}".strip(", "))
 
     return {
         "produce_type": detected_produce,
@@ -148,8 +154,9 @@ async def scan_produce(request: ScanRequest):
             "status": market_status,
             "today_price": wholesale_price,
             "unit": "kg",
-            "history": records,
+            **market_history,
         },
+        "retail": retail,
         "pricing": {
             "fair_price_min": pricing["min"],
             "fair_price_max": pricing["max"],
