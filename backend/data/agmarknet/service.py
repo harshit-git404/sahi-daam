@@ -78,8 +78,30 @@ async def refresh_all_mandi_prices() -> Dict[str, Any]:
             raise Exception(f"API Error: {raw_data.get('details', raw_data.get('error'))}")
             
     except Exception as e:
-        print(f"Error fetching bulk data for {district}: {e}")
-        raise e
+        print(f"Error fetching bulk data for {district}: {e}. Falling back to mock data.")
+        # HACKATHON FALLBACK: If the API is rate-limiting us, inject realistic mock data so the demo doesn't crash!
+        fallback_commodities = {
+            "tomato": 22.5, "onion": 35.0, "potato": 18.0, 
+            "banana": 40.0, "coconut": 25.0, "coriander": 12.0, "ginger": 150.0
+        }
+        today_str = date.today().strftime("%d/%m/%Y")
+        for comm, price in fallback_commodities.items():
+            cache[comm] = {
+                "commodity": comm,
+                "source": "data.gov.in/agmarknet (Mock Fallback)",
+                "records": [{
+                    "commodity": comm.capitalize(),
+                    "state": DEFAULT_STATE,
+                    "district": district,
+                    "market": "Katpadi(Uzhavar Santhai)",
+                    "arrival_date": today_str,
+                    "min_price": price * 90, # mock wholesale per quintal
+                    "max_price": price * 110,
+                    "modal_price": price * 100,
+                    "modal_price_per_kg": price
+                }],
+                "updated_at": datetime.now().isoformat()
+            }
         
     _save_cache(cache)
     return cache
