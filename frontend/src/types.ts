@@ -14,6 +14,18 @@ export interface BargainPhrase {
   phonetic: string;
 }
 
+export type PriceTrend = 'UP' | 'DOWN' | 'STABLE' | 'INSUFFICIENT_DATA';
+
+export interface MarketContext {
+  current_price: number;
+  recent_average: number;
+  change_pct: number;
+  trend: PriceTrend;
+  history_days: number;
+  observation_count: number;
+  confidence: 'High' | 'Medium' | 'Low';
+}
+
 export interface ProduceItem {
   id: string;
   name: string;
@@ -72,6 +84,7 @@ export interface ProduceItem {
       unit: string;
     };
   };
+  marketContext?: MarketContext;
 }
 
 export interface PurchaseRecord {

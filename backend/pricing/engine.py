@@ -26,6 +26,62 @@ from typing import Dict, Optional, Any
 SLIGHT_THRESHOLD_PCT = 10.0
 SIGNIFICANT_THRESHOLD_PCT = 30.0
 
+def analyze_price_trend(
+    current_price: float,
+    historical_observations: list[Dict[str, Any]]
+) -> Dict[str, Any]:
+    """
+    Analyzes historical observations to determine recent market price trends.
+    Uses a 5% threshold to define UP/DOWN vs STABLE.
+    """
+    if not historical_observations or len(historical_observations) < 2:
+        return {
+            "current_price": round(current_price, 2),
+            "recent_average": round(current_price, 2),
+            "change_pct": 0.0,
+            "trend": "INSUFFICIENT_DATA",
+            "history_days": 1 if historical_observations else 0,
+            "observation_count": len(historical_observations),
+            "confidence": "Low"
+        }
+        
+    prices = [obs["price"] for obs in historical_observations]
+    recent_average = sum(prices) / len(prices)
+    
+    change_pct = ((current_price - recent_average) / recent_average) * 100 if recent_average > 0 else 0.0
+    
+    if change_pct > 5.0:
+        trend = "UP"
+    elif change_pct < -5.0:
+        trend = "DOWN"
+    else:
+        trend = "STABLE"
+        
+    if len(prices) >= 10:
+        confidence = "High"
+    elif len(prices) >= 3:
+        confidence = "Medium"
+    else:
+        confidence = "Low"
+        
+    try:
+        from datetime import datetime
+        d1 = datetime.strptime(historical_observations[0]["date"], "%Y-%m-%d")
+        d2 = datetime.strptime(historical_observations[-1]["date"], "%Y-%m-%d")
+        history_days = abs((d1 - d2).days) + 1
+    except:
+        history_days = len(historical_observations)
+        
+    return {
+        "current_price": round(current_price, 2),
+        "recent_average": round(recent_average, 2),
+        "change_pct": round(change_pct, 1),
+        "trend": trend,
+        "history_days": history_days,
+        "observation_count": len(prices),
+        "confidence": confidence
+    }
+
 def calculate_fair_price(
     wholesale_price: float,
     markup_min_pct: float,
@@ -130,7 +186,8 @@ def analyze_purchase_decision(
     fair_price_max: float,
     asking_price: float,
     quality_info: Optional[str] = None,
-    quickcommerce_price: Optional[Dict[str, Any]] = None
+    quickcommerce_price: Optional[Dict[str, Any]] = None,
+    market_context: Optional[Dict[str, Any]] = None
 ) -> dict:
     """
     Full negotiation intelligence engine.
@@ -280,6 +337,16 @@ def analyze_purchase_decision(
         "FAIR_PRICE": "Fair Price",
     }
     legacy_verdict = legacy_verdict_map.get(decision, "Fair Price")
+
+    # --- Market context reasoning enrichment ---
+    if market_context and market_context.get("trend") not in (None, "INSUFFICIENT_DATA"):
+        trend = market_context.get("trend")
+        if trend == "UP" and position == "ABOVE":
+            explanation += f" Today's market is elevated, but Rs{asking_price} is still above the estimated fair range."
+        elif trend == "UP" and position == "WITHIN":
+            explanation += f" Today's market is elevated, making Rs{asking_price} a reasonable fair price today."
+        elif trend == "DOWN" and position == "BELOW":
+            explanation += f" The market is trending down, making Rs{asking_price} a good deal in context."
 
     result = {
         # Legacy fields (kept for backward compat)

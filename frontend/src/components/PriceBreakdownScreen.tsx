@@ -181,6 +181,67 @@ export const PriceBreakdownScreen: React.FC = () => {
           </div>
         </section>
 
+        {/* ── MARKET TODAY ── */}
+        {selectedProduce.marketContext && (
+          <section id="market-context-card" className="bg-white rounded-[24px] p-5 border border-[#e4e2de] shadow-xs">
+            <h3 className="text-[11px] font-bold text-[#594238] mb-3 uppercase tracking-widest flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[15px]">trending_up</span>
+              Market Today
+            </h3>
+
+            {selectedProduce.marketContext.trend === 'INSUFFICIENT_DATA' ? (
+              <div className="flex items-start gap-2">
+                <span className="material-symbols-outlined text-[18px] text-[#594238] mt-0.5 flex-shrink-0">info</span>
+                <p className="text-[13px] text-[#594238] leading-snug">
+                  Not enough recent market history to determine a price trend. Using today's single observation.
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {/* Main price + trend indicator */}
+                <div className="flex items-end justify-between">
+                  <div>
+                    <p className="text-[28px] font-extrabold text-[#1b1c1a] font-display leading-none">
+                      ₹{selectedProduce.marketContext.current_price}
+                      <span className="text-[14px] font-medium text-[#594238] ml-1">/{selectedProduce.unit}</span>
+                    </p>
+                    <p className="text-[12px] text-[#594238] mt-0.5">Today's local wholesale reference</p>
+                  </div>
+                  <div className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[13px] font-bold ${
+                    selectedProduce.marketContext.trend === 'UP' 
+                      ? 'bg-[#fef2f2] text-[#b91c1c]' 
+                      : selectedProduce.marketContext.trend === 'DOWN' 
+                        ? 'bg-[#f0fdf4] text-[#15803d]'
+                        : 'bg-[#f5f3ef] text-[#594238]'
+                  }`}>
+                    <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      {selectedProduce.marketContext.trend === 'UP' ? 'trending_up' : selectedProduce.marketContext.trend === 'DOWN' ? 'trending_down' : 'trending_flat'}
+                    </span>
+                    {selectedProduce.marketContext.change_pct > 0 ? '+' : ''}{selectedProduce.marketContext.change_pct}% vs avg
+                  </div>
+                </div>
+
+                {/* Details grid */}
+                <div className="grid grid-cols-2 gap-2 mt-1">
+                  <div className="bg-[#f5f3ef] rounded-xl p-3">
+                    <p className="text-[10px] font-bold text-[#594238] uppercase tracking-wider mb-0.5">Recent Average</p>
+                    <p className="text-[16px] font-bold text-[#1b1c1a]">₹{selectedProduce.marketContext.recent_average}/{selectedProduce.unit}</p>
+                  </div>
+                  <div className="bg-[#f5f3ef] rounded-xl p-3">
+                    <p className="text-[10px] font-bold text-[#594238] uppercase tracking-wider mb-0.5">History</p>
+                    <p className="text-[16px] font-bold text-[#1b1c1a]">{selectedProduce.marketContext.history_days} days</p>
+                    <p className="text-[10px] text-[#594238]">{selectedProduce.marketContext.observation_count} observations</p>
+                  </div>
+                </div>
+
+                <p className="text-[11px] text-[#594238] text-center">
+                  Trend confidence: {selectedProduce.marketContext.confidence}
+                </p>
+              </div>
+            )}
+          </section>
+        )}
+
         {/* Location Context */}
         <div className="flex items-center justify-center gap-1.5 text-[#594238] text-[13px] font-medium my-1">
           <span className="material-symbols-outlined text-[18px] text-[#9e3d00]">

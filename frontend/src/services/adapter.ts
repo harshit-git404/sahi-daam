@@ -29,5 +29,6 @@ export function mergeProduceData(catalogEntry: ProduceItem, backendResponse: any
       price: backendResponse.quickcommerce_price.price,
       unit: backendResponse.quickcommerce_price.unit,
     } : catalogEntry.quickCommercePrice,
+    marketContext: backendResponse.market_context ?? undefined,
   };
 }

@@ -83,6 +83,7 @@ async def scan_produce(request: ScanRequest):
             pass
             
     from data.agmarknet.service import resolve_wholesale_price
+    from pricing.engine import analyze_price_trend
     price_info = await resolve_wholesale_price(commodity=produce_type)
     
     wholesale_price = price_info["wholesale_price"]
@@ -90,6 +91,9 @@ async def scan_produce(request: ScanRequest):
     data_confidence = price_info["data_confidence"]
     price_source = price_info["price_source"]
     used_markets = price_info["used_markets"]
+    historical_observations = price_info.get("historical_observations", [])
+    
+    market_context = analyze_price_trend(wholesale_price, historical_observations)
                 
     markup_min = 30
     markup_max = 45
@@ -109,5 +113,6 @@ async def scan_produce(request: ScanRequest):
         "used_markets": used_markets,
         "location": "Katpadi, Vellore",
         "date": data_date,
-        "quickcommerce_price": { "source": "Blinkit", "price": wholesale_price * 1.8, "unit": "kg" }
+        "quickcommerce_price": { "source": "Blinkit", "price": wholesale_price * 1.8, "unit": "kg" },
+        "market_context": market_context
     }

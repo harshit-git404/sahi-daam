@@ -207,15 +207,28 @@ async def resolve_wholesale_price(
     # Filter out mock records from the 'live' search space
     real_records = [r for r in records if "Mock Fallback" not in r.get("source", state_data.get("source", ""))]
     
+    def format_obs(r):
+        try:
+            d, m, y = r["arrival_date"].split("/")
+            return {"date": f"{y}-{m}-{d}", "price": r["modal_price_per_kg"]}
+        except:
+            return {"date": today_iso, "price": r["modal_price_per_kg"]}
+
+    market_lower = target_market.lower()
+    local_history = [format_obs(r) for r in real_records if market_lower in r["market"].lower()][:30]
+    regional_history = [format_obs(r) for r in real_records][:30]
+    mock_history = [format_obs(r) for r in records if "Mock Fallback" in r.get("source", state_data.get("source", ""))][:30]
+
     # Tier A: Today's price for exact market
-    tier_a = [r for r in real_records if target_market.lower() in r["market"].lower() and r["arrival_date"] == today_str]
+    tier_a = [r for r in real_records if market_lower in r["market"].lower() and r["arrival_date"] == today_str]
     if tier_a:
         return {
             "wholesale_price": tier_a[0]["modal_price_per_kg"],
             "data_date": today_iso,
             "data_confidence": "High",
             "price_source": "live_local",
-            "used_markets": [tier_a[0]["market"]]
+            "used_markets": [tier_a[0]["market"]],
+            "historical_observations": local_history
         }
         
     # Tier B: Today's price averaged across other markets in the state
@@ -228,11 +241,12 @@ async def resolve_wholesale_price(
             "data_date": today_iso,
             "data_confidence": "Medium",
             "price_source": "live_regional_average",
-            "used_markets": used_markets
+            "used_markets": used_markets,
+            "historical_observations": regional_history
         }
         
     # Tier C: Most recent previous day's price for exact market
-    tier_c = [r for r in real_records if target_market.lower() in r["market"].lower()]
+    tier_c = [r for r in real_records if market_lower in r["market"].lower()]
     if tier_c:
         # already sorted by date descending in get_mandi_prices
         latest = tier_c[0]
@@ -243,7 +257,8 @@ async def resolve_wholesale_price(
             "data_date": f"{y}-{m}-{d}",
             "data_confidence": "Low",
             "price_source": "cached_previous_day",
-            "used_markets": [latest["market"]]
+            "used_markets": [latest["market"]],
+            "historical_observations": local_history
         }
         
     # Tier D: Mock Fallback
@@ -256,7 +271,8 @@ async def resolve_wholesale_price(
             "data_date": f"{y}-{m}-{d}",
             "data_confidence": "Estimated",
             "price_source": "fallback_mock",
-            "used_markets": [latest["market"]]
+            "used_markets": [latest["market"]],
+            "historical_observations": mock_history
         }
         
     # Absolute Fallback if even mock fails
@@ -265,6 +281,6 @@ async def resolve_wholesale_price(
         "data_date": today_iso,
         "data_confidence": "Estimated",
         "price_source": "fallback_mock",
-        "used_markets": ["None"]
+        "used_markets": ["None"],
+        "historical_observations": []
     }
-

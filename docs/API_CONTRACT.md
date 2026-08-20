@@ -19,9 +19,20 @@ Analyzes produce and returns pricing and quality details.
   "data_confidence": "Estimated",
   "location": "Katpadi, Vellore",
   "date": "2026-08-19",
-  "quickcommerce_price": { "source": "Blinkit", "price": 38.0, "unit": "kg" }
+  "quickcommerce_price": { "source": "Blinkit", "price": 38.0, "unit": "kg" },
+  "market_context": {
+    "current_price": 22.5,
+    "recent_average": 20.8,
+    "change_pct": 8.2,
+    "trend": "UP",
+    "history_days": 7,
+    "observation_count": 6,
+    "confidence": "Medium"
+  }
 }
 ```
+
+> **Note**: When only a single market observation is available (e.g. today's cached mock data), `market_context.trend` will be `"INSUFFICIENT_DATA"`. This is the honest representation and the UI must display "Not enough recent market history" in this case. Do NOT interpolate, duplicate, or fabricate observations to avoid this state.
 
 **Fields**:
 - `produce_type` (str): Type of produce detected.
@@ -37,6 +48,26 @@ Analyzes produce and returns pricing and quality details.
 - `location` (str): Target market location.
 - `date` (str): Snapshot date (YYYY-MM-DD).
 - `quickcommerce_price` (dict): Price comparison from quick commerce.
+- `market_context` (dict): Local wholesale market price trend analysis.
+
+### `market_context` Fields
+- `current_price` (float): Today's local wholesale reference price in ₹/kg.
+- `recent_average` (float): Mean of all available historical observations in ₹/kg.
+- `change_pct` (float): `(current_price - recent_average) / recent_average * 100`. Positive = elevated today.
+- `trend` (Enum): One of `"UP"`, `"DOWN"`, `"STABLE"`, `"INSUFFICIENT_DATA"`.
+  - `UP`: `change_pct > 5%` (consumer-visible significance threshold, not a statistical derivation)
+  - `DOWN`: `change_pct < -5%`
+  - `STABLE`: `-5% ≤ change_pct ≤ 5%`
+  - `INSUFFICIENT_DATA`: fewer than 2 historical observations available
+- `history_days` (int): Date span from oldest to newest observation in days.
+- `observation_count` (int): Number of price records used for the trend calculation.
+- `confidence` (Enum): `"High"` (≥10 obs), `"Medium"` (3–9 obs), `"Low"` (2 obs).
+
+### Architectural Notes
+- `market_context` is **read-only context**. It does NOT modify the `fair_price_range` calculation.
+- The fair-price engine uses today's wholesale price directly. Trend is additive reasoning context.
+- The negotiation engine may use trend to enrich its explanation text but does NOT change its threshold logic.
+
 
 ## POST `/haggle-check`
 
