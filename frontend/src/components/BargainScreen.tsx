@@ -19,10 +19,7 @@ export const BargainScreen: React.FC = () => {
   const fairAvg = Math.round((selectedProduce.retailFairMin + selectedProduce.retailFairMax) / 2);
   
   // Calculate suggested counter offer: slightly above wholesale, fair middle
-  const targetOffer = Math.max(
-    selectedProduce.wholesalePrice + 5,
-    Math.round(fairAvg + (vendorAskingPrice > fairAvg ? (fairAvg * 0.05) : 0))
-  );
+  const targetOffer = selectedProduce.suggestedOfferPrice;
 
   // Overpriced percentage calculation
   const overpricePct = Math.round(((vendorAskingPrice - fairAvg) / fairAvg) * 100);

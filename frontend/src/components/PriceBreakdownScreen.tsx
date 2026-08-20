@@ -56,7 +56,9 @@ export const PriceBreakdownScreen: React.FC = () => {
               isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'
             }`}
           >
-            ₹{selectedProduce.retailFairMin}–{selectedProduce.retailFairMax}/{selectedProduce.unit}
+            {selectedProduce.marketStatus === 'UNAVAILABLE'
+              ? 'Unavailable'
+              : `₹${selectedProduce.retailFairMin}–${selectedProduce.retailFairMax}/${selectedProduce.unit}`}
           </div>
 
           <div
@@ -107,8 +109,8 @@ export const PriceBreakdownScreen: React.FC = () => {
                   {selectedLocation.mandiName}
                 </span>
               </div>
-              <span className="font-semibold text-[15px] text-[#1b1c1a]">
-                ₹{selectedProduce.wholesalePrice}/{selectedProduce.unit}
+                <span className="font-semibold text-[15px] text-[#1b1c1a]">
+                {selectedProduce.marketStatus === 'UNAVAILABLE' ? 'Unavailable' : `₹${selectedProduce.wholesalePrice}/${selectedProduce.unit}`}
               </span>
             </li>
 
@@ -123,7 +125,7 @@ export const PriceBreakdownScreen: React.FC = () => {
                 </span>
               </div>
               <span className="font-semibold text-[15px] text-[#1b1c1a]">
-                ₹{Math.round(selectedProduce.wholesalePrice * (1 + selectedProduce.markupMinPercent / 100))}–{Math.round(selectedProduce.wholesalePrice * (1 + selectedProduce.markupMaxPercent / 100))}/{selectedProduce.unit}
+                {selectedProduce.marketStatus === 'UNAVAILABLE' ? 'Unavailable' : `₹${Math.round(selectedProduce.wholesalePrice * (1 + selectedProduce.markupMinPercent / 100))}–${Math.round(selectedProduce.wholesalePrice * (1 + selectedProduce.markupMaxPercent / 100))}/${selectedProduce.unit}`}
               </span>
             </li>
 
@@ -162,19 +164,20 @@ export const PriceBreakdownScreen: React.FC = () => {
           <span className="material-symbols-outlined text-[18px] text-[#9e3d00]">
             location_on
           </span>
-          <span>{selectedLocation.name} · Today</span>
+          <span>{selectedProduce.marketStatus === 'UNAVAILABLE' ? 'Market price unavailable' : `${selectedLocation.name} · Today`}</span>
         </div>
 
         {/* Primary Action Button */}
         <button
           id="start-haggling-button"
           onClick={() => setCurrentScreen('bargain')}
+          disabled={selectedProduce.marketStatus === 'UNAVAILABLE'}
           className={`w-full text-white font-display text-[16px] font-semibold py-4 rounded-2xl shadow-[0px_8px_24px_rgba(211,84,0,0.18)] active:scale-[0.98] transition-all flex justify-center items-center gap-2 hover:opacity-95 mt-1 ${
             isTerracotta ? 'bg-[#9e3d00]' : 'bg-[#012d1d]'
           }`}
         >
           <span className="material-symbols-outlined text-[20px]">forum</span>
-          Start Haggling
+          {selectedProduce.marketStatus === 'UNAVAILABLE' ? 'Market price unavailable' : 'Start Haggling'}
         </button>
       </main>
     </div>

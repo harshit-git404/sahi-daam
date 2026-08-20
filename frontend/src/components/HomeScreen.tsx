@@ -103,6 +103,8 @@ export const HomeScreen: React.FC = () => {
             {/* Tomato */}
             <button
               id="quick-produce-tomato"
+              disabled
+              aria-disabled="true"
               onClick={() => handleSelectProduce('tomato')}
               className="bg-[#efeeea] rounded-2xl p-3 flex flex-col items-center justify-center gap-2 active:scale-95 transition-all hover:bg-[#eae8e4] border border-[#e0c0b2]/40 shadow-xs group"
             >
@@ -119,6 +121,8 @@ export const HomeScreen: React.FC = () => {
             {/* Onion */}
             <button
               id="quick-produce-onion"
+              disabled
+              aria-disabled="true"
               onClick={() => handleSelectProduce('onion')}
               className="bg-[#efeeea] rounded-2xl p-3 flex flex-col items-center justify-center gap-2 active:scale-95 transition-all hover:bg-[#eae8e4] border border-[#e0c0b2]/40 shadow-xs group"
             >
@@ -135,6 +139,8 @@ export const HomeScreen: React.FC = () => {
             {/* Potato */}
             <button
               id="quick-produce-potato"
+              disabled
+              aria-disabled="true"
               onClick={() => handleSelectProduce('potato')}
               className="bg-[#efeeea] rounded-2xl p-3 flex flex-col items-center justify-center gap-2 active:scale-95 transition-all hover:bg-[#eae8e4] border border-[#e0c0b2]/40 shadow-xs group"
             >

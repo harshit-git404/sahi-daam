@@ -12,14 +12,15 @@ export function mergeProduceData(catalogEntry: ProduceItem, backendResponse: any
 
   return {
     ...catalogEntry,
+    matchScore: backendResponse.produce_confidence ?? catalogEntry.matchScore,
     freshness: mappedFreshness,
     freshnessPercent: backendResponse.freshness_percent ?? catalogEntry.freshnessPercent,
     qualitySummary: backendResponse.freshness_note ?? catalogEntry.qualitySummary,
-    wholesalePrice: backendResponse.wholesale_price ?? catalogEntry.wholesalePrice,
+    wholesalePrice: backendResponse.wholesale_price ?? 0,
     markupMinPercent: backendResponse.markup_range?.min_pct ?? catalogEntry.markupMinPercent,
     markupMaxPercent: backendResponse.markup_range?.max_pct ?? catalogEntry.markupMaxPercent,
-    retailFairMin: backendResponse.fair_price_range?.min ?? catalogEntry.retailFairMin,
-    retailFairMax: backendResponse.fair_price_range?.max ?? catalogEntry.retailFairMax,
+    retailFairMin: backendResponse.fair_price_range?.min ?? 0,
+    retailFairMax: backendResponse.fair_price_range?.max ?? 0,
     qualityAdjustment: backendResponse.quality_adjustment ?? catalogEntry.qualityAdjustment,
     qualityAdjustmentLabel: backendResponse.quality_adjustment_label ?? catalogEntry.qualityAdjustmentLabel,
     dataConfidence: backendResponse.data_confidence ?? catalogEntry.dataConfidence,
@@ -27,6 +28,8 @@ export function mergeProduceData(catalogEntry: ProduceItem, backendResponse: any
       source: backendResponse.quickcommerce_price.source,
       price: backendResponse.quickcommerce_price.price,
       unit: backendResponse.quickcommerce_price.unit,
-    } : catalogEntry.quickCommercePrice,
+    } : undefined,
+    marketStatus: backendResponse.market_status,
+    analysisProvider: backendResponse.analysis_provider,
   };
 }

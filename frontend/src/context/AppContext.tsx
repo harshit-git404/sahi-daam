@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Screen, ProduceItem, PurchaseRecord, MandiLocation, AppTheme } from '../types';
+import { Screen, ProduceItem, PurchaseRecord, MandiLocation, AppTheme, PurchaseType } from '../types';
 import { PRODUCE_DATABASE, INITIAL_PURCHASE_HISTORY } from '../data/produceData';
 import { MANDI_LOCATIONS } from '../data/mandiLocations';
 import confetti from 'canvas-confetti';
@@ -13,6 +13,8 @@ interface AppContextType {
   selectedSectorId: string | null;
   selectedSectorName: string;
   selectedComponent: string | null;
+  purchaseType: PurchaseType | null;
+  setPurchaseType: (type: PurchaseType) => void;
   selectSector: (sectorId: string) => void;
   selectComponent: (component: string) => void;
   selectedProduce: ProduceItem;
@@ -46,6 +48,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
   const [selectedSectorId, setSelectedSectorId] = useState<string | null>(null);
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
+  const [purchaseType, setPurchaseType] = useState<PurchaseType | null>(null);
   const [selectedProduce, setSelectedProduce] = useState<ProduceItem>(PRODUCE_DATABASE[0]);
   const [vendorAskingPrice, setVendorAskingPrice] = useState<number>(45);
   const [purchaseHistory, setPurchaseHistory] = useState<PurchaseRecord[]>(INITIAL_PURCHASE_HISTORY);
@@ -85,7 +88,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
     const fallbackItem = PRODUCE_DATABASE.find(p => p.id === id) || PRODUCE_DATABASE[0];
     try {
-      const backendResponse = await fetchScanResult(fallbackItem.id, imageBase64);
+      const backendResponse = await fetchScanResult(fallbackItem.id, imageBase64, {
+        state: selectedLocation.state,
+        district: selectedLocation.name.split(', ').pop(),
+        market: selectedLocation.mandiName,
+        purchase_type: purchaseType || 'street_vendor',
+      });
       const finalId = backendResponse.detected_produce_id || fallbackItem.id;
       let detectedItem = PRODUCE_DATABASE.find(p => p.id === finalId);
       
@@ -97,6 +105,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       
       const mergedItem = mergeProduceData(detectedItem, backendResponse);
+      if (mergedItem.retailFairMin > 0 && mergedItem.retailFairMax > 0) {
+        try {
+          const haggle = await fetchHaggleCheck(mergedItem.typicalVendorAsking, mergedItem.retailFairMin, mergedItem.retailFairMax);
+          mergedItem.suggestedOfferPrice = haggle.suggested_price;
+        } catch (haggleError) {
+          console.error('Initial haggle calculation failed:', haggleError);
+        }
+      }
       setSelectedProduce(mergedItem);
       setVendorAskingPrice(mergedItem.typicalVendorAsking);
       setCurrentScreen('quality_result');
@@ -111,7 +127,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     const verifyPrice = async () => {
       try {
-        const result = await fetchHaggleCheck(vendorAskingPrice);
+        if (!selectedProduce.retailFairMin || !selectedProduce.retailFairMax) return;
+        const result = await fetchHaggleCheck(vendorAskingPrice, selectedProduce.retailFairMin, selectedProduce.retailFairMax);
         setSelectedProduce(prev => ({ ...prev, suggestedOfferPrice: result.suggested_price }));
       } catch (e) {
         console.error('Haggle check API failed:', e);
@@ -138,7 +155,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // calculate savings vs fair average
     const fairAvg = Math.round((selectedProduce.retailFairMin + selectedProduce.retailFairMax) / 2);
     const vendorDiff = vendorAskingPrice - paidPrice;
-    const actualSaved = vendorDiff > 0 ? vendorDiff : Math.max(1, selectedProduce.typicalVendorAsking - paidPrice);
+    const actualSaved = vendorDiff > 0 ? vendorDiff : Math.max(0, fairAvg - paidPrice);
 
     const newRecord: PurchaseRecord = {
       id: 'rec-' + Date.now(),
@@ -176,6 +193,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         selectedSectorId,
         selectedSectorName,
         selectedComponent,
+        purchaseType,
+        setPurchaseType,
         selectSector,
         selectComponent,
         selectedProduce,

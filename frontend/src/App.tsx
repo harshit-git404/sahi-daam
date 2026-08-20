@@ -4,6 +4,8 @@ import { HomeScreen } from './components/HomeScreen';
 import { SectorSelectionScreen } from './components/SectorSelectionScreen';
 import { ComponentSelectionScreen } from './components/ComponentSelectionScreen';
 import { SectorAnalysisScreen } from './components/SectorAnalysisScreen';
+import { PurchaseTypeScreen } from './components/PurchaseTypeScreen';
+import { SupermarketScreen } from './components/SupermarketScreen';
 import { ScanScreen } from './components/ScanScreen';
 import { QualityResultScreen } from './components/QualityResultScreen';
 import { PriceBreakdownScreen } from './components/PriceBreakdownScreen';
@@ -45,6 +47,8 @@ const AppContent: React.FC = () => {
         {currentScreen === 'sector_analysis' && <SectorAnalysisScreen />}
         {currentScreen === 'scan' && <ScanScreen />}
         {currentScreen === 'quality_result' && <QualityResultScreen />}
+        {currentScreen === 'purchase_type' && <PurchaseTypeScreen />}
+        {currentScreen === 'supermarket' && <SupermarketScreen />}
         {currentScreen === 'price_breakdown' && <PriceBreakdownScreen />}
         {currentScreen === 'bargain' && <BargainScreen />}
         {currentScreen === 'history' && <HistoryScreen />}

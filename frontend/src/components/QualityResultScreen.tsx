@@ -117,7 +117,8 @@ export const QualityResultScreen: React.FC = () => {
             verified
           </span>
           <span>
-            Quality verified via Visual AI. Price benchmark adjusted for local Mandi rate.
+            {selectedProduce.analysisProvider === 'gemini' ? 'Analyzed with Gemini Flash.' : 'Analyzed with local fallback models.'}{' '}
+            {selectedProduce.marketStatus === 'AVAILABLE' ? 'Price benchmark loaded from the local market data.' : 'Market price is currently unavailable.'}
           </span>
         </div>
       </main>
@@ -126,7 +127,7 @@ export const QualityResultScreen: React.FC = () => {
       <div className="fixed bottom-[74px] w-full px-5 z-30 max-w-md mx-auto left-0 right-0">
         <button
           id="see-fair-price-button"
-          onClick={() => setCurrentScreen('price_breakdown')}
+          onClick={() => setCurrentScreen('purchase_type')}
           className={`w-full text-white font-display text-[18px] font-semibold py-4 rounded-[16px] shadow-[0px_8px_24px_rgba(211,84,0,0.18)] active:scale-[0.98] transition-all flex justify-center items-center gap-2 hover:opacity-95 ${
             isTerracotta ? 'bg-[#9e3d00]' : 'bg-[#012d1d]'
           }`}

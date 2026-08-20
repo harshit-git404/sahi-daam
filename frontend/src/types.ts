@@ -5,6 +5,8 @@ export type Screen =
   | 'sector_analysis'
   | 'scan'
   | 'quality_result'
+  | 'purchase_type'
+  | 'supermarket'
   | 'price_breakdown'
   | 'bargain'
   | 'history';
@@ -48,6 +50,8 @@ export interface ProduceItem {
     price: number;
     unit: string;
   };
+  marketStatus?: 'AVAILABLE' | 'UNAVAILABLE';
+  analysisProvider?: 'gemini' | 'local_fallback';
 }
 
 export interface PurchaseRecord {
@@ -71,3 +75,5 @@ export interface MandiLocation {
 }
 
 export type AppTheme = 'terracotta' | 'forest_green';
+
+export type PurchaseType = 'street_vendor' | 'supermarket_online';
