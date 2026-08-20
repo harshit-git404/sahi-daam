@@ -82,26 +82,14 @@ async def scan_produce(request: ScanRequest):
             confidence = 0.0
             pass
             
-    # Fetch real wholesale data based on detected produce_type
-    mandi_data = await get_mandi_prices(commodity=produce_type)
-    records = mandi_data.get("records", [])
+    from data.agmarknet.service import resolve_wholesale_price
+    price_info = await resolve_wholesale_price(commodity=produce_type)
     
-    wholesale_price = 22.0 # fallback
-    data_date = "2026-08-19" # fallback
-    
-    if records:
-        latest = records[0]
-        # Use modal price as the main wholesale benchmark
-        wholesale_price = latest.get("modal_price_per_kg", wholesale_price)
-        data_date = latest.get("arrival_date", data_date)
-        
-        # Format date from DD/MM/YYYY to YYYY-MM-DD
-        if "/" in data_date:
-            try:
-                d, m, y = data_date.split("/")
-                data_date = f"{y}-{m}-{d}"
-            except ValueError:
-                pass
+    wholesale_price = price_info["wholesale_price"]
+    data_date = price_info["data_date"]
+    data_confidence = price_info["data_confidence"]
+    price_source = price_info["price_source"]
+    used_markets = price_info["used_markets"]
                 
     markup_min = 30
     markup_max = 45
@@ -116,7 +104,9 @@ async def scan_produce(request: ScanRequest):
         "wholesale_price": wholesale_price,
         "markup_range": { "min_pct": markup_min, "max_pct": markup_max },
         "fair_price_range": fair_price_range,
-        "data_confidence": "Estimated" if not records else "High",
+        "data_confidence": data_confidence,
+        "price_source": price_source,
+        "used_markets": used_markets,
         "location": "Katpadi, Vellore",
         "date": data_date,
         "quickcommerce_price": { "source": "Blinkit", "price": wholesale_price * 1.8, "unit": "kg" }

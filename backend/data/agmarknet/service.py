@@ -188,3 +188,83 @@ async def get_mandi_prices(
         "source": "data.gov.in/agmarknet",
         "records": normalized_records
     }
+
+async def resolve_wholesale_price(
+    commodity: str,
+    state: str = DEFAULT_STATE,
+    district: str = "Vellore",
+    target_market: str = "Katpadi"
+) -> Dict[str, Any]:
+    today_str = date.today().strftime("%d/%m/%Y")
+    today_iso = date.today().strftime("%Y-%m-%d")
+
+    # Fetch live/cached data for the whole state (avoids extra live calls if we already cached Tamil Nadu, 
+    # but currently get_mandi_prices fetches state if district is missing).
+    # To keep it efficient, let's first check the local cache or fetch for the whole state.
+    state_data = await get_mandi_prices(commodity, state=state, district=None)
+    records = state_data.get("records", [])
+    
+    # Filter out mock records from the 'live' search space
+    real_records = [r for r in records if "Mock Fallback" not in r.get("source", state_data.get("source", ""))]
+    
+    # Tier A: Today's price for exact market
+    tier_a = [r for r in real_records if target_market.lower() in r["market"].lower() and r["arrival_date"] == today_str]
+    if tier_a:
+        return {
+            "wholesale_price": tier_a[0]["modal_price_per_kg"],
+            "data_date": today_iso,
+            "data_confidence": "High",
+            "price_source": "live_local",
+            "used_markets": [tier_a[0]["market"]]
+        }
+        
+    # Tier B: Today's price averaged across other markets in the state
+    tier_b = [r for r in real_records if r["arrival_date"] == today_str]
+    if tier_b:
+        avg_price = sum(r["modal_price_per_kg"] for r in tier_b) / len(tier_b)
+        used_markets = list(set(r["market"] for r in tier_b))
+        return {
+            "wholesale_price": round(avg_price, 2),
+            "data_date": today_iso,
+            "data_confidence": "Medium",
+            "price_source": "live_regional_average",
+            "used_markets": used_markets
+        }
+        
+    # Tier C: Most recent previous day's price for exact market
+    tier_c = [r for r in real_records if target_market.lower() in r["market"].lower()]
+    if tier_c:
+        # already sorted by date descending in get_mandi_prices
+        latest = tier_c[0]
+        # format date
+        d, m, y = latest["arrival_date"].split("/")
+        return {
+            "wholesale_price": latest["modal_price_per_kg"],
+            "data_date": f"{y}-{m}-{d}",
+            "data_confidence": "Low",
+            "price_source": "cached_previous_day",
+            "used_markets": [latest["market"]]
+        }
+        
+    # Tier D: Mock Fallback
+    mock_records = [r for r in records if "Mock Fallback" in r.get("source", state_data.get("source", ""))]
+    if mock_records:
+        latest = mock_records[0]
+        d, m, y = latest["arrival_date"].split("/")
+        return {
+            "wholesale_price": latest["modal_price_per_kg"],
+            "data_date": f"{y}-{m}-{d}",
+            "data_confidence": "Estimated",
+            "price_source": "fallback_mock",
+            "used_markets": [latest["market"]]
+        }
+        
+    # Absolute Fallback if even mock fails
+    return {
+        "wholesale_price": 22.0,
+        "data_date": today_iso,
+        "data_confidence": "Estimated",
+        "price_source": "fallback_mock",
+        "used_markets": ["None"]
+    }
+
