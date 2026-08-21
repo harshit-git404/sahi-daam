@@ -98,8 +98,46 @@ async def scan_produce(request: ScanRequest):
     markup_min = 30
     markup_max = 45
     fair_price_range = calculate_fair_price(wholesale_price, markup_min, markup_max, freshness_data.get("quality_adjustment", 0))
-    fair_price_range["unit"] = "kg"
+    import json
+    from pathlib import Path
+    
+    quickcommerce_price = { "source": "Blinkit", "price": wholesale_price * 1.8, "unit": "kg" }
+    retail_comparison = None
+    
+    try:
+        snapshot_path = Path(__file__).parent.parent / "data" / "quickcommerce_snapshot.json"
+        if snapshot_path.exists():
+            with open(snapshot_path, "r") as f:
+                qc_data = json.load(f)
+            
+            prod_data = qc_data.get(produce_type.lower())
+            if prod_data:
+                products = []
+                best_price = float('inf')
+                best_platform = None
                 
+                for platform, items in prod_data.items():
+                    for item in items:
+                        item["platform"] = platform
+                        products.append(item)
+                        if item.get("price_per_kg", float('inf')) < best_price:
+                            best_price = item["price_per_kg"]
+                            best_platform = platform
+                
+                if products:
+                    products.sort(key=lambda x: x.get("price_per_kg", 0))
+                    retail_comparison = {
+                        "status": "AVAILABLE",
+                        "products": products,
+                        "best_platform": best_platform,
+                        "best_price_per_kg": best_price,
+                        "collected_at": products[0].get("collected_at", ""),
+                        "source": "Quickcommerce Snapshot"
+                    }
+                    quickcommerce_price = { "source": str(best_platform).capitalize(), "price": best_price, "unit": "kg" }
+    except Exception as e:
+        print(f"Failed to load quickcommerce snapshot: {e}")
+        
     return {
         "produce_type": produce_type.capitalize(),
         "detected_produce_id": produce_type.lower(),
@@ -113,6 +151,7 @@ async def scan_produce(request: ScanRequest):
         "used_markets": used_markets,
         "location": "Katpadi, Vellore",
         "date": data_date,
-        "quickcommerce_price": { "source": "Blinkit", "price": wholesale_price * 1.8, "unit": "kg" },
+        "quickcommerce_price": quickcommerce_price,
+        "retail_comparison": retail_comparison,
         "market_context": market_context
     }
