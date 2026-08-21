@@ -1,5 +1,5 @@
 // Use environment variable if set (for local network override without ngrok), otherwise default to the Vite proxy (/api)
-import type { BargainPhrase, NegotiationLanguage, ProduceItem } from '../types';
+import type { BargainPhrase, NegotiationLanguage, ProduceItem, SectorAnalysisResult } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
@@ -94,4 +94,21 @@ export async function fetchHaggleCheck(
   }
   return response.json() as Promise<HaggleCheckResponse>;
 }
-export async function fetchSectorAnalysis(sectorId: string): Promise<any> { return {}; }
+
+/** GET /sector-analysis */
+export async function fetchSectorAnalysis(
+  sector: string,
+  component: string,
+): Promise<SectorAnalysisResult> {
+  const params = new URLSearchParams({ sector, component });
+  const response = await fetch(`${API_BASE_URL}/sector-analysis?${params.toString()}`);
+  if (!response.ok) {
+    let detail = response.statusText;
+    try {
+      const json = await response.json();
+      detail = json?.detail || detail;
+    } catch (_) { /* ignore */ }
+    throw new Error(`Sector analysis failed (${response.status}): ${detail}`);
+  }
+  return response.json();
+}

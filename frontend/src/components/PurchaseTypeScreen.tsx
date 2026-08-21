@@ -4,11 +4,12 @@ import { useApp } from '../context/AppContext';
 import { PurchaseType } from '../types';
 
 export const PurchaseTypeScreen: React.FC = () => {
-  const { selectedProduce, setCurrentScreen, theme } = useApp();
+  const { selectedProduce, setCurrentScreen, setPurchaseType, theme } = useApp();
   const isTerracotta = theme === 'terracotta';
 
-  const choose = (type: string) => {
-    setCurrentScreen(type === 'street_vendor' ? 'scan' : 'supermarket');
+  const choose = (type: PurchaseType) => {
+    setPurchaseType(type);
+    setCurrentScreen(type === 'street_vendor' ? 'price_breakdown' : 'supermarket');
   };
 
   return (

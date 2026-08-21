@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Screen, ProduceItem, PurchaseRecord, MandiLocation, AppTheme, NegotiationLanguage, NegotiationState } from '../types';
+import { Screen, ProduceItem, PurchaseRecord, MandiLocation, AppTheme, NegotiationLanguage, NegotiationState, PurchaseType } from '../types';
 import { PRODUCE_DATABASE } from '../data/produceData';
 import { MANDI_LOCATIONS } from '../data/mandiLocations';
 import confetti from 'canvas-confetti';
@@ -15,6 +15,8 @@ import {
 interface AppContextType {
   currentScreen: Screen;
   setCurrentScreen: (screen: Screen) => void;
+  purchaseType: PurchaseType | null;
+  setPurchaseType: (type: PurchaseType) => void;
   selectedProduce: ProduceItem;
   selectedSectorId: string | null;
   selectSector: (id: string) => void;
@@ -62,6 +64,7 @@ const createInitialNegotiationState = (vendorAskingPrice: number): NegotiationSt
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
+  const [purchaseType, setPurchaseType] = useState<PurchaseType | null>(null);
   const [selectedProduce, setSelectedProduce] = useState<ProduceItem>(PRODUCE_DATABASE[0]);
   const [selectedSectorId, setSelectedSectorId] = useState<string | null>(null);
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
@@ -291,6 +294,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       value={{
         currentScreen,
         setCurrentScreen,
+        purchaseType,
+        setPurchaseType,
         selectedProduce,
         setSelectedProduce,
         selectedSectorId,
