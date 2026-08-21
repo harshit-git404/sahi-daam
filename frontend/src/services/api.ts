@@ -94,3 +94,4 @@ export async function fetchHaggleCheck(
   }
   return response.json() as Promise<HaggleCheckResponse>;
 }
+export async function fetchSectorAnalysis(sectorId: string): Promise<any> { return {}; }

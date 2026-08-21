@@ -32,9 +32,9 @@ export const HomeScreen: React.FC = () => {
         {/* Primary Action: Scan Produce */}
         <section id="home-scan-action-section">
           <button
-            id="home-scan-produce-button"
+            id="home-primary-scan-button"
             onClick={() => setCurrentScreen('scan')}
-            className={`w-full text-white rounded-[24px] py-6 px-5 flex flex-col items-center justify-center gap-3 transition-all duration-200 active:scale-[0.97] hover:opacity-95 ${
+            className={`w-full text-white py-5 rounded-[24px] flex flex-col justify-center items-center gap-1.5 active:scale-[0.98] transition-transform ${
               isTerracotta
                 ? 'bg-[#9e3d00] shadow-[0px_8px_24px_rgba(158,61,0,0.22)]'
                 : 'bg-[#012d1d] shadow-[0px_8px_24px_rgba(1,45,29,0.22)]'
@@ -48,6 +48,20 @@ export const HomeScreen: React.FC = () => {
             </span>
             <span className="font-display text-[24px] font-semibold tracking-tight">
               Scan Produce
+            </span>
+          </button>
+          
+          <button
+            onClick={() => setCurrentScreen('sector_selection')}
+            className={`mt-3 w-full py-3.5 rounded-[20px] flex justify-center items-center gap-2 active:scale-[0.98] transition-transform border bg-white ${
+              isTerracotta
+                ? 'border-[#9e3d00]/30 text-[#9e3d00]'
+                : 'border-[#012d1d]/30 text-[#012d1d]'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[20px]">explore</span>
+            <span className="font-display text-[16px] font-semibold">
+              Explore All Categories
             </span>
           </button>
         </section>
