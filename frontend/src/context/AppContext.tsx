@@ -16,7 +16,10 @@ interface AppContextType {
   currentScreen: Screen;
   setCurrentScreen: (screen: Screen) => void;
   selectedProduce: ProduceItem;
-  setSelectedProduce: (item: ProduceItem) => void;
+  selectedSectorId: string | null;
+  selectSector: (id: string) => void;
+  selectedComponent: string | null;
+  selectComponent: (id: string) => void;
   selectProduceById: (id: string, imageBase64?: string) => void;
   vendorAskingPrice: number;
   setVendorAskingPrice: React.Dispatch<React.SetStateAction<number>>;
@@ -60,6 +63,8 @@ const createInitialNegotiationState = (vendorAskingPrice: number): NegotiationSt
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
   const [selectedProduce, setSelectedProduce] = useState<ProduceItem>(PRODUCE_DATABASE[0]);
+  const [selectedSectorId, setSelectedSectorId] = useState<string | null>(null);
+  const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [vendorAskingPrice, setVendorAskingPrice] = useState<number>(45);
   const [negotiationState, setNegotiationState] = useState<NegotiationState>(() => createInitialNegotiationState(45));
   const [purchaseHistory, setPurchaseHistory] = useState<PurchaseRecord[]>(() => loadPurchaseHistory());
@@ -288,6 +293,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setCurrentScreen,
         selectedProduce,
         setSelectedProduce,
+        selectedSectorId,
+        selectSector: (id: string) => {
+          setSelectedSectorId(id);
+          setCurrentScreen('component_selection');
+        },
+        selectedComponent,
+        selectComponent: (id: string) => {
+          setSelectedComponent(id);
+          if (selectedSectorId === 'food' && id === 'Fresh Produce') {
+            setCurrentScreen('purchase_type');
+          } else {
+            setCurrentScreen('sector_analysis');
+          }
+        },
         selectProduceById,
         vendorAskingPrice,
         setVendorAskingPrice: setVendorPriceAndMarkListening,
