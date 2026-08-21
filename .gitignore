@@ -4,6 +4,7 @@ node_modules/
 .env.*
 .env.example
 venv/
+.venv/
 __pycache__/
 *.pyc
 .pytest_cache/
@@ -11,6 +12,16 @@ __pycache__/
 dist/
 build/
 
-# OS files
+# Archives and Large Bundles
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# OS and IDE files
 .DS_Store
 Thumbs.db
+.idea/
+.vscode/
+*.log

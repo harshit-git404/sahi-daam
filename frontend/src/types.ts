@@ -11,10 +11,140 @@ export type Screen =
   | 'bargain'
   | 'history';
 
+export interface FuelHistoryItem {
+  date: string;
+  display_date: string;
+  price: number;
+}
+
+export interface FuelDistrictStats {
+  current_price: number;
+  average_10_days: number;
+  high_10_days: number;
+  low_10_days: number;
+  percentage_change: number;
+  trend: 'UP' | 'DOWN' | 'STABLE';
+  history: FuelHistoryItem[];
+  periods_available: number;
+  is_cheapest?: boolean;
+  diff_from_cheapest?: number;
+}
+
+export interface FuelTypeAnalytics {
+  fuel_type: 'petrol' | 'diesel';
+  fuel_name: string;
+  unit: string;
+  cheapest_district: string;
+  cheapest_price: number;
+  cheapest_avg_district: string;
+  max_savings_per_litre: number;
+  districts: Record<string, FuelDistrictStats>;
+}
+
+export interface FuelAnalysisData {
+  status: string;
+  petrol: FuelTypeAnalytics;
+  diesel: FuelTypeAnalytics;
+  districts: string[];
+  records: Record<string, unknown>[];
+  total_records: number;
+  source: string;
+  summary: string;
+}
+
+export interface WastewaterHistoryItem {
+  date: string;
+  display_date: string;
+  volume: number;
+}
+
+export interface WastewaterDistrictStats {
+  current_volume: number;
+  average_10_days: number;
+  high_10_days: number;
+  low_10_days: number;
+  percentage_change: number;
+  trend: 'UP' | 'DOWN' | 'STABLE';
+  history: WastewaterHistoryItem[];
+  periods_available: number;
+  is_highest?: boolean;
+  diff_from_highest?: number;
+}
+
+export interface WastewaterMetricAnalytics {
+  metric_type: 'effluent' | 'treated';
+  metric_name: string;
+  unit: string;
+  highest_district: string;
+  highest_volume: number;
+  highest_avg_district: string;
+  lowest_volume: number;
+  total_regional_volume: number;
+  districts: Record<string, WastewaterDistrictStats>;
+}
+
+export interface WastewaterAnalysisData {
+  status: string;
+  effluent: WastewaterMetricAnalytics;
+  treated: WastewaterMetricAnalytics;
+  districts: string[];
+  records: Record<string, unknown>[];
+  total_records: number;
+  source: string;
+  summary: string;
+}
+
+export interface GenericHistoryItem {
+  date: string;
+  display_date: string;
+  value: number;
+}
+
+export interface GenericDistrictStats {
+  current_value: number;
+  average_10_days: number;
+  high_10_days: number;
+  low_10_days: number;
+  percentage_change: number;
+  trend: 'UP' | 'DOWN' | 'STABLE';
+  history: GenericHistoryItem[];
+  periods_available: number;
+  is_highest?: boolean;
+  diff_from_highest?: number;
+}
+
+export interface MetricAnalytics {
+  metric_type: string;
+  metric_name: string;
+  unit: string;
+  highest_district: string;
+  highest_value: number;
+  highest_avg_district: string;
+  lowest_volume: number;
+  total_regional_volume: number;
+  districts: Record<string, GenericDistrictStats>;
+}
+
+export interface SectorAnalyticsPayload {
+  status: string;
+  primary: MetricAnalytics;
+  secondary: MetricAnalytics;
+  primary_label: string;
+  secondary_label: string;
+  districts: string[];
+  records: Record<string, unknown>[];
+  total_records: number;
+  source: string;
+  summary: string;
+}
+
 export interface SectorAnalysisResult {
   summary: string;
   records: Record<string, unknown>[];
   status?: 'API_AVAILABLE' | 'API_UNAVAILABLE' | 'NO_SUITABLE_DATA_SOURCE';
+  fuel_data?: FuelAnalysisData;
+  wastewater_data?: WastewaterAnalysisData;
+  analytics_data?: SectorAnalyticsPayload;
   metric?: {
     name: string;
     unit: string;

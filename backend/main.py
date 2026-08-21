@@ -18,9 +18,16 @@ logger = logging.getLogger(__name__)
 @app.on_event("startup")
 def load_ml_models() -> None:
     logger.info("Loading local ML models")
-    load_produce_classifier()
-    load_freshness_model()
-    logger.info("Local ML models loaded successfully")
+    try:
+        load_produce_classifier()
+        logger.info("Local produce classifier loaded successfully")
+    except Exception as e:
+        logger.warning("Produce classifier not preloaded: %s", e)
+    try:
+        load_freshness_model()
+        logger.info("Local freshness model loaded successfully")
+    except Exception as e:
+        logger.warning("Freshness model not preloaded: %s", e)
 
 app.add_middleware(
     CORSMiddleware,

@@ -5,7 +5,17 @@ from typing import Literal, TypedDict
 
 import numpy as np
 from PIL import Image
-from tf_keras.models import load_model
+
+try:
+    from tf_keras.models import load_model
+except ImportError:
+    try:
+        from tensorflow.keras.models import load_model
+    except ImportError:
+        try:
+            from keras.models import load_model
+        except ImportError:
+            load_model = None
 
 logger = logging.getLogger(__name__)
 MODEL_PATH = Path(__file__).resolve().parent / "models" / "rottenvsfresh98pval.h5"
@@ -23,6 +33,8 @@ class FreshnessResult(TypedDict):
 def _get_model():
     global _model
     if _model is None:
+        if load_model is None:
+            raise RuntimeError("Keras / tf_keras is not installed; freshness model is unavailable.")
         if not MODEL_PATH.is_file():
             raise RuntimeError(f"Freshness model not found: {MODEL_PATH}")
         try:
