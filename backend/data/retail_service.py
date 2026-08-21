@@ -152,6 +152,16 @@ def get_retail_prices(commodity: str, location: str | None = None) -> dict[str, 
     # Sort by price_per_kg ascending so the best deal comes first
     products.sort(key=lambda p: p["price_per_kg"])
 
+    # Calculate cache age for transparency
+    cache_age_hours: float | None = None
+    if latest_collected_at:
+        try:
+            collected_dt = datetime.fromisoformat(latest_collected_at.replace("Z", "+00:00"))
+            age = datetime.now(collected_dt.tzinfo) - collected_dt if collected_dt.tzinfo else datetime.now() - datetime.fromisoformat(latest_collected_at[:19])
+            cache_age_hours = round(age.total_seconds() / 3600, 1)
+        except (ValueError, TypeError):
+            pass
+
     return {
         "status": "AVAILABLE",
         "commodity": commodity_id,
@@ -160,5 +170,10 @@ def get_retail_prices(commodity: str, location: str | None = None) -> dict[str, 
         "best_price_per_kg": products[0]["price_per_kg"],
         "best_platform": products[0]["platform"],
         "collected_at": latest_collected_at or datetime.now().isoformat(),
-        "source": "cached retail snapshot — refresh via offline collector",
+        "cache_age_hours": cache_age_hours,
+        "data_source_type": "cached_snapshot",
+        "source": (
+            "Cached retail snapshot from friend's Blinkit/Zepto collector. "
+            "Not live — refresh by running the offline collector script."
+        ),
     }
