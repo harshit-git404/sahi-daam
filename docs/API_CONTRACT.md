@@ -20,6 +20,18 @@ Analyzes produce and returns pricing and quality details.
   "location": "Katpadi, Vellore",
   "date": "2026-08-19",
   "quickcommerce_price": { "source": "Blinkit", "price": 38.0, "unit": "kg" },
+  "retail_comparison": {
+    "status": "AVAILABLE",
+    "products": [
+      { "platform": "Blinkit", "price_per_kg": 38.0, "quantity": "1 kg", "product_name": "Tomato Local" }
+    ],
+    "best_platform": "Blinkit",
+    "best_price_per_kg": 38.0,
+    "collected_at": "2026-08-19T10:00:00+00:00",
+    "cache_age_hours": 24.5,
+    "data_source_type": "cached_snapshot",
+    "source": "Cached retail snapshot from friend's Blinkit/Zepto collector. Not live — refresh by running the offline collector script."
+  },
   "market_context": {
     "current_price": 22.5,
     "recent_average": 20.8,
@@ -48,6 +60,7 @@ Analyzes produce and returns pricing and quality details.
 - `location` (str): Target market location.
 - `date` (str): Snapshot date (YYYY-MM-DD).
 - `quickcommerce_price` (dict): Price comparison from quick commerce.
+- `retail_comparison` (dict): Detailed quick commerce options, including `cache_age_hours`, `data_source_type`, and `source` transparency metadata.
 - `market_context` (dict): Local wholesale market price trend analysis.
 
 ### `market_context` Fields

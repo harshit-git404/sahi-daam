@@ -126,13 +126,29 @@ async def scan_produce(request: ScanRequest):
                 
                 if products:
                     products.sort(key=lambda x: x.get("price_per_kg", 0))
+                    
+                    latest_collected_at = products[0].get("collected_at", "")
+                    cache_age_hours = None
+                    if latest_collected_at:
+                        from datetime import datetime
+                        try:
+                            dt_str = latest_collected_at.replace("Z", "+00:00")
+                            collected_dt = datetime.fromisoformat(dt_str)
+                            now = datetime.now(collected_dt.tzinfo) if collected_dt.tzinfo else datetime.now()
+                            age = now - collected_dt
+                            cache_age_hours = round(age.total_seconds() / 3600, 1)
+                        except (ValueError, TypeError):
+                            pass
+
                     retail_comparison = {
                         "status": "AVAILABLE",
                         "products": products,
                         "best_platform": best_platform,
                         "best_price_per_kg": best_price,
-                        "collected_at": products[0].get("collected_at", ""),
-                        "source": "Quickcommerce Snapshot"
+                        "collected_at": latest_collected_at,
+                        "cache_age_hours": cache_age_hours,
+                        "data_source_type": "cached_snapshot",
+                        "source": "Cached retail snapshot from friend's Blinkit/Zepto collector. Not live — refresh by running the offline collector script."
                     }
                     quickcommerce_price = { "source": str(best_platform).capitalize(), "price": best_price, "unit": "kg" }
     except Exception as e:
