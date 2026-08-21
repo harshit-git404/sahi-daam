@@ -44,11 +44,8 @@ export function mergeProduceData(
     marketBlock?.status ??
     'UNAVAILABLE';
 
-  // Typical vendor asking: only use catalog value if market is AVAILABLE
-  const typicalVendorAsking =
-    marketStatus === 'AVAILABLE' && retailFairMax > 0
-      ? Math.round(retailFairMax * 1.15) // vendor typically asks ~15% above fair max
-      : catalogEntry.typicalVendorAsking;
+  // typicalVendorAsking: use catalog entry unchanged; only user input updates this
+  const typicalVendorAsking = catalogEntry.typicalVendorAsking;
 
   // Quick-commerce price
   const qcPrice = backendResponse.quickcommerce_price as
@@ -91,10 +88,8 @@ export function mergeProduceData(
     retailFairMin,
     retailFairMax,
     typicalVendorAsking,
-    // suggestedOfferPrice will be updated by haggle API after purchase type is chosen
-    suggestedOfferPrice: retailFairMin > 0
-      ? Math.round((retailFairMin + retailFairMax) / 2)
-      : catalogEntry.suggestedOfferPrice,
+    // suggestedOfferPrice: 0 until /haggle-check responds; user must enter asking price first
+    suggestedOfferPrice: 0,
     dataConfidence: (backendResponse.data_confidence as 'High' | 'Medium' | 'Estimated' | 'Unavailable') ??
       catalogEntry.dataConfidence,
     marketStatus,

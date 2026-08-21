@@ -52,6 +52,10 @@ export interface RetailResult {
   best_price_per_kg?: number;
   best_platform?: string;
   collected_at?: string;
+  /** Cache age in hours — null if cannot be calculated */
+  cache_age_hours?: number | null;
+  /** 'cached_snapshot' | 'live' — always 'cached_snapshot' for now */
+  data_source_type?: string;
   message?: string;
   source?: string;
 }

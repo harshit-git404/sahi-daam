@@ -272,9 +272,14 @@ export const PriceBreakdownScreen: React.FC = () => {
         {/* ── Online Retail Reference (contextual) ── */}
         {retailAvailable && (
           <section className="rounded-2xl border border-[#d8e6dc] bg-[#e9f8ef] p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-[#315b48] mb-3">
-              Online Retail Reference
-            </p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-[#315b48]">
+                Online Retail Reference
+              </p>
+              <span className="text-[10px] text-[#6b7f72] bg-[#c8ecd8] px-2 py-0.5 rounded-full">
+                Cached snapshot
+              </span>
+            </div>
             <div className="flex flex-col gap-2">
               {bestBlinkit && (
                 <div className="flex items-center justify-between text-sm">
@@ -296,8 +301,14 @@ export const PriceBreakdownScreen: React.FC = () => {
               )}
             </div>
             <p className="text-[11px] text-[#6b7f72] mt-2">
-              Retail reference — not used to calculate fair price.
-              {retail?.collected_at && ` Data from ${new Date(retail.collected_at).toLocaleDateString('en-IN')}.`}
+              Reference only — not used to calculate fair price.
+              {retail?.collected_at && ` Data collected: ${new Date(retail.collected_at).toLocaleDateString('en-IN')}.`}
+              {retail?.cache_age_hours != null
+                ? ` (${retail.cache_age_hours}h ago)`
+                : ''}
+            </p>
+            <p className="text-[10px] text-[#8a756b] mt-0.5">
+              Not live — refresh via offline collector.
             </p>
           </section>
         )}

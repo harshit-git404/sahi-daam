@@ -17,36 +17,32 @@ export const BargainScreen: React.FC = () => {
   } = useApp();
 
   const isTerracotta = theme === 'terracotta';
-  const hasFetched = useRef(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // ------------------------------------------------------------------
-  // Fetch initial haggle verdict when screen mounts
-  // ------------------------------------------------------------------
-  useEffect(() => {
-    if (!hasFetched.current) {
-      hasFetched.current = true;
-      fetchHaggle(vendorAskingPrice);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  // ------------------------------------------------------------------
   // Re-fetch haggle when vendor asking price changes (debounced 600ms)
-  // ------------------------------------------------------------------
+  // Only triggers when the user has entered a price > 0
   const handleAskingPriceChange = (newPrice: number) => {
     setVendorAskingPrice(newPrice);
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      fetchHaggle(newPrice);
-    }, 600);
+    if (newPrice > 0) {
+      debounceRef.current = setTimeout(() => {
+        fetchHaggle(newPrice);
+      }, 600);
+    }
   };
 
   // ------------------------------------------------------------------
   // Display values — prefer backend result; fall back to local calc
   // ------------------------------------------------------------------
-  const fairAvg = Math.round((selectedProduce.retailFairMin + selectedProduce.retailFairMax) / 2);
-  const targetOffer = haggleResult?.suggested_price ?? selectedProduce.suggestedOfferPrice ?? fairAvg;
+  const fairAvg = selectedProduce.retailFairMin > 0 && selectedProduce.retailFairMax > 0
+    ? Math.round((selectedProduce.retailFairMin + selectedProduce.retailFairMax) / 2)
+    : 0;
+  // Only show suggested price after user has entered a price and haggle ran
+  const targetOffer = vendorAskingPrice > 0
+    ? (haggleResult?.suggested_price ?? selectedProduce.suggestedOfferPrice)
+    : null;
+  const priceEntered = vendorAskingPrice > 0;
 
   // Overpriced % — local display calc (not authoritative; haggle verdict is authoritative)
   const overpricePct =
@@ -91,7 +87,7 @@ export const BargainScreen: React.FC = () => {
   };
 
   const handleBuy = () => {
-    recordPurchase(targetOffer);
+    recordPurchase(targetOffer ?? vendorAskingPrice);
     setCurrentScreen('history');
   };
 
@@ -152,7 +148,9 @@ export const BargainScreen: React.FC = () => {
             id="vendor-asking-heading"
             className="font-display text-[24px] font-bold text-[#1b1c1a] mb-1 tracking-tight"
           >
-            Vendor asking ₹{vendorAskingPrice}?
+            {priceEntered
+              ? `Vendor asking ₹${vendorAskingPrice}?`
+              : 'Enter vendor\'s asking price below'}
           </h2>
 
           <div className="flex items-baseline gap-2.5 mt-3 mb-1.5">
@@ -163,7 +161,7 @@ export const BargainScreen: React.FC = () => {
                 isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'
               }`}
             >
-              {isHaggling ? '…' : `₹${targetOffer}`}
+              {!priceEntered ? '—' : isHaggling ? '…' : targetOffer != null ? `₹${targetOffer}` : '—'}
             </span>
           </div>
 
@@ -279,9 +277,9 @@ export const BargainScreen: React.FC = () => {
               className="w-full h-2 bg-[#e4e2de] rounded-lg appearance-none cursor-pointer accent-[#9e3d00]"
             />
             <div className="flex justify-between mt-2 text-[12px] font-medium text-[#594238]">
-              <span>Fair avg: ₹{fairAvg}</span>
+              <span>{fairAvg > 0 ? `Fair avg: ₹${fairAvg}` : 'Enter vendor price'}</span>
               <span className={overpricePct > 15 ? 'text-[#ba1a1a] font-semibold' : 'text-[#006d37]'}>
-                {overpricePct > 15 ? 'High Quote' : 'Fair Quote'}
+                {!priceEntered ? 'Slide to set price' : overpricePct > 15 ? 'High Quote' : 'Fair Quote'}
               </span>
             </div>
           </div>
@@ -341,7 +339,8 @@ export const BargainScreen: React.FC = () => {
           <button
             id="i-bought-it-btn"
             onClick={handleBuy}
-            className={`w-full text-white font-display text-[17px] font-bold rounded-2xl py-4 shadow-[0px_8px_24px_rgba(211,84,0,0.22)] active:scale-[0.98] transition-all flex items-center justify-center gap-2 hover:opacity-95 ${
+            disabled={!priceEntered}
+            className={`w-full text-white font-display text-[17px] font-bold rounded-2xl py-4 shadow-[0px_8px_24px_rgba(211,84,0,0.22)] active:scale-[0.98] transition-all flex items-center justify-center gap-2 hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed ${
               isTerracotta ? 'bg-[#9e3d00]' : 'bg-[#012d1d]'
             }`}
           >
@@ -351,7 +350,9 @@ export const BargainScreen: React.FC = () => {
             >
               check_circle
             </span>
-            I Bought It at ₹{targetOffer}
+            {priceEntered && targetOffer != null
+              ? `I Bought It at ₹${targetOffer}`
+              : 'Enter price to continue'}
           </button>
 
           <p className="text-center text-[12px] text-[#594238] font-normal">

@@ -87,7 +87,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [purchaseType, setPurchaseType] = useState<PurchaseType | null>(null);
   const [selectedProduce, setSelectedProduce] = useState<ProduceItem>(PRODUCE_DATABASE[0]);
-  const [vendorAskingPrice, setVendorAskingPrice] = useState<number>(45);
+  // 0 = not entered yet; user must type/slide the actual asking price in BargainScreen
+  const [vendorAskingPrice, setVendorAskingPrice] = useState<number>(0);
   const [purchaseHistory, setPurchaseHistory] = useState<PurchaseRecord[]>(INITIAL_PURCHASE_HISTORY);
   const [totalSavings, setTotalSavings] = useState<number>(340);
   const [selectedLocation, setSelectedLocation] = useState<MandiLocation>(MANDI_LOCATIONS[0]);
@@ -166,14 +167,43 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
 
       const mergedItem = mergeProduceData(catalogEntry, backendResponse);
+
+      // Debug: log key backend fields so you can verify values in the browser console
+      console.log('[Sahi Daam] /scan-produce response fields:', {
+        produce_type: backendResponse.produce_type,
+        detected_produce_id: backendResponse.detected_produce_id,
+        produce_confidence: backendResponse.produce_confidence,
+        analysis_provider: backendResponse.analysis_provider,
+        freshness_label: backendResponse.freshness_label,
+        freshness_percent: backendResponse.freshness_percent,
+        freshness_note: backendResponse.freshness_note,
+        quality_adjustment: backendResponse.quality_adjustment,
+        quality_adjustment_label: backendResponse.quality_adjustment_label,
+        wholesale_price: backendResponse.wholesale_price,
+        market_status: backendResponse.market_status,
+        fair_price_range: backendResponse.fair_price_range,
+        pricing: backendResponse.pricing,
+        market: backendResponse.market,
+        retail_status: (backendResponse.retail as Record<string,unknown>)?.status,
+        retail_products: ((backendResponse.retail as Record<string,unknown>)?.products as unknown[])?.length,
+      });
+      console.log('[Sahi Daam] mergedItem:', {
+        id: mergedItem.id,
+        name: mergedItem.name,
+        freshnessPercent: mergedItem.freshnessPercent,
+        freshness: mergedItem.freshness,
+        wholesalePrice: mergedItem.wholesalePrice,
+        retailFairMin: mergedItem.retailFairMin,
+        retailFairMax: mergedItem.retailFairMax,
+        marketStatus: mergedItem.marketStatus,
+        market: mergedItem.market,
+      });
+
       setSelectedProduce(mergedItem);
 
-      // Seed vendor asking price from fair max + 15% (dynamic from backend)
-      if (mergedItem.retailFairMax > 0) {
-        setVendorAskingPrice(Math.round(mergedItem.retailFairMax * 1.15));
-      } else {
-        setVendorAskingPrice(mergedItem.typicalVendorAsking || 50);
-      }
+      // Reset vendor asking price to 0 — user must enter the actual price the vendor quotes.
+      // Do NOT pre-seed from fair_price_max to avoid giving the impression we invented a price.
+      setVendorAskingPrice(0);
 
       setCurrentScreen('quality_result');
     } catch (err: unknown) {
