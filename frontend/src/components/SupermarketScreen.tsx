@@ -145,9 +145,22 @@ export const SupermarketScreen: React.FC = () => {
                   isTerracotta ? 'bg-[#fff1e9] border border-[#e0c0b2]' : 'bg-[#e9f8ef] border border-[#d8e6dc]'
                 }`}
               >
-                <p className="text-[13px] font-bold text-[#1b1c1a]">
-                  Best available retail price
-                </p>
+                <div className="flex items-start justify-between">
+                  <p className="text-[13px] font-bold text-[#1b1c1a]">
+                    Best available retail price
+                  </p>
+                  {retail?.cache_age_hours != null && (
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold inline-block ${
+                      retail.cache_age_hours < 24 ? 'bg-[#7bf8a1]/20 text-[#006d37]' :
+                      retail.cache_age_hours <= 72 ? 'bg-[#ffb595]/20 text-[#9e3d00]' :
+                      'bg-[#a46700]/15 text-[#835100]'
+                    }`}>
+                      {retail.cache_age_hours > 72 
+                        ? `Updated ${Math.floor(retail.cache_age_hours / 24)}d ago` 
+                        : `Updated ${Math.round(retail.cache_age_hours)}h ago`}
+                    </span>
+                  )}
+                </div>
                 <p
                   className={`font-display text-[28px] font-extrabold mt-1 ${
                     isTerracotta ? 'text-[#9e3d00]' : 'text-[#0e6c4a]'

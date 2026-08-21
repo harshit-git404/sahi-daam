@@ -32,6 +32,8 @@ export interface RetailComparison {
   best_price_per_kg: number;
   collected_at: string;
   source: string;
+  cache_age_hours?: number;
+  data_source_type?: string;
 }
 
 export interface BargainPhrase {
@@ -118,6 +120,7 @@ export interface ProduceItem {
       unit: string;
     };
   };
+  retailComparison?: RetailComparison;
   marketContext?: MarketContext;
 }
 
