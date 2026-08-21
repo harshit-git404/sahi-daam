@@ -30,6 +30,7 @@ export function mergeProduceData(catalogEntry: ProduceItem, backendResponse: Sca
       price: backendResponse.quickcommerce_price.price,
       unit: backendResponse.quickcommerce_price.unit,
     } : catalogEntry.quickCommercePrice,
+    retailComparison: backendResponse.retail_comparison ?? undefined,
     marketContext: backendResponse.market_context ?? undefined,
   };
 }

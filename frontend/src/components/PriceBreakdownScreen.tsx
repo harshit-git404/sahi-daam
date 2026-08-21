@@ -262,6 +262,17 @@ export const PriceBreakdownScreen: React.FC = () => {
           <span className="material-symbols-outlined text-[20px]">forum</span>
           Start Haggling
         </button>
+
+        {/* Secondary Action Button */}
+        <button
+          onClick={() => setCurrentScreen('supermarket')}
+          className={`w-full font-display text-[15px] font-semibold py-3.5 rounded-2xl border active:scale-[0.98] transition-all flex justify-center items-center gap-2 hover:bg-gray-50 mt-1 mb-4 ${
+            isTerracotta ? 'text-[#9e3d00] border-[#9e3d00]/30' : 'text-[#012d1d] border-[#012d1d]/30'
+          }`}
+        >
+          <span className="material-symbols-outlined text-[18px]">storefront</span>
+          Compare with quick-commerce
+        </button>
       </main>
     </div>
   );

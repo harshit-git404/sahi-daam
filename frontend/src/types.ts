@@ -4,11 +4,35 @@ export type Screen =
   | 'quality_result'
   | 'price_breakdown'
   | 'bargain'
-  | 'history';
+  | 'history'
+  | 'sector_selection'
+  | 'component_selection'
+  | 'purchase_type'
+  | 'supermarket'
+  | 'sector_analysis';
 
 export type FreshnessLevel = 'fresh' | 'slightly_aged' | 'overripe';
 export type NegotiationLanguage = 'hi' | 'ta' | 'en';
 export type HaggleStatus = 'idle' | 'listening' | 'processing' | 'ready' | 'timeout' | 'error';
+
+export interface RetailProduct {
+  platform: string;
+  product_name: string;
+  price_per_kg: number;
+  quantity: string;
+  variant: string;
+  mrp: number;
+  location_note: string;
+}
+
+export interface RetailComparison {
+  status: string; // 'AVAILABLE'
+  products: RetailProduct[];
+  best_platform: string;
+  best_price_per_kg: number;
+  collected_at: string;
+  source: string;
+}
 
 export interface BargainPhrase {
   hindi: string;

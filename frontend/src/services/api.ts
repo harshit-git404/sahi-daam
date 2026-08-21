@@ -6,26 +6,28 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 export type QuickCommercePrice = NonNullable<ProduceItem['quickCommercePrice']>;
 
 export interface ScanResultResponse {
-  detected_produce_id?: string;
-  produce_type?: string;
-  freshness_label?: string;
-  freshness_percent?: number;
-  freshness_note?: string;
-  wholesale_price?: number;
-  markup_range?: {
-    min_pct?: number;
-    max_pct?: number;
+  produce_type: string;
+  detected_produce_id: string;
+  classification_confidence: number;
+  freshness_label: string;
+  freshness_percent: number;
+  freshness_note: string;
+  quality_adjustment: number;
+  quality_adjustment_label: string;
+  wholesale_price: number;
+  markup_range: {
+    min_pct: number;
+    max_pct: number;
   };
-  quality_adjustment?: number;
-  quality_adjustment_label?: string;
-  fair_price_range?: {
-    min?: number;
-    max?: number;
-    unit?: string;
+  fair_price_range: {
+    min: number;
+    max: number;
+    unit: string;
   };
   data_confidence?: ProduceItem['dataConfidence'];
   price_source?: string;
   quickcommerce_price?: QuickCommercePrice;
+  retail_comparison?: any;
   market_context?: ProduceItem['marketContext'];
 }
 
