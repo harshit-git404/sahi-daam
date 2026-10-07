@@ -32,5 +32,16 @@ export function mergeProduceData(catalogEntry: ProduceItem, backendResponse: Sca
     } : catalogEntry.quickCommercePrice,
     retailComparison: backendResponse.retail_comparison ?? undefined,
     marketContext: backendResponse.market_context ?? undefined,
+    sessionId: backendResponse.session_id,
+    needsAdditionalObservation: backendResponse.needs_additional_observation,
+    observationRequest: backendResponse.observation_request,
+    valuationUncertainty: backendResponse.valuation_uncertainty,
+    valuationConfidence: backendResponse.valuation_confidence,
+    qualityUncertainty: backendResponse.quality_uncertainty,
+    marketUncertainty: backendResponse.market_uncertainty,
+    marketConfidence: backendResponse.market_confidence,
+    decisionTrace: backendResponse.decision_trace,
+    instrumentationComparison: backendResponse.instrumentation_comparison,
+    observationCount: backendResponse.observation_count,
   };
 }

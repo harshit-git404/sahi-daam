@@ -2,6 +2,7 @@ import React from 'react';
 import { useApp } from '../context/AppContext';
 import { Header } from './Header';
 import { formatRupees, formatRupeesPerUnit } from '../services/format';
+import { AdaptiveValuationCard } from './AdaptiveValuationCard';
 
 export const PriceBreakdownScreen: React.FC = () => {
   const { setCurrentScreen, selectedProduce, selectedLocation, theme } = useApp();
@@ -242,6 +243,9 @@ export const PriceBreakdownScreen: React.FC = () => {
             )}
           </section>
         )}
+
+        {/* Adaptive Valuation & Active Observation Engine Card */}
+        <AdaptiveValuationCard />
 
         {/* Location Context */}
         <div className="flex items-center justify-center gap-1.5 text-[#594238] text-[13px] font-medium my-1">

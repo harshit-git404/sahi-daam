@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { Screen } from '../types';
+import { DemoScenarioModal } from './DemoScenarioModal';
 
 interface HeaderProps {
   title?: string;
@@ -11,6 +12,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ title, showBack, onBack }) => {
   const { currentScreen, setCurrentScreen, setIsDrawerOpen, theme, toggleTheme, selectedLocation } = useApp();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showDemoModal, setShowDemoModal] = useState(false);
 
   const isTerracotta = theme === 'terracotta';
 
@@ -86,22 +88,34 @@ export const Header: React.FC<HeaderProps> = ({ title, showBack, onBack }) => {
           {getDisplayTitle()}
         </h1>
 
-        {/* Right User Profile */}
-        <div className="relative">
+        {/* Right Actions */}
+        <div className="flex items-center gap-2">
+          {/* Patent / Demonstration Mode Trigger */}
           <button
-            id="header-profile-button"
-            aria-label="User profile"
-            onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className={`w-9 h-9 rounded-full overflow-hidden border-2 transition-transform active:scale-95 flex items-center justify-center ${
-              isTerracotta ? 'border-[#ffb595]' : 'border-[#a5d0b9]'
-            }`}
+            id="patent-demo-button"
+            onClick={() => setShowDemoModal(true)}
+            title="Patent Validation & Demonstration Scenarios"
+            className="w-9 h-9 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center hover:bg-amber-200 transition-all border border-amber-300 active:scale-95 shadow-xs"
           >
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbA12FlcdstUUGVQxGgRA4MDIMmEYiGaMUMZsdBlmmIrhkucPenOSgqR1IIArGWb9mHvh2drqFptrfDExNnHQkIriEANc0KaV3KlIw_Zu6-4mzrhnxQXckY6xFCYIjkOJ3k7Pnl1hJGwzshV0Gu0BCUpkNbrdEI0NjMHbnSGQ6QePC8AAXykcxb2SGtIzOJwKqAUI1sLu-MGqOPpvFRF5bh6KcjlL62_e9S5v6t7wcAd0BH7I89I5evQ"
-              alt="Ravi Kumar avatar"
-              className="w-full h-full object-cover"
-            />
+            <span className="material-symbols-outlined text-[18px]">science</span>
           </button>
+
+          {/* User Profile */}
+          <div className="relative">
+            <button
+              id="header-profile-button"
+              aria-label="User profile"
+              onClick={() => setShowProfileMenu(!showProfileMenu)}
+              className={`w-9 h-9 rounded-full overflow-hidden border-2 transition-transform active:scale-95 flex items-center justify-center ${
+                isTerracotta ? 'border-[#ffb595]' : 'border-[#a5d0b9]'
+              }`}
+            >
+              <img
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbA12FlcdstUUGVQxGgRA4MDIMmEYiGaMUMZsdBlmmIrhkucPenOSgqR1IIArGWb9mHvh2drqFptrfDExNnHQkIriEANc0KaV3KlIw_Zu6-4mzrhnxQXckY6xFCYIjkOJ3k7Pnl1hJGwzshV0Gu0BCUpkNbrdEI0NjMHbnSGQ6QePC8AAXykcxb2SGtIzOJwKqAUI1sLu-MGqOPpvFRF5bh6KcjlL62_e9S5v6t7wcAd0BH7I89I5evQ"
+                alt="Ravi Kumar avatar"
+                className="w-full h-full object-cover"
+              />
+            </button>
 
           {/* Profile Dropdown */}
           {showProfileMenu && (
@@ -151,8 +165,10 @@ export const Header: React.FC<HeaderProps> = ({ title, showBack, onBack }) => {
               </div>
             </div>
           )}
+          </div>
         </div>
       </div>
+      <DemoScenarioModal isOpen={showDemoModal} onClose={() => setShowDemoModal(false)} />
     </header>
   );
 };

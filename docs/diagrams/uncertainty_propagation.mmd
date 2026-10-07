@@ -1,0 +1,54 @@
+graph TD
+    subgraph QualityDomain [Visual Quality Uncertainty Engine]
+        C_qual[Model Confidence C]
+        Disag[Model Disagreement D]
+        ImgQ[Image Quality / Blur Penalty P_img]
+        Cov[Visual Coverage Penalty P_cov]
+        Amb[Class Ambiguity Penalty P_amb]
+        
+        U_Q["U_quality = w1*(1-C) + w2*D + w3*P_img + w4*P_cov + w5*P_amb"]
+        C_qual --> U_Q
+        Disag --> U_Q
+        ImgQ --> U_Q
+        Cov --> U_Q
+        Amb --> U_Q
+    end
+
+    subgraph MarketDomain [Market Evidence Uncertainty Engine]
+        Tau[Temporal Staleness / Recency Penalty]
+        Geo[Geographic Distance / Regional Penalty]
+        Disp[Source Price Variance / Disagreement]
+        Sparse[Sparse Evidence Penalty]
+        
+        U_M["U_market = w_disp*Variance + w_recency*Staleness + w_sparse*Sparse"]
+        Tau --> U_M
+        Geo --> U_M
+        Disp --> U_M
+        Sparse --> U_M
+    end
+
+    subgraph ValuationDomain [Compound Variance Propagation]
+        Sigma_M["sigma_market = U_market * P_market * 0.15"]
+        Sigma_Adj["sigma_adjustment = U_adjustment * |Adj| * 0.25"]
+        Sigma_Mod["sigma_model = (1 - C_valuation) * BaseScale"]
+        
+        Sigma_Fair["sigma_fair^2 = sigma_market^2 + sigma_adjustment^2 + sigma_model^2"]
+        U_Q --> Sigma_Adj
+        U_M --> Sigma_M
+        Sigma_M --> Sigma_Fair
+        Sigma_Adj --> Sigma_Fair
+        Sigma_Mod --> Sigma_Fair
+    end
+
+    subgraph DynamicInterval [Fair-Price Range Expansion]
+        FairMid["P_fair_mid = P_market + Markup_mid + Adjustment_mid"]
+        Expansion["Delta = Z * sigma_fair * (1 + lambda * U_valuation)"]
+        FairMin["P_fair_min = P_fair_mid - Delta"]
+        FairMax["P_fair_max = P_fair_mid + Delta"]
+        
+        FairMid --> FairMin
+        FairMid --> FairMax
+        Sigma_Fair --> Expansion
+        Expansion --> FairMin
+        Expansion --> FairMax
+    end

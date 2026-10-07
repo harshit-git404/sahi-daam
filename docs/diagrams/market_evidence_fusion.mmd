@@ -1,0 +1,30 @@
+flowchart LR
+    subgraph EvidenceSources [Multi-Source Market Stream]
+        S1["Local Mandi (Today)<br/>Source Reliability: High"]
+        S2["Neighboring Mandi (Today)<br/>Geographic Distance: 25km"]
+        S3["District Benchmark (Yesterday)<br/>Temporal Age: 24h"]
+        S4["State / Historical Reference<br/>Temporal Age: 72h"]
+    end
+
+    subgraph ReliabilityScorer [Multi-Factor Reliability Engine]
+        R1["Score R_1 = f(Recency, Geo, Authority, Consistency)"]
+        R2["Score R_2 = f(Recency, Geo, Authority, Consistency)"]
+        R3["Score R_3 = f(Recency, Geo, Authority, Consistency)"]
+        R4["Score R_4 = f(Recency, Geo, Authority, Consistency)"]
+    end
+
+    subgraph WeightedSynthesis [Evidence Fusion]
+        W["Normalized Weight w_i = R_i / sum(R_j)"]
+        Price["P_weighted = sum(w_i * P_i)"]
+        Dispersion["Variance = sum(w_i * (P_i - P_weighted)^2)"]
+        Uncertainty["Market Uncertainty U_m = f(Dispersion, Recency, Coverage)"]
+    end
+
+    S1 --> R1 --> W
+    S2 --> R2 --> W
+    S3 --> R3 --> W
+    S4 --> R4 --> W
+
+    W --> Price
+    W --> Dispersion
+    Dispersion --> Uncertainty

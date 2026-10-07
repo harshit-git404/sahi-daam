@@ -122,6 +122,43 @@ export interface ProduceItem {
   };
   retailComparison?: RetailComparison;
   marketContext?: MarketContext;
+  sessionId?: string;
+  needsAdditionalObservation?: boolean;
+  observationRequest?: {
+    reason: string;
+    requested_view: string;
+    user_guidance: string;
+    priority: number;
+    expected_information_gain: number;
+  };
+  valuationUncertainty?: number;
+  valuationConfidence?: number;
+  qualityUncertainty?: number;
+  marketUncertainty?: number;
+  marketConfidence?: number;
+  decisionTrace?: {
+    stage: string;
+    timestamp: string;
+    metric: string;
+    value: any;
+    rationale: string;
+  }[];
+  instrumentationComparison?: {
+    observation_count: number;
+    steps: {
+      stage: string;
+      quality_uncertainty: number;
+      market_uncertainty: number;
+      valuation_uncertainty: number;
+      fair_min: number;
+      fair_max: number;
+      range_width: number;
+    }[];
+    uncertainty_reduction: number;
+    range_width_reduction: number;
+  };
+  observationCount?: number;
+  isDemoMode?: boolean;
 }
 
 export interface PurchaseRecord {

@@ -1,0 +1,26 @@
+flowchart TD
+    Start([User Initiates Produce Appraisal]) --> Obs1[Capture Observation k=1]
+    Obs1 --> EstQual[Model-Agnostic Quality Estimation]
+    EstQual --> CalcUncQual[Compute Epistemic Quality Uncertainty U_quality]
+    
+    CalcUncQual --> IngestMkt[Ingest Multi-Source Market Records]
+    IngestMkt --> ScoreRel[Score Source Reliability Recency, Geo, Authority]
+    ScoreRel --> EstMkt[Weighted Price Estimation & Market Variance U_market]
+    
+    EstMkt --> ValEngine[Propagate Compound Valuation Variance sigma_fair^2]
+    ValEngine --> FairRange[Derive Quality-Adjusted Fair Range [Min, Max]]
+    
+    FairRange --> Controller{Adaptive Controller<br/>Evaluate EVI vs Cost}
+    
+    Controller -->|EVI > Cost AND k < MaxObs| ReqObs[Formulate Targeted Observation Request<br/>'Capture opposite side / damaged area']
+    ReqObs --> UserPrompt[Prompt User in UI with Guidance & Justification]
+    UserPrompt --> NewObs[Acquire Observation k = k + 1]
+    NewObs --> FuseObs[Multi-Observation Fusion Engine<br/>Defect Preservation & Variance Reduction]
+    FuseObs --> CalcUncQual
+    
+    Controller -->|EVI <= Cost OR k >= MaxObs OR Confident| Finalize([Finalize Valuation])
+    Finalize --> AnomalyCheck[Price-Quality Anomaly Detector]
+    AnomalyCheck -->|Uncertainty High| Guard[Output INSUFFICIENT_CONFIDENCE<br/>Advise cautious inspection]
+    AnomalyCheck -->|Uncertainty Normal| Assert[Output Confident Verdict<br/>OVERPRICED / FAIR / GOOD_DEAL]
+    Guard --> HaggleEngine[Confidence-Aware Negotiation Strategy]
+    Assert --> HaggleEngine

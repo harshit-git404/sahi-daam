@@ -5,19 +5,19 @@ from fastapi.middleware.cors import CORSMiddleware
 try:
     from .ml.freshness_model import load_freshness_model
     from .ml.produce_classifier import load_produce_classifier
-    from .routers import scan, haggle, sector
+    from .routers import scan, haggle, sector, valuation
 except ImportError:
     from ml.freshness_model import load_freshness_model
     from ml.produce_classifier import load_produce_classifier
-    from routers import scan, haggle, sector
+    from routers import scan, haggle, sector, valuation
 
-app = FastAPI(title="Sahi Daam API")
+app = FastAPI(title="Sahi Daam - Uncertainty-Driven Adaptive Valuation API")
 logger = logging.getLogger(__name__)
 
 
 @app.on_event("startup")
 def load_ml_models() -> None:
-    logger.info("Loading local ML models")
+    logger.info("Initializing Sahi Daam Adaptive Valuation System")
     try:
         load_produce_classifier()
         logger.info("Local produce classifier loaded successfully")
@@ -41,10 +41,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(valuation.router)
 app.include_router(scan.router)
 app.include_router(haggle.router)
 app.include_router(sector.router)
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "system": "Uncertainty-Driven Adaptive Valuation System",
+        "version": "2.0.0-adaptive"
+    }

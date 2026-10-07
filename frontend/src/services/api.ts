@@ -29,6 +29,17 @@ export interface ScanResultResponse {
   quickcommerce_price?: QuickCommercePrice;
   retail_comparison?: any;
   market_context?: ProduceItem['marketContext'];
+  session_id?: string;
+  needs_additional_observation?: boolean;
+  observation_request?: ProduceItem['observationRequest'];
+  valuation_uncertainty?: number;
+  valuation_confidence?: number;
+  quality_uncertainty?: number;
+  market_uncertainty?: number;
+  market_confidence?: number;
+  decision_trace?: ProduceItem['decisionTrace'];
+  instrumentation_comparison?: ProduceItem['instrumentationComparison'];
+  observation_count?: number;
 }
 
 export interface HaggleCheckResponse {
@@ -112,3 +123,81 @@ export async function fetchSectorAnalysis(
   }
   return response.json();
 }
+
+/** POST /valuation/observe - Add an additional viewpoint to an existing session */
+export async function submitAdditionalObservation(
+  sessionId: string,
+  imageBase64: string,
+  viewAngle: string = 'reverse_side'
+): Promise<ScanResultResponse> {
+  const response = await fetch(`${API_BASE_URL}/valuation/observe`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      session_id: sessionId,
+      image_base64: imageBase64,
+      view_angle: viewAngle,
+    }),
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to submit additional observation: ${response.statusText}`);
+  }
+  const session = await response.json();
+  
+  // Map session response to ScanResultResponse
+  const latestQuality = session.current_quality_estimate;
+  const latestMarket = session.current_market_estimate;
+  const latestValuation = session.latest_valuation;
+  const latestDecision = session.latest_decision;
+  
+  return {
+    produce_type: session.commodity,
+    detected_produce_id: session.commodity.toLowerCase(),
+    classification_confidence: latestQuality?.confidence ?? 0.8,
+    freshness_label: latestQuality?.quality_class || 'Fresh',
+    freshness_percent: Math.round((latestQuality?.freshness_score ?? 0.8) * 100),
+    freshness_note: latestQuality?.defect_notes?.length ? latestQuality.defect_notes.join('. ') : 'Quality re-estimated across multiple viewpoints.',
+    quality_adjustment: latestValuation?.quality_adjustment_per_kg ?? 0,
+    quality_adjustment_label: `${latestValuation?.quality_adjustment_per_kg >= 0 ? '+' : ''}₹${latestValuation?.quality_adjustment_per_kg ?? 0}/kg adjustment`,
+    wholesale_price: latestMarket?.estimated_price_per_kg ?? 30,
+    markup_range: {
+      min_pct: 15,
+      max_pct: 35,
+    },
+    fair_price_range: {
+      min: latestValuation?.fair_min ?? 28,
+      max: latestValuation?.fair_max ?? 40,
+      unit: 'kg',
+    },
+    data_confidence: (latestValuation?.confidence ?? 0.8) > 0.75 ? 'High' : (latestValuation?.confidence ?? 0.8) > 0.5 ? 'Medium' : 'Estimated',
+    price_source: latestMarket?.sources?.[0]?.source || 'Weighted Market Evidence',
+    session_id: session.session_id,
+    needs_additional_observation: latestDecision?.decision === 'ACQUIRE_ADDITIONAL_OBSERVATION',
+    observation_request: latestDecision?.observation_request,
+    valuation_uncertainty: latestValuation?.valuation_uncertainty,
+    valuation_confidence: latestValuation?.confidence,
+    quality_uncertainty: session.current_quality_uncertainty,
+    market_uncertainty: session.current_market_uncertainty,
+    market_confidence: latestMarket?.confidence,
+    decision_trace: session.decision_trace,
+    instrumentation_comparison: session.comparison,
+    observation_count: session.observation_count,
+  };
+}
+
+/** POST /valuation/simulate - Run demonstration benchmark scenario */
+export async function runSimulatedScenario(scenarioKey: string): Promise<any> {
+  const response = await fetch(`${API_BASE_URL}/valuation/simulate?scenario_key=${encodeURIComponent(scenarioKey)}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to run scenario: ${response.statusText}`);
+  }
+  return response.json();
+}
+

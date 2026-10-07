@@ -1,25 +1,30 @@
-# Frontend (Sahi Daam UI)
+# Sahi Daam Frontend — Adaptive Valuation UI
 
-## Purpose
-The Sahi Daam UI, built from the Stitch export. Features the following screens: `HomeScreen`, `ScanScreen`, `QualityResultScreen`, `PriceBreakdownScreen`, `BargainScreen`, and `HistoryScreen`.
+The Sahi Daam client interface visualizes the closed-loop **Uncertainty-Driven Adaptive Valuation System**, displaying multi-source evidence, compound uncertainty indicators, targeted active observation prompts, before/after range comparisons, and explainable decision traces.
 
-## Current Status
-Wired to the backend via `src/services/api.ts` and `adapter.ts`. All screens are functional against live (currently mocked) backend data.
+---
 
-## Development Stages
-- **Stage 1**: Stitch UI integrated and wired to backend (Done)
-- **Stage 2**: Reflect real data once backend folders complete their stages.
-- **Stage 3**: Roadmap features (multi-item basket mode, regional haggling phrasebook, savings/history polish).
+## Key Features
+
+1. **Confidence Status Badge**: Displays `HIGH CONFIDENCE`, `MEDIUM CONFIDENCE`, or `LOW CONFIDENCE` dynamically based on propagated valuation variance.
+2. **Uncertainty Breakdown Card**: Displays separate uncertainty gauges for Visual Quality ($U_q$), Market Evidence ($U_m$), and Compound Valuation ($U_{\text{val}}$).
+3. **Active Observation Request Prompt**: When the controller determines that Expected Value of Information exceeds observation cost ($\text{EVI} > \text{Cost}$), prompts the user with targeted instructions (e.g., *"Capture another angle or opposite side of produce to inspect hidden surfaces"*).
+4. **Before/After Range Comparison**: When a secondary viewpoint is fused, highlights the reduction in fair price interval width and drop in compound uncertainty.
+5. **Explainable Decision Trace**: Expandable diagnostic section exposing each algorithmic stage, intermediate values, and rationale.
+6. **Validation & Demonstration Mode**: Click the **Beaker / Science** button in the top header to run any of the 8 deterministic patent benchmark scenarios directly.
+
+---
 
 ## How to Run
-1. Install dependencies: `npm install`
-2. Start the dev server: `npm run dev -- --host`
 
-**Testing on a phone via ngrok:**
-Because the frontend Vite server proxies `/api` requests directly to the local backend, you only need a single ngrok tunnel. 
-Start both servers locally, then run: `ngrok http 5173` (or `ngrok http 5173 --domain=your-domain.ngrok-free.app`). Access the resulting URL on your mobile device.
-*(Note: Do not set `VITE_API_BASE_URL` in `.env.local` for ngrok testing unless you are explicitly bypassing the proxy.)*
+```bash
+# Install dependencies
+npm install
 
-## Future Plans
-- Voice haggling (staged: phrasebook mode first, full negotiation later).
-- General thrifting expansion (explicitly roadmap-only, not built).
+# Start Vite development server
+npm run dev
+
+# Run production build
+npm run build
+```
+The frontend automatically proxies `/api` calls to the local FastAPI backend on port 8000.

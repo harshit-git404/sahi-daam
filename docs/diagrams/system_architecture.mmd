@@ -1,0 +1,61 @@
+graph TB
+    subgraph ClientLayer [Client & User Interface]
+        UI[Mobile / Web Client App]
+        Cam[Multi-Angle Camera Capture]
+        Audio[Voice / Negotiation Audio]
+        TraceView[Explainable Decision Trace UI]
+        DemoMod[Validation / Demonstration Mode]
+    end
+
+    subgraph APILayer [API Gateway & Routing Layer]
+        RouterScan["POST /scan-produce (Backward Compatible)"]
+        RouterHaggle["POST /haggle-check (Confidence-Gated)"]
+        RouterSession["POST /valuation/session (Session Init)"]
+        RouterObserve["POST /valuation/observe (Active Observation)"]
+        RouterDecision["POST /valuation/decision (Controller Direct)"]
+        RouterSim["POST /valuation/simulate (Test Harness Scenarios)"]
+    end
+
+    subgraph StateLayer [Session & Context Management]
+        SessionMgr[ValuationSessionManager]
+        SessionStore[(In-Memory / Persistent Session Store)]
+        SessionMgr --- SessionStore
+    end
+
+    subgraph CoreInvention [Uncertainty-Driven Adaptive Valuation Pipeline]
+        QE[Quality Estimator<br/>IQualityEstimator Interface]
+        UE[Uncertainty Estimator<br/>Deterministic Mathematical Metric]
+        MEP[Multi-Source Market Evidence Provider<br/>Agmarknet + Cache + Nearby Mandis]
+        MSR[Market Source Reliability Scorer<br/>Recency, Geo, Authority, Consistency]
+        WMPE[Weighted Market Price Estimator<br/>Dispersion & Volatility Uncertainty]
+        QPAM[Quality-Price Adjustment Model<br/>Perishability & Market Dynamic Scale]
+        UVE[Uncertainty-Aware Valuation Engine<br/>Compound Variance Propagation]
+        AOC[Adaptive Observation Controller<br/>Expected Value of Information vs Cost]
+        OFusion[Multi-Observation Fusion Engine<br/>Defect Preservation & Variance Reduction]
+        PQAD[Price-Quality Anomaly Detector<br/>Confidence Guarding & Bargaining Targets]
+    end
+
+    UI --> Cam
+    Cam --> APILayer
+    Audio --> RouterHaggle
+    APILayer --> SessionMgr
+
+    SessionMgr --> QE
+    QE --> UE
+    UE --> OFusion
+    OFusion --> AOC
+
+    SessionMgr --> MEP
+    MEP --> MSR
+    MSR --> WMPE
+
+    WMPE --> UVE
+    OFusion --> UVE
+    QPAM --> UVE
+
+    UVE --> AOC
+    AOC -->|EVI > Cost| RouterObserve
+    AOC -->|EVI <= Cost| PQAD
+    PQAD --> RouterHaggle
+    UVE --> TraceView
+    DemoMod --> RouterSim

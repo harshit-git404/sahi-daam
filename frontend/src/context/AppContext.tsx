@@ -3,7 +3,7 @@ import { Screen, ProduceItem, PurchaseRecord, MandiLocation, AppTheme, Negotiati
 import { PRODUCE_DATABASE } from '../data/produceData';
 import { MANDI_LOCATIONS } from '../data/mandiLocations';
 import confetti from 'canvas-confetti';
-import { fetchScanResult, fetchHaggleCheck } from '../services/api';
+import { fetchScanResult, fetchHaggleCheck, submitAdditionalObservation, runSimulatedScenario, ScanResultResponse } from '../services/api';
 import { mergeProduceData } from '../services/adapter';
 import {
   calculateHistoryStats,
@@ -45,6 +45,10 @@ interface AppContextType {
   capturedImage: string | null;
   allProduce: ProduceItem[];
   triggerCelebration: () => void;
+  addAdditionalObservation: (imageBase64: string, viewAngle?: string) => Promise<void>;
+  runDemoScenario: (scenarioKey: string) => Promise<void>;
+  isDemoMode: boolean;
+  setIsDemoMode: (val: boolean) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -144,6 +148,85 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch (e) {
       console.error('API failed:', e);
       setApiError('Failed to connect to the server. Please check your connection and try again.');
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
+
+  const addAdditionalObservation = async (imageBase64: string, viewAngle: string = 'reverse_side') => {
+    if (!selectedProduce.sessionId) {
+      console.warn('No active valuation session found for additional observation');
+      return;
+    }
+    setIsScanning(true);
+    setApiError(null);
+    try {
+      const backendResponse = await submitAdditionalObservation(selectedProduce.sessionId, imageBase64, viewAngle);
+      const mergedItem = mergeProduceData(selectedProduce, backendResponse);
+      setSelectedProduce(mergedItem);
+    } catch (e) {
+      console.error('Failed to submit additional observation:', e);
+      setApiError('Failed to process additional observation. Please try again.');
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const runDemoScenario = async (scenarioKey: string) => {
+    setIsScanning(true);
+    setApiError(null);
+    try {
+      const result = await runSimulatedScenario(scenarioKey);
+      if (result && result.session) {
+        const session = result.session;
+        const latestQuality = session.current_quality_estimate;
+        const latestMarket = session.current_market_estimate;
+        const latestValuation = session.latest_valuation;
+        const latestDecision = session.latest_decision;
+        
+        const detectedItem = PRODUCE_DATABASE.find(p => p.id === session.commodity.toLowerCase()) || PRODUCE_DATABASE[0];
+        const simulatedScanResponse: ScanResultResponse = {
+          produce_type: session.commodity,
+          detected_produce_id: session.commodity.toLowerCase(),
+          classification_confidence: latestQuality?.confidence ?? 0.85,
+          freshness_label: latestQuality?.quality_class || 'Fresh',
+          freshness_percent: Math.round((latestQuality?.freshness_score ?? 0.8) * 100),
+          freshness_note: `Demo Scenario [${scenarioKey}]: ${latestDecision?.reason || 'Simulation completed'}`,
+          quality_adjustment: latestValuation?.quality_adjustment_per_kg ?? 0,
+          quality_adjustment_label: `${(latestValuation?.quality_adjustment_per_kg ?? 0) >= 0 ? '+' : ''}₹${latestValuation?.quality_adjustment_per_kg ?? 0}/kg`,
+          wholesale_price: latestMarket?.estimated_price_per_kg ?? 30,
+          markup_range: { min_pct: 15, max_pct: 35 },
+          fair_price_range: {
+            min: latestValuation?.fair_min ?? 28,
+            max: latestValuation?.fair_max ?? 40,
+            unit: 'kg',
+          },
+          data_confidence: (latestValuation?.confidence ?? 0.8) > 0.75 ? 'High' : 'Medium',
+          price_source: 'Validation / Demonstration Engine',
+          session_id: session.session_id,
+          needs_additional_observation: latestDecision?.decision === 'ACQUIRE_ADDITIONAL_OBSERVATION',
+          observation_request: latestDecision?.observation_request,
+          valuation_uncertainty: latestValuation?.valuation_uncertainty,
+          valuation_confidence: latestValuation?.confidence,
+          quality_uncertainty: session.current_quality_uncertainty,
+          market_uncertainty: session.current_market_uncertainty,
+          market_confidence: latestMarket?.confidence,
+          decision_trace: session.decision_trace,
+          instrumentation_comparison: session.comparison,
+          observation_count: session.observation_count,
+        };
+        const mergedItem = mergeProduceData(detectedItem, simulatedScanResponse);
+        mergedItem.isDemoMode = true;
+        setSelectedProduce(mergedItem);
+        setVendorAskingPrice(result.asking_price || mergedItem.typicalVendorAsking);
+        setIsDemoMode(true);
+        setCurrentScreen('quality_result');
+      }
+    } catch (e) {
+      console.error('Failed to run demo scenario:', e);
+      setApiError('Failed to run demo scenario.');
     } finally {
       setIsScanning(false);
     }
@@ -334,7 +417,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setApiError,
         capturedImage,
         allProduce: PRODUCE_DATABASE,
-        triggerCelebration
+        triggerCelebration,
+        addAdditionalObservation,
+        runDemoScenario,
+        isDemoMode,
+        setIsDemoMode,
       }}
     >
       <div className={theme === 'forest_green' ? 'theme-forest' : 'theme-terracotta'}>

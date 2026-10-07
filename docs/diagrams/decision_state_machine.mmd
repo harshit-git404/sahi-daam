@@ -1,0 +1,33 @@
+stateDiagram-v2
+    [*] --> INITIALIZING: Session Created
+    INITIALIZING --> OBSERVING: Image / Metadata Ingested
+    
+    state OBSERVING {
+        [*] --> QUALITY_ESTIMATION
+        QUALITY_ESTIMATION --> UNCERTAINTY_COMPUTATION
+        UNCERTAINTY_COMPUTATION --> MARKET_FUSION
+        MARKET_FUSION --> VALUATION_SYNTHESIS
+        VALUATION_SYNTHESIS --> CONTROLLER_EVALUATION
+    }
+
+    state CONTROLLER_EVALUATION {
+        [*] --> COMPUTE_EVI
+        COMPUTE_EVI --> EVALUATE_THRESHOLDS
+    }
+
+    CONTROLLER_EVALUATION --> REQUESTING_OBSERVATION: EVI > Cost AND Count < Max
+    REQUESTING_OBSERVATION --> FUSING_OBSERVATION: User Supplies View (k+1)
+    FUSING_OBSERVATION --> QUALITY_ESTIMATION: Recompute Joint Evidence
+
+    CONTROLLER_EVALUATION --> FINALIZED: EVI <= Cost OR Count >= Max OR Low Uncertainty
+    
+    state FINALIZED {
+        [*] --> ANOMALY_DETECTION
+        ANOMALY_DETECTION --> INSUFFICIENT_CONFIDENCE: High Valuation Uncertainty
+        ANOMALY_DETECTION --> CONFIDENT_VALUATION: Normal / High Confidence
+        CONFIDENT_VALUATION --> OVERPRICED: Asking > Max
+        CONFIDENT_VALUATION --> FAIR_PRICE: Asking within [Min, Max]
+        CONFIDENT_VALUATION --> GOOD_DEAL: Asking < Min
+    }
+
+    FINALIZED --> [*]: Session Complete / Bargaining Guided

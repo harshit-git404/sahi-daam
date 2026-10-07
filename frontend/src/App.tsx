@@ -11,11 +11,6 @@ import { QualityResultScreen } from './components/QualityResultScreen';
 import { PriceBreakdownScreen } from './components/PriceBreakdownScreen';
 import { BargainScreen } from './components/BargainScreen';
 import { HistoryScreen } from './components/HistoryScreen';
-import { SupermarketScreen } from './components/SupermarketScreen';
-import { SectorSelectionScreen } from './components/SectorSelectionScreen';
-import { ComponentSelectionScreen } from './components/ComponentSelectionScreen';
-import { SectorAnalysisScreen } from './components/SectorAnalysisScreen';
-import { PurchaseTypeScreen } from './components/PurchaseTypeScreen';
 import { BottomNav } from './components/BottomNav';
 import { DrawerMenu } from './components/DrawerMenu';
 import { AudioHaggleModal } from './components/AudioHaggleModal';
@@ -57,11 +52,6 @@ const AppContent: React.FC = () => {
         {currentScreen === 'price_breakdown' && <PriceBreakdownScreen />}
         {currentScreen === 'bargain' && <BargainScreen />}
         {currentScreen === 'history' && <HistoryScreen />}
-        {currentScreen === 'supermarket' && <SupermarketScreen />}
-        {currentScreen === 'sector_selection' && <SectorSelectionScreen />}
-        {currentScreen === 'component_selection' && <ComponentSelectionScreen />}
-        {currentScreen === 'sector_analysis' && <SectorAnalysisScreen />}
-        {currentScreen === 'purchase_type' && <PurchaseTypeScreen />}
       </div>
 
       {/* Global Navigation Shell */}

@@ -1,0 +1,120 @@
+{
+  "timestamp": "2026-10-07T12:29:48.707019",
+  "total_scenarios": 8,
+  "all_passed": true,
+  "scenarios": [
+    {
+      "scenario_id": "scenario_1",
+      "title": "High Quality Image & Strong Market Agreement",
+      "passed": true,
+      "metrics": {
+        "quality_confidence": 0.94,
+        "quality_uncertainty": 0.157,
+        "market_uncertainty": 0.276,
+        "valuation_uncertainty": 0.222,
+        "fair_range": [
+          28.0,
+          40.8
+        ],
+        "decision": "FINALIZE_VALUATION",
+        "evi": 0.0,
+        "reason": "Valuation uncertainty (0.22) is below threshold (0.35); confidence is sufficient."
+      }
+    },
+    {
+      "scenario_id": "scenario_2",
+      "title": "Poor Quality Image / High Uncertainty Request",
+      "passed": true,
+      "metrics": {
+        "quality_confidence": 0.52,
+        "quality_uncertainty": 0.482,
+        "valuation_uncertainty": 0.46,
+        "decision": "ACQUIRE_ADDITIONAL_OBSERVATION",
+        "evi": 0.058,
+        "requested_view": "reverse_side",
+        "user_guidance": "Capture the other side of the produce to inspect hidden surfaces."
+      }
+    },
+    {
+      "scenario_id": "scenario_3",
+      "title": "Two Agreeing Observations Reduce Range Width",
+      "passed": true,
+      "metrics": {
+        "before": {
+          "range": [
+            26.1,
+            45.3
+          ],
+          "width": 19.2,
+          "uncertainty": 0.381
+        },
+        "after": {
+          "range": [
+            27.5,
+            44.1
+          ],
+          "width": 16.6,
+          "uncertainty": 0.308
+        },
+        "width_reduction": 2.6,
+        "uncertainty_reduction": 0.073
+      }
+    },
+    {
+      "scenario_id": "scenario_4",
+      "title": "Conflicting Views Preserve Defect and Retain Uncertainty",
+      "passed": true,
+      "metrics": {
+        "view_1_score": 0.88,
+        "view_2_score": 0.35,
+        "fused_quality_score": 0.496,
+        "fused_class": "Slightly Aged",
+        "inter_view_diff": 0.53
+      }
+    },
+    {
+      "scenario_id": "scenario_5",
+      "title": "Conflicting Market Sources Elevate Market Uncertainty",
+      "passed": true,
+      "metrics": {
+        "aligned_market_uncertainty": 0.273,
+        "divergent_market_uncertainty": 0.842,
+        "uncertainty_increase": 0.569
+      }
+    },
+    {
+      "scenario_id": "scenario_6",
+      "title": "Stale Market Data Decays Source Reliability",
+      "passed": true,
+      "metrics": {
+        "fresh_reliability_4h": 0.871,
+        "stale_reliability_96h": 0.575
+      }
+    },
+    {
+      "scenario_id": "scenario_7",
+      "title": "High Asking Price with Confident Valuation is Overpriced",
+      "passed": true,
+      "metrics": {
+        "asking_price": 55.0,
+        "fair_range": [
+          26.4,
+          41.1
+        ],
+        "deviation_pct": 33.8,
+        "potential_saving": 13.9
+      }
+    },
+    {
+      "scenario_id": "scenario_8",
+      "title": "High Uncertainty Guard Withholds Overpriced Assertion",
+      "passed": true,
+      "metrics": {
+        "confidence": 0.294,
+        "valuation_uncertainty": 0.706,
+        "decision": "INSUFFICIENT_CONFIDENCE",
+        "caution": "High uncertainty; proceed cautiously."
+      }
+    }
+  ]
+}

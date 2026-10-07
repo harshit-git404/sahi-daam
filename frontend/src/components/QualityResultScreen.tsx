@@ -2,6 +2,7 @@ import React from 'react';
 import { useApp } from '../context/AppContext';
 import { Header } from './Header';
 import { getQualityTip } from '../data/qualityTips';
+import { AdaptiveValuationCard } from './AdaptiveValuationCard';
 
 export const QualityResultScreen: React.FC = () => {
   const { setCurrentScreen, selectedProduce, capturedImage, theme } = useApp();
@@ -14,6 +15,11 @@ export const QualityResultScreen: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-1 max-w-md mx-auto w-full px-5 py-4 flex flex-col items-center">
+        {selectedProduce.isDemoMode && (
+          <div className="w-full bg-amber-500 text-white font-extrabold text-[11px] tracking-wider uppercase py-1.5 px-3 rounded-lg mb-2 text-center shadow-xs">
+            VALIDATION / DEMONSTRATION MODE
+          </div>
+        )}
         {/* Result Card */}
         <div
           id="quality-result-card"
@@ -150,17 +156,20 @@ export const QualityResultScreen: React.FC = () => {
           )}
         </div>
 
-        {/* AI Insight Pill */}
-        <div className="w-full mt-4 bg-[#f5f3ef] rounded-2xl p-3.5 border border-[#e4e2de] text-xs text-[#594238] flex items-center gap-2.5">
-          <span className="material-symbols-outlined text-[20px] text-[#006d37]">
-            verified
-          </span>
-          <span>
-            {selectedProduce.analysisProvider === 'gemini' ? 'Analyzed with Gemini Flash.' : 'Analyzed with local fallback models.'}{' '}
-            {selectedProduce.marketStatus === 'AVAILABLE' ? 'Price benchmark loaded from the local market data.' : 'Market price is currently unavailable.'}
-          </span>
-        </div>
-      </main>
+          {/* AI Insight Pill */}
+          <div className="w-full mt-4 bg-[#f5f3ef] rounded-2xl p-3.5 border border-[#e4e2de] text-xs text-[#594238] flex items-center gap-2.5">
+            <span className="material-symbols-outlined text-[20px] text-[#006d37]">
+              verified
+            </span>
+            <span>
+              {selectedProduce.analysisProvider === 'gemini' ? 'Analyzed with Gemini Flash.' : 'Analyzed with model-agnostic hybrid estimator.'}{' '}
+              {selectedProduce.priceSource ? `Benchmark: ${selectedProduce.priceSource}` : 'Market price evidence synthesized.'}
+            </span>
+          </div>
+
+          {/* Adaptive Valuation & Active Observation Engine Card */}
+          <AdaptiveValuationCard />
+        </main>
 
       {/* Sticky Bottom Action Area */}
       <div className="fixed bottom-[74px] w-full px-5 z-30 max-w-md mx-auto left-0 right-0">

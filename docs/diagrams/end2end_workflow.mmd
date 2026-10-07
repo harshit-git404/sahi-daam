@@ -1,0 +1,45 @@
+sequenceDiagram
+    autonumber
+    actor User as Consumer / Field User
+    participant App as Sahi Daam Frontend
+    participant Session as Session Manager
+    participant Quality as Quality & Uncertainty Engine
+    participant Market as Multi-Source Market Engine
+    participant Valuation as Valuation Engine
+    participant Controller as Adaptive Controller
+    participant Anomaly as Anomaly & Negotiation Engine
+
+    User->>App: Capture initial image (View 1)
+    App->>Session: POST /valuation/session (Image 1, Commodity)
+    activate Session
+    Session->>Quality: Estimate Quality & Uncertainty (View 1)
+    Quality-->>Session: Quality Score, Confidence, Uncertainty_Q1
+    Session->>Market: Ingest Evidence (Agmarknet, Nearby, Cache)
+    Market-->>Session: Reliability-Weighted Benchmark, Uncertainty_M
+    Session->>Valuation: Synthesize Valuation & Propagate Variance
+    Valuation-->>Session: Initial Fair Interval [Min, Max], Compound Uncertainty_V1
+    Session->>Controller: Evaluate Expected Value of Information (EVI)
+    Controller-->>Session: Decision: ACQUIRE_ADDITIONAL_OBSERVATION (EVI > Cost)
+    Session-->>App: Session Response (Fair Range, Confidence, Needs View 2, Reason)
+    deactivate Session
+
+    App->>User: Display Status: Medium Confidence.<br/>Prompt: "Capture opposite side of produce to inspect hidden surfaces."
+    User->>App: Capture second angle (View 2)
+    App->>Session: POST /valuation/observe (Session ID, Image 2)
+    activate Session
+    Session->>Quality: Estimate Quality & Uncertainty (View 2)
+    Quality-->>Session: Quality Score, Confidence, Uncertainty_Q2
+    Session->>Quality: Multi-Observation Fusion (View 1 + View 2)
+    Quality-->>Session: Fused Quality, Retained Defects, Reduced Uncertainty
+    Session->>Valuation: Recompute Valuation with Fused Evidence
+    Valuation-->>Session: Narrowed Fair Interval [Min', Max'], Reduced Uncertainty_V2
+    Session->>Controller: Re-evaluate EVI
+    Controller-->>Session: Decision: FINALIZE_VALUATION
+    Session-->>App: Updated Valuation (Narrowed Range, High Confidence, Decision Complete)
+    deactivate Session
+
+    App->>User: Display Updated Valuation: Range narrowed, High Confidence
+    User->>App: Enter Vendor Asking Price
+    App->>Anomaly: POST /haggle-check (Asking Price, Fair Range, Confidence)
+    Anomaly-->>App: Deal Classification (OVERPRICED / GOOD_DEAL / INSUFFICIENT_CONFIDENCE) + Bargaining Script
+    App->>User: Display Multilingual Tactical Negotiation Guidance
