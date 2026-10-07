@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inspection Control Station | Bulk Perishable Lots</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #38bdf8;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 20px; }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; }
+    h1 { font-size: 1.4rem; color: var(--accent); }
+    .badge { background: #0369a1; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+    .card h2 { font-size: 1.1rem; margin-bottom: 12px; color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+    .telemetry-row { display: flex; gap: 15px; margin-bottom: 10px; }
+    .telemetry-box { flex: 1; background: #0f172a; padding: 10px; border-radius: 6px; border-left: 3px solid var(--accent); }
+    .telemetry-box span { display: block; font-size: 0.75rem; color: var(--muted); }
+    .telemetry-box strong { font-size: 1.2rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.88rem; }
+    th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; }
+    .btn { background: var(--accent); color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn:hover { opacity: 0.9; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-secondary { background: #475569; color: #fff; }
+    .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+    .log-box { max-height: 200px; overflow-y: auto; background: #090d16; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 0.8rem; }
+    .status-open { color: var(--warning); font-weight: bold; }
+    .status-sealed { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Tabletop Bulk Lot Inspection Station</h1>
+      <p style="color: var(--muted); font-size: 0.85rem;">Exposure-Governed Physical Access & Receding-Horizon Controller</p>
+    </div>
+    <div class="badge" id="station-status">STATUS: STANDBY</div>
+  </header>
+
+  <div class="card">
+    <h2>1. Lot Initialization & Rig Setup</h2>
+    <div style="display: flex; gap: 15px; align-items: flex-end;">
+      <div>
+        <label style="font-size: 0.8rem; color: var(--muted);">Lot ID</label><br>
+        <input type="text" id="lot-id" value="BENCH_POTATO_01" style="background: #0f172a; color: #fff; border: 1px solid var(--border); padding: 6px; border-radius: 4px;">
+      </div>
+      <div>
+        <label style="font-size: 0.8rem; color: var(--muted);">Commodity</label><br>
+        <select id="commodity" style="background: #0f172a; color: #fff; border: 1px solid var(--border); padding: 6px; border-radius: 4px;">
+          <option value="potato">Potato (Tabletop Crate)</option>
+          <option value="onion">Onion (Mesh Tray)</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size: 0.8rem; color: var(--muted);">Defect Pattern</label><br>
+        <select id="defect-pattern" style="background: #0f172a; color: #fff; border: 1px solid var(--border); padding: 6px; border-radius: 4px;">
+          <option value="ADVERSARIAL">Adversarial Presentation (Pristine top / Rotten base)</option>
+          <option value="DEPTH_CORRELATED">Depth-Correlated Spoilage</option>
+          <option value="HIDDEN_BOTTOM">Hidden Bottom Spoilage</option>
+          <option value="UNIFORM">Uniform Quality</option>
+          <option value="BENIGN">Benign Lot (Stop immediately)</option>
+        </select>
+      </div>
+      <div>
+        <button class="btn" onclick="initLot()">Initialize Rig</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- Left Column: Stratum Map & Exposure Ledger -->
+    <div>
+      <div class="card">
+        <h2>2. Live Physical Telemetry & Exposure Ledger</h2>
+        <div class="telemetry-row">
+          <div class="telemetry-box">
+            <span>CORE TEMP</span>
+            <strong id="val-core-temp">-- °C</strong>
+          </div>
+          <div class="telemetry-box">
+            <span>AMBIENT TEMP</span>
+            <strong id="val-amb-temp">-- °C</strong>
+          </div>
+          <div class="telemetry-box">
+            <span>LOT EXPOSURE</span>
+            <strong id="val-lot-exp">0.0 s</strong>
+          </div>
+        </div>
+
+        <h3 style="font-size: 0.85rem; color: var(--muted); margin-top: 15px;">STRATUM MAP & POSTERIOR BELIEF</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Stratum</th>
+              <th>Access</th>
+              <th>Exposure Stage</th>
+              <th>Est. Defect %</th>
+              <th>Conf.</th>
+            </tr>
+          </thead>
+          <tbody id="strata-table-body">
+            <tr><td colspan="5" style="text-align: center; color: var(--muted);">Rig Uninitialized</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right Column: Operator Workflow & Controller Action -->
+    <div>
+      <div class="card">
+        <h2>3. Controller Recommendation & Operator Workflow</h2>
+        <div style="background: #0f172a; padding: 15px; border-radius: 6px; border: 1px solid #0284c7;">
+          <span style="font-size: 0.75rem; color: #38bdf8; text-transform: uppercase;">RECOMMENDED PHYSICAL ACTION</span>
+          <h3 id="rec-action-name" style="color: #fff; margin: 8px 0;">--</h3>
+          <p id="rec-action-reason" style="font-size: 0.85rem; color: var(--muted);">Reason: --</p>
+          <p id="rec-action-cost" style="font-size: 0.85rem; color: var(--muted); margin-top: 4px;">Physical Cost: ₹0.0</p>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn" style="flex: 2;" onclick="executeAction('EXECUTE')">EXECUTE ACTION</button>
+          <button class="btn btn-secondary" onclick="executeAction('SKIP')">SKIP</button>
+          <button class="btn btn-danger" onclick="executeAction('STOP')">STOP / DISPOSITION</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>4. Audit Trail & Timeline</h2>
+        <div class="log-box" id="audit-log">
+          <div>[SYSTEM READY] Initialize lot to begin physical inspection sequence.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function initLot() {
+      const lotId = document.getElementById("lot-id").value;
+      const commodity = document.getElementById("commodity").value;
+      const pattern = document.getElementById("defect-pattern").value;
+      
+      const res = await fetch("/api/station/initialize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lot_id: lotId, commodity: commodity, pattern: pattern })
+      });
+      const data = await res.json();
+      document.getElementById("station-status").innerText = "STATUS: ACTIVE INSPECTION";
+      pollState();
+    }
+
+    async function pollState() {
+      const res = await fetch("/api/station/state");
+      const state = await res.json();
+      if (state.status === "UNINITIALIZED") return;
+
+      document.getElementById("val-core-temp").innerText = state.core_temp_c + " °C";
+      document.getElementById("val-amb-temp").innerText = state.ambient_temp_c + " °C";
+      document.getElementById("val-lot-exp").innerText = state.cumulative_lot_exposure_sec + " s";
+
+      // Stratum map
+      const tbody = document.getElementById("strata-table-body");
+      tbody.innerHTML = "";
+      state.strata.forEach(s => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${s.name}</strong></td>
+          <td>${s.accessible ? (s.is_open ? "<span class='status-open'>OPEN</span>" : "RE-COVERED") : "<span class='status-sealed'>SEALED</span>"}</td>
+          <td>${s.exposure_stage} (${s.cumulative_exposure_sec}s)</td>
+          <td>${s.expected_defect_pct}%</td>
+          <td>${s.observation_confidence}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Recommended action
+      document.getElementById("rec-action-name").innerText = state.recommended_action.name;
+      document.getElementById("rec-action-reason").innerText = "Reason: " + state.recommended_action.reason;
+      document.getElementById("rec-action-cost").innerText = "Physical Cost: ₹" + state.recommended_action.cost_inr;
+
+      // Audit logs
+      const logBox = document.getElementById("audit-log");
+      logBox.innerHTML = "";
+      state.audit_timeline.forEach(item => {
+        const d = document.createElement("div");
+        d.innerText = `[Step ${item.step}] ${item.action} (${item.operator || 'SYSTEM'})`;
+        logBox.appendChild(d);
+      });
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    async function executeAction(cmd) {
+      const res = await fetch("/api/station/execute_step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action_command: cmd })
+      });
+      const data = await res.json();
+      if (data.status === "TERMINATED") {
+        document.getElementById("station-status").innerText = "STATUS: TERMINATED (" + data.terminal_disposition + ")";
+        alert("INSPECTION CONCLUDED!\nFinal Disposition: " + data.terminal_disposition + "\nTrue Ground Truth Defect Rate: " + (data.true_overall_defect_rate * 100).toFixed(1) + "%");
+      }
+      pollState();
+    }
+  </script>
+</body>
+</html>

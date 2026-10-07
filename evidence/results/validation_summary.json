@@ -1,0 +1,95 @@
+{
+  "non_additive_experiment": {
+    "n_trials": 150,
+    "vs_FB5_State_Blind": {
+      "n_trials": 150,
+      "baseline_mean_loss": 132.8,
+      "proposed_mean_loss": 122.0,
+      "mean_loss_reduction_pct": 8.13,
+      "cohen_d": 0.0,
+      "p_value": 0.0,
+      "win_rate_pct": 100.0,
+      "tie_rate_pct": 0.0,
+      "loss_rate_pct": 0.0
+    },
+    "vs_FB6_Additive_Cost": {
+      "n_trials": 150,
+      "baseline_mean_loss": 132.8,
+      "proposed_mean_loss": 122.0,
+      "mean_loss_reduction_pct": 8.13,
+      "cohen_d": 0.0,
+      "p_value": 0.0,
+      "win_rate_pct": 100.0,
+      "tie_rate_pct": 0.0,
+      "loss_rate_pct": 0.0
+    }
+  },
+  "benchmark_summary": {
+    "FB0_Surface_Only": {
+      "n_trials": 360,
+      "baseline_mean_loss": 29.7,
+      "proposed_mean_loss": 28.64,
+      "mean_loss_reduction_pct": 3.58,
+      "cohen_d": 0.551,
+      "p_value": 1.5653579987377272e-22,
+      "win_rate_pct": 66.67,
+      "tie_rate_pct": 22.22,
+      "loss_rate_pct": 11.11
+    },
+    "FB1_Fixed_Random": {
+      "n_trials": 360,
+      "baseline_mean_loss": 75.5,
+      "proposed_mean_loss": 28.64,
+      "mean_loss_reduction_pct": 62.07,
+      "cohen_d": 24.299,
+      "p_value": 0.0,
+      "win_rate_pct": 100.0,
+      "tie_rate_pct": 0.0,
+      "loss_rate_pct": 0.0
+    },
+    "FB2_Depth_Stratified": {
+      "n_trials": 360,
+      "baseline_mean_loss": 88.73,
+      "proposed_mean_loss": 28.64,
+      "mean_loss_reduction_pct": 67.73,
+      "cohen_d": 1.171,
+      "p_value": 2.0482801928043655e-69,
+      "win_rate_pct": 97.5,
+      "tie_rate_pct": 0.0,
+      "loss_rate_pct": 2.5
+    },
+    "FB3_Macro_Myopic_VOI": {
+      "n_trials": 360,
+      "baseline_mean_loss": 29.72,
+      "proposed_mean_loss": 28.64,
+      "mean_loss_reduction_pct": 3.66,
+      "cohen_d": 0.556,
+      "p_value": 7.734428713183346e-23,
+      "win_rate_pct": 66.67,
+      "tie_rate_pct": 22.22,
+      "loss_rate_pct": 11.11
+    },
+    "FB5_State_Blind": {
+      "n_trials": 360,
+      "baseline_mean_loss": 38.3,
+      "proposed_mean_loss": 28.64,
+      "mean_loss_reduction_pct": 25.23,
+      "cohen_d": 5.01,
+      "p_value": 1.329191424443768e-256,
+      "win_rate_pct": 100.0,
+      "tie_rate_pct": 0.0,
+      "loss_rate_pct": 0.0
+    },
+    "FB6_Additive_Cost": {
+      "n_trials": 360,
+      "baseline_mean_loss": 38.3,
+      "proposed_mean_loss": 28.64,
+      "mean_loss_reduction_pct": 25.23,
+      "cohen_d": 5.01,
+      "p_value": 1.329191424443768e-256,
+      "win_rate_pct": 100.0,
+      "tie_rate_pct": 0.0,
+      "loss_rate_pct": 0.0
+    }
+  }
+}

@@ -12,3 +12,6 @@ Thumbs.db
 
 # Data caches
 backend/data/prices_*.json
+
+# Simulation temporary captures
+evidence/captures/mock_capture_*.jpg

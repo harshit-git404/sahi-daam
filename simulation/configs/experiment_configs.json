@@ -1,0 +1,52 @@
+{
+  "system_title": "Closed-Loop Inspection Control System for Bulk Perishable Lots",
+  "lot_geometry": {
+    "strata_count": 5,
+    "strata_definitions": [
+      {"id": 0, "name": "exposed_surface", "nominal_units": 100},
+      {"id": 1, "name": "near_surface", "nominal_units": 100},
+      {"id": 2, "name": "middle_core", "nominal_units": 100},
+      {"id": 3, "name": "deep_core", "nominal_units": 100},
+      {"id": 4, "name": "bottom_floor", "nominal_units": 100}
+    ],
+    "total_lot_units": 500,
+    "commodity_archetype": "Potato / Onion Bulk Pallet"
+  },
+  "action_costs": {
+    "cost_surface_inspect_inr": 5.0,
+    "cost_remove_layer_inr": 25.0,
+    "cost_sample_unit_base_inr": 10.0,
+    "cost_sample_per_unit_inr": 2.0,
+    "cost_secondary_sensor_inr": 35.0,
+    "time_surface_inspect_minutes": 1.0,
+    "time_remove_layer_minutes": 4.0,
+    "time_sample_units_minutes": 2.0,
+    "time_secondary_sensor_minutes": 3.0
+  },
+  "economic_loss_matrix": {
+    "lot_nominal_value_inr": 10000.0,
+    "cost_per_defective_accepted_inr": 45.0,
+    "cost_false_reject_good_unit_inr": 18.0,
+    "tolerance_threshold_accept": 0.08,
+    "tolerance_threshold_markdown": 0.22,
+    "tolerance_threshold_reroute": 0.40
+  },
+  "benchmark_regimes": [
+    {"name": "Uniform", "pattern": "uniform", "bias": "low", "base_rate": 0.18},
+    {"name": "Depth_Correlated", "pattern": "depth_correlated", "bias": "medium", "base_rate": 0.22},
+    {"name": "Clustered", "pattern": "clustered", "bias": "medium", "base_rate": 0.20},
+    {"name": "Hidden_Bottom", "pattern": "hidden_bottom", "bias": "high", "base_rate": 0.24},
+    {"name": "Surface_Biased", "pattern": "surface_biased", "bias": "high", "base_rate": 0.20},
+    {"name": "Adversarial", "pattern": "adversarial", "bias": "adversarial", "base_rate": 0.26}
+  ],
+  "evaluated_planners": [
+    {"id": "B0", "name": "B0_Surface_Only", "type": "baseline"},
+    {"id": "B1", "name": "B1_Fixed_Random", "type": "baseline"},
+    {"id": "B2", "name": "B2_Depth_Stratified", "type": "baseline"},
+    {"id": "B3", "name": "B3_Sahi_Daam_Heuristic", "type": "baseline"},
+    {"id": "B4", "name": "B4_Myopic_VOI", "type": "baseline"},
+    {"id": "B5", "name": "B5_Lookahead_VOI", "type": "baseline"},
+    {"id": "B6", "name": "B6_Access_Aware", "type": "baseline"},
+    {"id": "B7", "name": "B7_Proposed", "type": "proposed"}
+  ]
+}

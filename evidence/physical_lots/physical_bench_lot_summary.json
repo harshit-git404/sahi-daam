@@ -1,0 +1,31 @@
+{
+  "lot_id": "BENCH_POTATO_LOT_PHYSICAL_01",
+  "planner": "FB7_Physical_Bench_Controller",
+  "commodity": "potato",
+  "pattern": "ADVERSARIAL",
+  "true_overall_defect_rate": 0.38,
+  "estimated_defect_rate": 0.116,
+  "residual_risk": 0.264,
+  "chosen_disposition": "MARKDOWN",
+  "is_false_accept": 1.0,
+  "is_false_reject": 0.0,
+  "is_correct": 0.0,
+  "disposition_penalty": 300.0,
+  "inspection_cost": 0.0,
+  "deterioration_loss": 0.0,
+  "total_disposition_loss": 300.0,
+  "cumulative_exposure_sec": 0.0,
+  "strata_defect_breakdown": {
+    "0": 0.01,
+    "1": 0.4935,
+    "2": 0.4097,
+    "3": 0.5146,
+    "4": 0.4743
+  },
+  "steps_taken": 1,
+  "action_sequence": [
+    "STOP_INSPECTION"
+  ],
+  "total_spent_inr": 0.0,
+  "elapsed_inspection_time_sec": 0.0
+}
