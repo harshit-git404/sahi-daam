@@ -1,0 +1,45 @@
+{
+  "0": {
+    "units_defective": 2,
+    "units_total": 40,
+    "true_defect_rate": 0.05632868863754448,
+    "defect_types": [
+      "skin_scuff"
+    ]
+  },
+  "1": {
+    "units_defective": 5,
+    "units_total": 40,
+    "true_defect_rate": 0.11575775304119856,
+    "defect_types": [
+      "skin_scuff"
+    ]
+  },
+  "2": {
+    "units_defective": 8,
+    "units_total": 40,
+    "true_defect_rate": 0.19661017330955305,
+    "defect_types": [
+      "soft_rot",
+      "internal_browning"
+    ]
+  },
+  "3": {
+    "units_defective": 10,
+    "units_total": 40,
+    "true_defect_rate": 0.26136609723399357,
+    "defect_types": [
+      "soft_rot",
+      "internal_browning"
+    ]
+  },
+  "4": {
+    "units_defective": 15,
+    "units_total": 40,
+    "true_defect_rate": 0.3842350162957683,
+    "defect_types": [
+      "soft_rot",
+      "internal_browning"
+    ]
+  }
+}
