@@ -1,0 +1,12 @@
+{
+  "n_lots": 20,
+  "action_agreement_pct": 100.0,
+  "disposition_agreement_pct": 100.0,
+  "fb6_mean_loss": 75.0,
+  "fb7_mean_loss": 75.0,
+  "loss_delta_inr": 0.0,
+  "fb7_advantage_pct": 0.0,
+  "win_count": 0,
+  "tie_count": 20,
+  "loss_count": 0
+}

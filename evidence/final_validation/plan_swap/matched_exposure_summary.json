@@ -1,0 +1,13 @@
+{
+  "n_trials": 50,
+  "mean_damage_plan_a": 0.033498,
+  "mean_damage_plan_b": 0.033498,
+  "mean_damage_difference": 0.0,
+  "damage_diff_p_value": 1.0,
+  "mean_fidelity_plan_a": 0.9026,
+  "mean_fidelity_plan_b": 0.8153999999999999,
+  "mean_fidelity_difference": 0.0873,
+  "fidelity_diff_p_value": 0.0,
+  "damage_path_dependence_demonstrated": false,
+  "fidelity_path_dependence_demonstrated": true
+}

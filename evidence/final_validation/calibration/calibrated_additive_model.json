@@ -1,0 +1,6 @@
+{
+  "n_training_lots": 20,
+  "calibrated_c_add_inr_per_sec": 1.3855,
+  "mean_training_damage": 65.68,
+  "mean_training_duration_sec": 48.17
+}

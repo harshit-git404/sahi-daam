@@ -1,0 +1,27 @@
+{
+  "0": {
+    "units_defective": 1,
+    "units_total": 40,
+    "true_rate": 0.03687448708813281
+  },
+  "1": {
+    "units_defective": 1,
+    "units_total": 40,
+    "true_rate": 0.012773878453676505
+  },
+  "2": {
+    "units_defective": 1,
+    "units_total": 40,
+    "true_rate": 0.029766416907530333
+  },
+  "3": {
+    "units_defective": 1,
+    "units_total": 40,
+    "true_rate": 0.01844501811909703
+  },
+  "4": {
+    "units_defective": 1,
+    "units_total": 40,
+    "true_rate": 0.03244652002627201
+  }
+}
