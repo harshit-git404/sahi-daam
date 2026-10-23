@@ -44,3 +44,18 @@ def init_db(target_engine=None) -> None:
     from . import models  # noqa: F401 - ensure models are registered
     active_engine = target_engine or engine
     Base.metadata.create_all(bind=active_engine, checkfirst=True)
+
+    # Lightweight non-destructive column migration for SQLite
+    try:
+        from sqlalchemy import text
+        with active_engine.connect() as conn:
+            cursor = conn.execute(text("PRAGMA table_info(community_price_observations)"))
+            existing_cols = {row[1] for row in cursor.fetchall()}
+            if existing_cols:
+                if "normalized_price_per_kg" not in existing_cols:
+                    conn.execute(text("ALTER TABLE community_price_observations ADD COLUMN normalized_price_per_kg FLOAT"))
+                if "duplicate_reason" not in existing_cols:
+                    conn.execute(text("ALTER TABLE community_price_observations ADD COLUMN duplicate_reason VARCHAR(256)"))
+                conn.commit()
+    except Exception:
+        pass

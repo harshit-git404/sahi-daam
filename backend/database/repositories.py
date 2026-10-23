@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Tuple
 from sqlalchemy import select, func, and_
 from sqlalchemy.orm import Session
 
@@ -185,6 +185,94 @@ class CommunityPriceRepository:
     @staticmethod
     def get_by_id(session: Session, observation_id: str) -> Optional[CommunityPriceObservation]:
         return session.get(CommunityPriceObservation, observation_id)
+
+    @staticmethod
+    def create(session: Session, data: Dict[str, Any]) -> CommunityPriceObservation:
+        item = CommunityPriceObservation(**data)
+        session.add(item)
+        session.commit()
+        session.refresh(item)
+        return item
+
+    @staticmethod
+    def find_potential_duplicate(
+        session: Session,
+        commodity_id: str,
+        locality_id: str,
+        price: float,
+        unit: str,
+        observed_at: datetime,
+        contributor_id: Optional[str] = None,
+        source_type: Optional[str] = None,
+        time_window_hours: int = 12,
+    ) -> Optional[CommunityPriceObservation]:
+        """
+        Conservative duplicate check: looks for reports with the same commodity,
+        locality, price, unit, and contributor (or source type) within a time window.
+        """
+        from datetime import timedelta
+        window_start = observed_at - timedelta(hours=time_window_hours)
+        window_end = observed_at + timedelta(hours=time_window_hours)
+
+        conditions = [
+            CommunityPriceObservation.commodity_id == commodity_id,
+            CommunityPriceObservation.locality_id == locality_id,
+            CommunityPriceObservation.price == price,
+            CommunityPriceObservation.unit == unit,
+            CommunityPriceObservation.observed_at >= window_start,
+            CommunityPriceObservation.observed_at <= window_end,
+        ]
+
+        if contributor_id:
+            conditions.append(CommunityPriceObservation.contributor_id == contributor_id)
+        elif source_type:
+            conditions.append(CommunityPriceObservation.source_type == source_type)
+
+        stmt = select(CommunityPriceObservation).where(and_(*conditions)).order_by(CommunityPriceObservation.observed_at.desc()).limit(1)
+        return session.scalars(stmt).first()
+
+    @staticmethod
+    def query_observations(
+        session: Session,
+        commodity_id: Optional[str] = None,
+        locality_id: Optional[str] = None,
+        source_type: Optional[str] = None,
+        since: Optional[datetime] = None,
+        until: Optional[datetime] = None,
+        exclude_duplicates: bool = True,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> Tuple[List[CommunityPriceObservation], int]:
+        conditions = []
+        if commodity_id:
+            conditions.append(CommunityPriceObservation.commodity_id == commodity_id)
+        if locality_id:
+            conditions.append(CommunityPriceObservation.locality_id == locality_id)
+        if source_type:
+            conditions.append(CommunityPriceObservation.source_type == source_type)
+        if since:
+            conditions.append(CommunityPriceObservation.observed_at >= since)
+        if until:
+            conditions.append(CommunityPriceObservation.observed_at <= until)
+        if exclude_duplicates:
+            conditions.append(CommunityPriceObservation.is_duplicate.is_(False))
+
+        where_clause = and_(*conditions) if conditions else True
+
+        # Total count query
+        count_stmt = select(func.count(CommunityPriceObservation.id)).where(where_clause)
+        total_count = session.scalar(count_stmt) or 0
+
+        # Items query
+        stmt = (
+            select(CommunityPriceObservation)
+            .where(where_clause)
+            .order_by(CommunityPriceObservation.observed_at.desc())
+            .offset(offset)
+            .limit(limit)
+        )
+        items = list(session.scalars(stmt).all())
+        return items, total_count
 
     @staticmethod
     def list_recent(

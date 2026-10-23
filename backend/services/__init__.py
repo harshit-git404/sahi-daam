@@ -11,6 +11,7 @@ from .transport_service import (
     CalculationStatus,
     TransportMethod,
 )
+from .community_service import CommunityPriceService
 
 __all__ = [
     "TransportCostService",
@@ -19,4 +20,5 @@ __all__ = [
     "TripDirection",
     "CalculationStatus",
     "TransportMethod",
+    "CommunityPriceService",
 ]

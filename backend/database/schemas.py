@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, List, Any
+from typing import Optional, List, Any, Dict
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -128,11 +128,47 @@ class CommunityPriceObservationBase(BaseModel):
     provenance: str = "mock_seed_survey"
     is_duplicate: bool = False
     duplicate_of_id: Optional[str] = None
+    duplicate_reason: Optional[str] = None
+    normalized_price_per_kg: Optional[float] = None
 
 
 class CommunityPriceObservationRead(CommunityPriceObservationBase):
     created_at: datetime
+    is_outlier: Optional[bool] = False
     model_config = ConfigDict(from_attributes=True)
+
+
+class CommunityPriceSubmission(BaseModel):
+    """Payload submitted by user or vendor."""
+    commodity_id: str
+    locality_id: Optional[str] = None
+    locality_name: Optional[str] = None
+    district: Optional[str] = "Vellore"
+    state: Optional[str] = "Tamil Nadu"
+    pincode: Optional[str] = None
+    price: float
+    unit: str = "kg"
+    source_type: str = "customer"  # customer | vendor
+    contributor_id: Optional[str] = None
+    observed_at: Optional[datetime] = None
+    provenance: Optional[str] = None
+
+
+class CommunityPriceSubmissionResponse(BaseModel):
+    status: str = "recorded"
+    observation: CommunityPriceObservationRead
+    is_duplicate: bool = False
+    duplicate_of_id: Optional[str] = None
+    duplicate_reason: Optional[str] = None
+    normalized_price_per_kg: Optional[float] = None
+    warnings: List[str] = Field(default_factory=list)
+
+
+class CommunityPriceListResponse(BaseModel):
+    total_count: int
+    window_days: Optional[int] = None
+    items: List[CommunityPriceObservationRead]
+    summary: Dict[str, Any] = Field(default_factory=dict)
 
 
 # ---------------------------------------------------------------------------

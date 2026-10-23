@@ -273,3 +273,117 @@ Returns normalized retail benchmark prices from cached snapshots (Blinkit, Zepto
 
 * **GET `/sector-status`**: Lists all configured components in the sector registry and their official dataset availability.
 * **GET `/sector-analysis?sector={sector}&component={component}`**: Fetches official data.gov.in records for a given non-produce component and computes a distinct-period metric history and trend.
+
+---
+
+## 6. Community Price Endpoints
+
+### POST `/community-prices` (Alias: `/api/community-prices`)
+
+Submit a crowd-sourced produce price observation from an ordinary customer or vendor.
+
+#### Request Shape
+```json
+{
+  "commodity_id": "tomato",
+  "locality_id": "loc_katpadi",
+  "locality_name": "Katpadi",
+  "district": "Vellore",
+  "state": "Tamil Nadu",
+  "pincode": "632014",
+  "price": 28.0,
+  "unit": "kg",
+  "source_type": "customer",
+  "contributor_id": "cust_mock_001",
+  "observed_at": "2026-10-23T11:00:00Z"
+}
+```
+
+* **`commodity_id`** *(string, required)*: Canonical commodity ID or recognizable alias (`"tomato"`, `"onion"`, `"potato"`, etc.).
+* **`locality_id`** *(string, optional)*: Pre-existing locality identifier (e.g. `"loc_katpadi"`).
+* **`locality_name`** *(string, optional)*: Creates/resolves locality on the fly if `locality_id` is omitted.
+* **`price`** *(float, required)*: Positive finite price.
+* **`unit`** *(string, required)*: Supported unit (`kg`, `g`, `500g`, `250g`, `100g`, `piece`, `dozen`, `bunch`). Ambiguous units (`box`, `bag`, `crate`) are rejected.
+* **`source_type`** *(string, required)*: Contributor category: `"customer"` or `"vendor"`.
+* **`contributor_id`** *(string, optional)*: Contributor identifier (mock or anonymous).
+* **`observed_at`** *(datetime, optional)*: ISO timestamp of observation (defaults to current time; future timestamps rejected).
+
+#### Response Shape (HTTP 201)
+```json
+{
+  "status": "recorded",
+  "observation": {
+    "id": "cpo_a1b2c3d4e5f6",
+    "commodity_id": "tomato",
+    "price": 28.0,
+    "unit": "kg",
+    "locality_id": "loc_katpadi",
+    "source_type": "customer",
+    "contributor_id": "cust_mock_001",
+    "observed_at": "2026-10-23T11:00:00Z",
+    "created_at": "2026-10-23T11:05:00Z",
+    "provenance": "community_submission",
+    "is_duplicate": false,
+    "duplicate_of_id": null,
+    "duplicate_reason": null,
+    "normalized_price_per_kg": 28.0,
+    "is_outlier": false
+  },
+  "is_duplicate": false,
+  "duplicate_of_id": null,
+  "duplicate_reason": null,
+  "normalized_price_per_kg": 28.0,
+  "warnings": []
+}
+```
+
+---
+
+### GET `/community-prices` (Alias: `/api/community-prices`)
+
+Query crowd-sourced price observations and statistical summary metrics across a configurable rolling temporal window.
+
+#### Query Parameters
+* **`commodity_id`** *(string, optional)*: Filter by produce identifier.
+* **`locality_id`** *(string, optional)*: Filter by locality identifier.
+* **`source_type`** *(string, optional)*: Filter by `"customer"` or `"vendor"`.
+* **`window_days`** *(integer, optional, default: `2`)*: Rolling demo window in days.
+* **`exclude_duplicates`** *(boolean, optional, default: `true`)*: Exclude conservative duplicates from results.
+* **`limit`** *(integer, optional, default: `50`, max: `100`)*: Safe pagination limit.
+* **`offset`** *(integer, optional, default: `0`)*: Pagination offset.
+
+#### Response Shape (HTTP 200)
+```json
+{
+  "total_count": 3,
+  "window_days": 2,
+  "items": [
+    {
+      "id": "obs_tomato_katpadi_01",
+      "commodity_id": "tomato",
+      "price": 28.0,
+      "unit": "kg",
+      "locality_id": "loc_katpadi",
+      "source_type": "customer",
+      "contributor_id": "cust_mock_001",
+      "observed_at": "2026-10-23T09:00:00Z",
+      "created_at": "2026-10-23T09:00:00Z",
+      "provenance": "mock_seed_survey",
+      "is_duplicate": false,
+      "duplicate_of_id": null,
+      "duplicate_reason": null,
+      "normalized_price_per_kg": 28.0,
+      "is_outlier": false
+    }
+  ],
+  "summary": {
+    "sample_count": 3,
+    "average_price": 29.0,
+    "median_price": 29.0,
+    "min_price": 28.0,
+    "max_price": 30.0,
+    "duplicate_count": 0
+  }
+}
+```
+

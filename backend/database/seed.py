@@ -390,6 +390,8 @@ def seed_database(session: Session, base_time: Optional[datetime] = None) -> Dic
         },
     ]
     for item in community_obs_data:
+        if "normalized_price_per_kg" not in item and item.get("unit") == "kg":
+            item["normalized_price_per_kg"] = item["price"]
         CommunityPriceRepository.upsert(session, item)
 
     session.commit()

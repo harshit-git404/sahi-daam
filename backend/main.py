@@ -5,12 +5,12 @@ from fastapi.middleware.cors import CORSMiddleware
 try:
     from .ml.freshness_model import load_freshness_model
     from .ml.produce_classifier import load_produce_classifier
-    from .routers import scan, haggle, sector
+    from .routers import scan, haggle, sector, community
     from .database import init_db, seed_database, SessionLocal
 except ImportError:
     from ml.freshness_model import load_freshness_model
     from ml.produce_classifier import load_produce_classifier
-    from routers import scan, haggle, sector
+    from routers import scan, haggle, sector, community
     from database import init_db, seed_database, SessionLocal
 
 app = FastAPI(title="Sahi Daam API")
@@ -61,6 +61,7 @@ app.add_middleware(
 app.include_router(scan.router)
 app.include_router(haggle.router)
 app.include_router(sector.router)
+app.include_router(community.router)
 
 @app.get("/health")
 def health_check():

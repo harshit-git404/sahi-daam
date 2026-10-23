@@ -173,6 +173,8 @@ class CommunityPriceObservation(Base):
     provenance: Mapped[str] = mapped_column(String(128), default="mock_seed_survey")
     is_duplicate: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
     duplicate_of_id: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    duplicate_reason: Mapped[Optional[str]] = mapped_column(String(256), nullable=True)
+    normalized_price_per_kg: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
 
     # Relationships
     locality: Mapped["Locality"] = relationship("Locality", back_populates="community_observations")
