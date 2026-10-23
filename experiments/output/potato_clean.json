@@ -1,0 +1,98 @@
+{
+  "platform": "blinkit",
+  "commodity": "potato",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T15:11:58.616530",
+  "summary": {
+    "raw_count": 165,
+    "unique_count": 13,
+    "valid_count": 7,
+    "excluded_count": 6
+  },
+  "products": [
+    {
+      "name": "Potato (Urulaikizhangu)",
+      "commodity": "potato",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Crax Fritts Peri Peri Corn & Potato Sticks",
+      "commodity": "potato",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "84 g",
+      "quantity_kg": 0.084,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Potato (Urulaikizhangu)",
+      "commodity": "potato",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "1 kg",
+      "quantity_kg": 1.0,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Ooty Potato",
+      "commodity": "potato",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Baby Potato (Urulaikizhangu)",
+      "commodity": "potato",
+      "variant": [
+        "baby"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Potato (Urulaikizhangu)",
+      "commodity": "potato",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "1 kg",
+      "quantity_kg": 1.0,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Sweet Potato (Chakkara Valli Kizhangu)",
+      "commodity": "potato",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "450 g",
+      "quantity_kg": 0.45,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    }
+  ]
+}

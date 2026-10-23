@@ -1,0 +1,101 @@
+{
+  "platform": "zepto",
+  "commodity": "brinjal",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T17:02:33.222680",
+  "summary": {
+    "raw_count": 30,
+    "unique_count": 30,
+    "valid_count": 7,
+    "excluded_count": 23
+  },
+  "products": [
+    {
+      "name": "Brinjal Purple Striped",
+      "commodity": "brinjal",
+      "variant": [
+        "purple",
+        "striped"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": 14.0,
+      "mrp": 48.0,
+      "price_per_kg": 56.0
+    },
+    {
+      "name": "Brinjal Bharta",
+      "commodity": "brinjal",
+      "variant": [
+        "bharta"
+      ],
+      "quantity": "2 pcs",
+      "quantity_kg": null,
+      "price": 24.0,
+      "mrp": 87.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Brinjal Bharta",
+      "commodity": "brinjal",
+      "variant": [
+        "bharta"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 14.0,
+      "mrp": 53.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Brinjal Small Striped",
+      "commodity": "brinjal",
+      "variant": [
+        "striped"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 35.0,
+      "mrp": 86.0,
+      "price_per_kg": 70.0
+    },
+    {
+      "name": "Brinjal Purple Long",
+      "commodity": "brinjal",
+      "variant": [
+        "purple",
+        "long"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": 26.0,
+      "mrp": 81.0,
+      "price_per_kg": 104.0
+    },
+    {
+      "name": "Organically Grown Brinjal Purple Small",
+      "commodity": "brinjal",
+      "variant": [
+        "purple",
+        "organic"
+      ],
+      "quantity": "230 - 260 g",
+      "quantity_kg": 0.245,
+      "price": 33.0,
+      "mrp": 56.0,
+      "price_per_kg": 134.69
+    },
+    {
+      "name": "Organically Grown Brinjal Varikateri (Venga)",
+      "commodity": "brinjal",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": 16.0,
+      "mrp": 30.0,
+      "price_per_kg": 64.0
+    }
+  ]
+}

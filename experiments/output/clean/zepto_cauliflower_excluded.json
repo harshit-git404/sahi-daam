@@ -1,0 +1,538 @@
+{
+  "excluded_products": [
+    {
+      "name": "Potato",
+      "quantity": "900 g - 1 kg",
+      "price": 25.0,
+      "mrp": 55.0,
+      "raw_text": [
+        "ADD",
+        "₹25",
+        "₹55",
+        "₹30",
+        "OFF",
+        "Potato",
+        "900 g - 1 kg"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "250 g",
+      "price": 26.0,
+      "mrp": 56.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹56",
+        "₹30",
+        "OFF",
+        "Carrot Local",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Tomato Local",
+      "quantity": "500 g",
+      "price": 13.0,
+      "mrp": 37.0,
+      "raw_text": [
+        "ADD",
+        "₹13",
+        "₹37",
+        "₹24",
+        "OFF",
+        "Tomato Local",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Capsicum Green",
+      "quantity": "2 pcs",
+      "price": 16.0,
+      "mrp": 55.0,
+      "raw_text": [
+        "ADD",
+        "₹16",
+        "₹55",
+        "₹39",
+        "OFF",
+        "Capsicum Green",
+        "2 pcs"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Lady Finger",
+      "quantity": "500 g",
+      "price": 30.0,
+      "mrp": 81.0,
+      "raw_text": [
+        "ADD",
+        "₹30",
+        "₹81",
+        "₹51",
+        "OFF",
+        "Lady Finger",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Beans Haricot",
+      "quantity": "250 g",
+      "price": 24.0,
+      "mrp": 63.0,
+      "raw_text": [
+        "ADD",
+        "₹24",
+        "₹63",
+        "₹39",
+        "OFF",
+        "Beans Haricot",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Bottle Gourd",
+      "quantity": "1 pc",
+      "price": 29.0,
+      "mrp": 74.0,
+      "raw_text": [
+        "ADD",
+        "₹29",
+        "₹74",
+        "₹45",
+        "OFF",
+        "Bottle Gourd",
+        "1 pc"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "500 g",
+      "price": 44.0,
+      "mrp": 96.0,
+      "raw_text": [
+        "ADD",
+        "₹44",
+        "₹96",
+        "₹52",
+        "OFF",
+        "Carrot Local",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Beetroot",
+      "quantity": "500 g",
+      "price": 32.0,
+      "mrp": 66.0,
+      "raw_text": [
+        "ADD",
+        "₹32",
+        "₹66",
+        "₹34",
+        "OFF",
+        "Beetroot",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Drumsticks",
+      "quantity": "3 pcs",
+      "price": 35.0,
+      "mrp": 120.0,
+      "raw_text": [
+        "ADD",
+        "₹35",
+        "₹120",
+        "₹85",
+        "OFF",
+        "Drumsticks",
+        "3 pcs"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Carrot Ooty",
+      "quantity": "200 - 300 g",
+      "price": 40.0,
+      "mrp": 79.0,
+      "raw_text": [
+        "ADD",
+        "₹40",
+        "₹79",
+        "₹39",
+        "OFF",
+        "Carrot Ooty",
+        "200 - 300 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Carrot Ooty",
+      "quantity": "500 g",
+      "price": 68.0,
+      "mrp": 188.0,
+      "raw_text": [
+        "ADD",
+        "₹68",
+        "₹188",
+        "₹120",
+        "OFF",
+        "Carrot Ooty",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Lotus Flower",
+      "quantity": "1 pc",
+      "price": 41.0,
+      "mrp": 112.0,
+      "raw_text": [
+        "ADD",
+        "₹41",
+        "₹112",
+        "₹71",
+        "OFF",
+        "Lotus Flower",
+        "1 pc",
+        "Fresh"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Mint Leaves",
+      "quantity": "100 g",
+      "price": 10.0,
+      "mrp": 31.0,
+      "raw_text": [
+        "ADD",
+        "₹10",
+        "₹31",
+        "₹21",
+        "OFF",
+        "Mint Leaves",
+        "100 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Assorted Pooja Flowers",
+      "quantity": "100 g",
+      "price": 28.0,
+      "mrp": 97.0,
+      "raw_text": [
+        "ADD",
+        "₹28",
+        "₹97",
+        "₹69",
+        "OFF",
+        "Assorted Pooja Flowers",
+        "100 g",
+        "Fresh"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Chrysanthemum Yellow Flower",
+      "quantity": "100 g",
+      "price": 41.0,
+      "mrp": 83.0,
+      "raw_text": [
+        "ADD",
+        "₹41",
+        "₹83",
+        "₹42",
+        "OFF",
+        "Chrysanthemum Yellow Flower",
+        "100 g",
+        "Fresh"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Banana Robusta Baby",
+      "quantity": "4 pcs",
+      "price": 21.0,
+      "mrp": 58.0,
+      "raw_text": [
+        "ADD",
+        "₹21",
+        "₹58",
+        "₹37",
+        "OFF",
+        "Banana Robusta Baby",
+        "4 pcs"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Organically Grown Coriander Leaves",
+      "quantity": "100 g",
+      "price": 12.1,
+      "mrp": 30.0,
+      "raw_text": [
+        "ADD",
+        "₹12.1",
+        "₹30",
+        "₹18",
+        "OFF",
+        "Organically Grown Coriander Leaves",
+        "100 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Marigold Yellow Flower",
+      "quantity": "100 g",
+      "price": 16.0,
+      "mrp": 30.0,
+      "raw_text": [
+        "ADD",
+        "₹16",
+        "₹30",
+        "₹14",
+        "OFF",
+        "Marigold Yellow Flower",
+        "100 g",
+        "Fresh"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Organically Grown Banana Yellaki",
+      "quantity": "250 g",
+      "price": 78.0,
+      "mrp": 102.0,
+      "raw_text": [
+        "ADD",
+        "₹78",
+        "₹102",
+        "₹24",
+        "OFF",
+        "Organically Grown Banana Yellaki",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Organically Grown Spinach",
+      "quantity": "100 g",
+      "price": 19.57,
+      "mrp": 32.0,
+      "raw_text": [
+        "ADD",
+        "₹19.57",
+        "₹32",
+        "₹12",
+        "OFF",
+        "Organically Grown Spinach",
+        "100 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Banana Nendran",
+      "quantity": "500 g",
+      "price": 77.0,
+      "mrp": 142.0,
+      "raw_text": [
+        "ADD",
+        "₹77",
+        "₹142",
+        "₹65",
+        "OFF",
+        "Banana Nendran",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Marigold Orange Flower",
+      "quantity": "100 g",
+      "price": 16.0,
+      "mrp": 32.0,
+      "raw_text": [
+        "ADD",
+        "₹16",
+        "₹32",
+        "₹16",
+        "OFF",
+        "Marigold Orange Flower",
+        "100 g",
+        "Fresh"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Carrot Grated",
+      "quantity": "200 g",
+      "price": 39.0,
+      "mrp": 65.0,
+      "raw_text": [
+        "ADD",
+        "₹39",
+        "₹65",
+        "₹26",
+        "OFF",
+        "Carrot Grated",
+        "200 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Superior MP Wheat Atta, 0% Maida | Aashirvaad",
+      "quantity": "1 pack (2 kg)",
+      "price": 106.0,
+      "mrp": 116.0,
+      "raw_text": [
+        "ADD",
+        "₹106",
+        "₹116",
+        "₹10",
+        "OFF",
+        "Superior MP Wheat Atta, 0% Maida | Aashirvaad",
+        "1 pack (2 kg)",
+        "4.9",
+        "(26.3k)"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Onion",
+      "quantity": "900 g - 1 kg",
+      "price": 38.0,
+      "mrp": 90.0,
+      "raw_text": [
+        "ADD",
+        "₹38",
+        "₹90",
+        "₹52",
+        "OFF",
+        "Onion",
+        "900 g - 1 kg"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Cabbage",
+      "quantity": "1 pc",
+      "price": 20.0,
+      "mrp": 53.0,
+      "raw_text": [
+        "ADD",
+        "₹20",
+        "₹53",
+        "₹33",
+        "OFF",
+        "Cabbage",
+        "1 pc"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Brinjal Purple Striped",
+      "quantity": "250 g",
+      "price": 14.0,
+      "mrp": 48.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹48",
+        "₹34",
+        "OFF",
+        "Brinjal Purple Striped",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Cucumber English",
+      "quantity": "200 - 300 g",
+      "price": 20.0,
+      "mrp": 40.0,
+      "raw_text": [
+        "ADD",
+        "₹20",
+        "₹40",
+        "₹20",
+        "OFF",
+        "Cucumber English",
+        "200 - 300 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Cucumber English",
+      "quantity": "500 g",
+      "price": 33.0,
+      "mrp": 70.0,
+      "raw_text": [
+        "ADD",
+        "₹33",
+        "₹70",
+        "₹37",
+        "OFF",
+        "Cucumber English",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Tomato Local",
+      "quantity": "250 g",
+      "price": 8.0,
+      "mrp": 27.0,
+      "raw_text": [
+        "ADD",
+        "₹8",
+        "₹27",
+        "₹19",
+        "OFF",
+        "Tomato Local",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    }
+  ]
+}

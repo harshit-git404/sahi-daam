@@ -1,0 +1,98 @@
+{
+  "platform": "blinkit",
+  "commodity": "onion",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T15:12:05.767466",
+  "summary": {
+    "raw_count": 172,
+    "unique_count": 16,
+    "valid_count": 7,
+    "excluded_count": 9
+  },
+  "products": [
+    {
+      "name": "Sambar Onion Peeled (Vengayam)",
+      "commodity": "onion",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "125 g",
+      "quantity_kg": 0.125,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Onion (Vengayam)",
+      "commodity": "onion",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "1 kg",
+      "quantity_kg": 1.0,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Sambhar Onion (Vengayam)",
+      "commodity": "onion",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Spring Onion (Vengaya Thaal)",
+      "commodity": "onion",
+      "variant": [
+        "spring"
+      ],
+      "quantity": "150 g",
+      "quantity_kg": 0.15,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown - Onion (Vengayam)",
+      "commodity": "onion",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Sambhar Onion",
+      "commodity": "onion",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Baby Onion (Peeled) (Vengayam)",
+      "commodity": "onion",
+      "variant": [
+        "baby"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    }
+  ]
+}

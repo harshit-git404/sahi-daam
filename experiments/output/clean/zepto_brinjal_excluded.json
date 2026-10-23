@@ -1,0 +1,405 @@
+{
+  "excluded_products": [
+    {
+      "name": "Potato",
+      "quantity": "900 g - 1 kg",
+      "price": 25.0,
+      "mrp": 55.0,
+      "raw_text": [
+        "ADD",
+        "₹25",
+        "₹55",
+        "₹30",
+        "OFF",
+        "Potato",
+        "900 g - 1 kg"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "250 g",
+      "price": 26.0,
+      "mrp": 56.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹56",
+        "₹30",
+        "OFF",
+        "Carrot Local",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Onion",
+      "quantity": "900 g - 1 kg",
+      "price": 38.0,
+      "mrp": 90.0,
+      "raw_text": [
+        "ADD",
+        "₹38",
+        "₹90",
+        "₹52",
+        "OFF",
+        "Onion",
+        "900 g - 1 kg"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Tomato Local",
+      "quantity": "500 g",
+      "price": 13.0,
+      "mrp": 37.0,
+      "raw_text": [
+        "ADD",
+        "₹13",
+        "₹37",
+        "₹24",
+        "OFF",
+        "Tomato Local",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Lady Finger",
+      "quantity": "500 g",
+      "price": 30.0,
+      "mrp": 81.0,
+      "raw_text": [
+        "ADD",
+        "₹30",
+        "₹81",
+        "₹51",
+        "OFF",
+        "Lady Finger",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Beans Haricot",
+      "quantity": "250 g",
+      "price": 24.0,
+      "mrp": 63.0,
+      "raw_text": [
+        "ADD",
+        "₹24",
+        "₹63",
+        "₹39",
+        "OFF",
+        "Beans Haricot",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "500 g",
+      "price": 44.0,
+      "mrp": 96.0,
+      "raw_text": [
+        "ADD",
+        "₹44",
+        "₹96",
+        "₹52",
+        "OFF",
+        "Carrot Local",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Coccinia",
+      "quantity": "250 g",
+      "price": 13.0,
+      "mrp": 39.0,
+      "raw_text": [
+        "ADD",
+        "₹13",
+        "₹39",
+        "₹26",
+        "OFF",
+        "Coccinia",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Radish White (Mooli)",
+      "quantity": "250 g",
+      "price": 14.0,
+      "mrp": 29.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹29",
+        "₹15",
+        "OFF",
+        "Radish White (Mooli)",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Green Peas (Matar)",
+      "quantity": "250 g",
+      "price": 66.0,
+      "mrp": 174.0,
+      "raw_text": [
+        "ADD",
+        "₹66",
+        "₹174",
+        "₹108",
+        "OFF",
+        "Green Peas (Matar)",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Sambar Onion",
+      "quantity": "250 g",
+      "price": 22.0,
+      "mrp": 57.0,
+      "raw_text": [
+        "ADD",
+        "₹22",
+        "₹57",
+        "₹35",
+        "OFF",
+        "Sambar Onion",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Pumpkin Green",
+      "quantity": "1 pc",
+      "price": 65.0,
+      "mrp": 111.0,
+      "raw_text": [
+        "ADD",
+        "₹65",
+        "₹111",
+        "₹46",
+        "OFF",
+        "Pumpkin Green",
+        "1 pc"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "MAGGI 2-Minute Instant Noodles | Masala Noodles | Made With Quality Spices",
+      "quantity": "1 pack (280 g or 300 g)",
+      "price": 59.0,
+      "mrp": 60.0,
+      "raw_text": [
+        "ADD",
+        "₹59",
+        "₹60",
+        "₹1",
+        "OFF",
+        "MAGGI 2-Minute Instant Noodles | Masala Noodles | Made With Quality Spices",
+        "1 pack (280 g or 300 g)",
+        "4.7",
+        "(560.6k)"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Organically Grown Garlic",
+      "quantity": "100 g",
+      "price": 46.2,
+      "mrp": 56.0,
+      "raw_text": [
+        "ADD",
+        "₹46.2",
+        "₹56",
+        "₹10",
+        "OFF",
+        "Organically Grown Garlic",
+        "100 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Daily Good Unpolished Urad White Whole - Gota",
+      "quantity": "1 pack (1 kg)",
+      "price": 175.0,
+      "mrp": 250.0,
+      "raw_text": [
+        "ADD",
+        "₹175",
+        "₹250",
+        "₹75",
+        "OFF",
+        "Daily Good Unpolished Urad White Whole - Gota",
+        "1 pack (1 kg)",
+        "4.7",
+        "(16.8k)"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Garlic",
+      "quantity": "200 g",
+      "price": 70.0,
+      "mrp": 135.0,
+      "raw_text": [
+        "ADD",
+        "₹70",
+        "₹135",
+        "₹65",
+        "OFF",
+        "Garlic",
+        "200 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Nandini Curd Pouch",
+      "quantity": "1 pack (200 g)",
+      "price": 13.0,
+      "mrp": null,
+      "raw_text": [
+        "ADD",
+        "₹13",
+        "Nandini Curd Pouch",
+        "1 pack (200 g)",
+        "4.6",
+        "(16.2k)"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Garlic Peeled",
+      "quantity": "100 g",
+      "price": 58.0,
+      "mrp": 83.0,
+      "raw_text": [
+        "ADD",
+        "₹58",
+        "₹83",
+        "₹25",
+        "OFF",
+        "Garlic Peeled",
+        "100 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "GRB Ghee | Bottle | Pure & Classic",
+      "quantity": "1 pc (500 ml)",
+      "price": 411.0,
+      "mrp": 475.0,
+      "raw_text": [
+        "ADD",
+        "₹411",
+        "₹475",
+        "₹64",
+        "OFF",
+        "GRB Ghee | Bottle | Pure & Classic",
+        "1 pc (500 ml)",
+        "4.7",
+        "(8.3k)"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "MAGGI Spicy Cheesy Noodles, Instant Noodles",
+      "quantity": "1 pack (304 g)",
+      "price": 99.0,
+      "mrp": 100.0,
+      "raw_text": [
+        "ADD",
+        "₹99",
+        "₹100",
+        "₹1",
+        "OFF",
+        "MAGGI Spicy Cheesy Noodles, Instant Noodles",
+        "1 pack (304 g)",
+        "4.4",
+        "(24.0k)"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Daily Good Unpolished Masoor Dal",
+      "quantity": "1 pack (500 g)",
+      "price": 59.0,
+      "mrp": 90.0,
+      "raw_text": [
+        "ADD",
+        "₹59",
+        "₹90",
+        "₹31",
+        "OFF",
+        "Daily Good Unpolished Masoor Dal",
+        "1 pack (500 g)",
+        "4.7",
+        "(37.4k)"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Nandini Fresh Paneer (Pouch)",
+      "quantity": "1 pack (200 g)",
+      "price": 96.0,
+      "mrp": null,
+      "raw_text": [
+        "ADD",
+        "₹96",
+        "Nandini Fresh Paneer (Pouch)",
+        "1 pack (200 g)",
+        "4.6",
+        "(49.1k)"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Daily Good Unpolished Red Masoor Whole - Malka - Lentils",
+      "quantity": "1 pack (1 kg)",
+      "price": 115.0,
+      "mrp": 150.0,
+      "raw_text": [
+        "ADD",
+        "₹115",
+        "₹150",
+        "₹35",
+        "OFF",
+        "Daily Good Unpolished Red Masoor Whole - Malka - Lentils",
+        "1 pack (1 kg)",
+        "4.7",
+        "(17.3k)"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    }
+  ]
+}

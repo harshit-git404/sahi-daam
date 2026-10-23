@@ -1,0 +1,1 @@
+# Install browsers after installation: python -m playwright install chromium

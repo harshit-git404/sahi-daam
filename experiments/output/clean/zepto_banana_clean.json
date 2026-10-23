@@ -1,0 +1,135 @@
+{
+  "platform": "zepto",
+  "commodity": "banana",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T17:02:49.775586",
+  "summary": {
+    "raw_count": 30,
+    "unique_count": 30,
+    "valid_count": 10,
+    "excluded_count": 20
+  },
+  "products": [
+    {
+      "name": "Banana Elaichi (Yelakki)",
+      "commodity": "banana",
+      "variant": [
+        "yelakki",
+        "elaichi"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 74.0,
+      "mrp": 149.0,
+      "price_per_kg": 148.0
+    },
+    {
+      "name": "Banana Robusta",
+      "commodity": "banana",
+      "variant": [
+        "robusta"
+      ],
+      "quantity": "4 pcs",
+      "quantity_kg": null,
+      "price": 31.0,
+      "mrp": 72.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Banana Yellaki",
+      "commodity": "banana",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": 78.0,
+      "mrp": 102.0,
+      "price_per_kg": 312.0
+    },
+    {
+      "name": "Banana Robusta",
+      "commodity": "banana",
+      "variant": [
+        "robusta"
+      ],
+      "quantity": "2 pcs",
+      "quantity_kg": null,
+      "price": 19.0,
+      "mrp": 42.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Banana Red Semi Ripe",
+      "commodity": "banana",
+      "variant": [
+        "red"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 76.0,
+      "mrp": 152.0,
+      "price_per_kg": 152.0
+    },
+    {
+      "name": "Banana Nendran",
+      "commodity": "banana",
+      "variant": [
+        "nendran"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 77.0,
+      "mrp": 142.0,
+      "price_per_kg": 154.0
+    },
+    {
+      "name": "Banana Robusta Baby",
+      "commodity": "banana",
+      "variant": [
+        "robusta"
+      ],
+      "quantity": "4 pcs",
+      "quantity_kg": null,
+      "price": 21.0,
+      "mrp": 58.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Banana Raw",
+      "commodity": "banana",
+      "variant": [
+        "raw"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 43.0,
+      "mrp": 86.0,
+      "price_per_kg": 86.0
+    },
+    {
+      "name": "Bloom Banana Robusta",
+      "commodity": "banana",
+      "variant": [
+        "robusta"
+      ],
+      "quantity": "4 pcs",
+      "quantity_kg": null,
+      "price": 63.0,
+      "mrp": 76.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Banana Flower",
+      "commodity": "banana",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 27.0,
+      "mrp": 66.0,
+      "price_per_kg": null
+    }
+  ]
+}

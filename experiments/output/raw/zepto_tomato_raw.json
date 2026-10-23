@@ -1,0 +1,458 @@
+{
+  "platform": "zepto",
+  "commodity_search": "Tomato",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T17:02:05.108013",
+  "products": [
+    {
+      "name": "Tomato Local",
+      "quantity": "500 g",
+      "price": 13.0,
+      "mrp": 37.0,
+      "raw_text": [
+        "ADD",
+        "₹13",
+        "₹37",
+        "₹24",
+        "OFF",
+        "Tomato Local",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Tomato Hybrid",
+      "quantity": "500 g",
+      "price": 14.0,
+      "mrp": 39.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹39",
+        "₹25",
+        "OFF",
+        "Tomato Hybrid",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Tomato Local",
+      "quantity": "250 g",
+      "price": 8.0,
+      "mrp": 27.0,
+      "raw_text": [
+        "ADD",
+        "₹8",
+        "₹27",
+        "₹19",
+        "OFF",
+        "Tomato Local",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Organically Grown Tomato Local",
+      "quantity": "500 g",
+      "price": 14.3,
+      "mrp": 47.0,
+      "raw_text": [
+        "ADD",
+        "₹14.3",
+        "₹47",
+        "₹33",
+        "OFF",
+        "Organically Grown Tomato Local",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Organically Grown Tomato Hybrid",
+      "quantity": "500 g",
+      "price": 28.0,
+      "mrp": 54.0,
+      "raw_text": [
+        "ADD",
+        "₹28",
+        "₹54",
+        "₹26",
+        "OFF",
+        "Organically Grown Tomato Hybrid",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Tomato Green",
+      "quantity": "500 g",
+      "price": 14.0,
+      "mrp": 44.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹44",
+        "₹30",
+        "OFF",
+        "Tomato Green",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Cherry Tomato",
+      "quantity": "250 g",
+      "price": 49.0,
+      "mrp": 98.0,
+      "raw_text": [
+        "ADD",
+        "₹49",
+        "₹98",
+        "₹49",
+        "OFF",
+        "Cherry Tomato",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Cherry Tomato Mix",
+      "quantity": "100 g",
+      "price": 26.0,
+      "mrp": 48.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹48",
+        "₹22",
+        "OFF",
+        "Cherry Tomato Mix",
+        "100 g"
+      ]
+    },
+    {
+      "name": "Potato",
+      "quantity": "900 g - 1 kg",
+      "price": 25.0,
+      "mrp": 55.0,
+      "raw_text": [
+        "ADD",
+        "₹25",
+        "₹55",
+        "₹30",
+        "OFF",
+        "Potato",
+        "900 g - 1 kg"
+      ]
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "250 g",
+      "price": 26.0,
+      "mrp": 56.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹56",
+        "₹30",
+        "OFF",
+        "Carrot Local",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Capsicum Green",
+      "quantity": "2 pcs",
+      "price": 16.0,
+      "mrp": 55.0,
+      "raw_text": [
+        "ADD",
+        "₹16",
+        "₹55",
+        "₹39",
+        "OFF",
+        "Capsicum Green",
+        "2 pcs"
+      ]
+    },
+    {
+      "name": "Onion",
+      "quantity": "900 g - 1 kg",
+      "price": 38.0,
+      "mrp": 90.0,
+      "raw_text": [
+        "ADD",
+        "₹38",
+        "₹90",
+        "₹52",
+        "OFF",
+        "Onion",
+        "900 g - 1 kg"
+      ]
+    },
+    {
+      "name": "Lady Finger",
+      "quantity": "500 g",
+      "price": 30.0,
+      "mrp": 81.0,
+      "raw_text": [
+        "ADD",
+        "₹30",
+        "₹81",
+        "₹51",
+        "OFF",
+        "Lady Finger",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Beans Haricot",
+      "quantity": "250 g",
+      "price": 24.0,
+      "mrp": 63.0,
+      "raw_text": [
+        "ADD",
+        "₹24",
+        "₹63",
+        "₹39",
+        "OFF",
+        "Beans Haricot",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Cucumber Green",
+      "quantity": "3 pcs",
+      "price": 37.0,
+      "mrp": 81.0,
+      "raw_text": [
+        "ADD",
+        "₹37",
+        "₹81",
+        "₹44",
+        "OFF",
+        "Cucumber Green",
+        "3 pcs"
+      ]
+    },
+    {
+      "name": "Hydroponic Cherry Tomato",
+      "quantity": "250 g",
+      "price": 48.0,
+      "mrp": 89.0,
+      "raw_text": [
+        "ADD",
+        "₹48",
+        "₹89",
+        "₹41",
+        "OFF",
+        "Hydroponic Cherry Tomato",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Brinjal Purple Striped",
+      "quantity": "250 g",
+      "price": 14.0,
+      "mrp": 48.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹48",
+        "₹34",
+        "OFF",
+        "Brinjal Purple Striped",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Cucumber English",
+      "quantity": "200 - 300 g",
+      "price": 20.0,
+      "mrp": 40.0,
+      "raw_text": [
+        "ADD",
+        "₹20",
+        "₹40",
+        "₹20",
+        "OFF",
+        "Cucumber English",
+        "200 - 300 g"
+      ]
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "500 g",
+      "price": 44.0,
+      "mrp": 96.0,
+      "raw_text": [
+        "ADD",
+        "₹44",
+        "₹96",
+        "₹52",
+        "OFF",
+        "Carrot Local",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Bottle Gourd",
+      "quantity": "1 pc",
+      "price": 29.0,
+      "mrp": 74.0,
+      "raw_text": [
+        "ADD",
+        "₹29",
+        "₹74",
+        "₹45",
+        "OFF",
+        "Bottle Gourd",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Brinjal Bharta",
+      "quantity": "2 pcs",
+      "price": 24.0,
+      "mrp": 87.0,
+      "raw_text": [
+        "ADD",
+        "₹24",
+        "₹87",
+        "₹63",
+        "OFF",
+        "Brinjal Bharta",
+        "2 pcs"
+      ]
+    },
+    {
+      "name": "Beans French",
+      "quantity": "250 g",
+      "price": 27.0,
+      "mrp": 65.0,
+      "raw_text": [
+        "ADD",
+        "₹27",
+        "₹65",
+        "₹38",
+        "OFF",
+        "Beans French",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Brinjal Bharta",
+      "quantity": "1 pc",
+      "price": 14.0,
+      "mrp": 53.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹53",
+        "₹39",
+        "OFF",
+        "Brinjal Bharta",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Beans Broad",
+      "quantity": "250 g",
+      "price": 26.0,
+      "mrp": 54.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹54",
+        "₹28",
+        "OFF",
+        "Beans Broad",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Beans Cluster (Gawar Phali)",
+      "quantity": "250 g",
+      "price": 16.0,
+      "mrp": 41.0,
+      "raw_text": [
+        "ADD",
+        "₹16",
+        "₹41",
+        "₹25",
+        "OFF",
+        "Beans Cluster (Gawar Phali)",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Beans Cowpea",
+      "quantity": "500 g",
+      "price": 42.0,
+      "mrp": 106.0,
+      "raw_text": [
+        "ADD",
+        "₹42",
+        "₹106",
+        "₹64",
+        "OFF",
+        "Beans Cowpea",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Cabbage",
+      "quantity": "1 pc",
+      "price": 20.0,
+      "mrp": 53.0,
+      "raw_text": [
+        "ADD",
+        "₹20",
+        "₹53",
+        "₹33",
+        "OFF",
+        "Cabbage",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Cucumber English",
+      "quantity": "500 g",
+      "price": 33.0,
+      "mrp": 70.0,
+      "raw_text": [
+        "ADD",
+        "₹33",
+        "₹70",
+        "₹37",
+        "OFF",
+        "Cucumber English",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Lady Finger",
+      "quantity": "250 g",
+      "price": 18.0,
+      "mrp": 45.0,
+      "raw_text": [
+        "ADD",
+        "₹18",
+        "₹45",
+        "₹27",
+        "OFF",
+        "Lady Finger",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Beetroot",
+      "quantity": "500 g",
+      "price": 32.0,
+      "mrp": 66.0,
+      "raw_text": [
+        "ADD",
+        "₹32",
+        "₹66",
+        "₹34",
+        "OFF",
+        "Beetroot",
+        "500 g"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "excluded_products": [
+    {
+      "name": "Unknown",
+      "quantity": "Unknown",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "₹34",
+        "₹42",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "500 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "15% OFF",
+        "8 MINS",
+        "Orange Carrot (Local Carrot)",
+        "500 g",
+        "₹39",
+        "₹46",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "250 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "17% OFF",
+        "8 MINS",
+        "Ooty Carrot",
+        "250 g",
+        "₹29",
+        "₹35",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "150 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "17% OFF",
+        "8 MINS",
+        "Organic Cherry Tomatoes",
+        "150 g",
+        "₹32",
+        "₹39",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "295 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "8 MINS",
+        "Abbie's Sun Dried Tomatoes in Oil",
+        "295 g",
+        "₹425",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "400 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "12% OFF",
+        "8 MINS",
+        "pastaZara Finely Chopped Tomatoes",
+        "400 g",
+        "₹262",
+        "₹300",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "1 kg",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "20% OFF",
+        "8 MINS",
+        "Onion (Vengayam)",
+        "1 kg",
+        "₹44",
+        "₹55",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    }
+  ]
+}

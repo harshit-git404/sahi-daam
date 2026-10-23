@@ -1,0 +1,84 @@
+{
+  "platform": "blinkit",
+  "commodity": "tomato",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T12:06:41.172686",
+  "summary": {
+    "raw_count": 103,
+    "unique_count": 24,
+    "valid_count": 7,
+    "excluded_count": 17
+  },
+  "products": [
+    {
+      "name": "Desi Tomato (Thakkali)",
+      "commodity": "tomato",
+      "variant": "desi",
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 16.0,
+      "mrp": 18.0,
+      "price_per_kg": 32.0
+    },
+    {
+      "name": "Hybrid Tomato (Thakkali)",
+      "commodity": "tomato",
+      "variant": "hybrid",
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 18.0,
+      "mrp": 21.0,
+      "price_per_kg": 36.0
+    },
+    {
+      "name": "Organically Grown Tomato (Desi) (Thakkali)",
+      "commodity": "tomato",
+      "variant": "organic",
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 29.0,
+      "mrp": 33.0,
+      "price_per_kg": 58.0
+    },
+    {
+      "name": "Organically Grown Tomato (Hybrid) (Thakkali)",
+      "commodity": "tomato",
+      "variant": "organic_hybrid",
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 38.0,
+      "mrp": 45.0,
+      "price_per_kg": 76.0
+    },
+    {
+      "name": "Organically Grown Desi Tomato by Bhoomi Farms",
+      "commodity": "tomato",
+      "variant": "organic",
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": 19.0,
+      "mrp": 23.0,
+      "price_per_kg": 76.0
+    },
+    {
+      "name": "Cherry Tomatoes - Packet",
+      "commodity": "tomato",
+      "variant": "cherry",
+      "quantity": "150 g",
+      "quantity_kg": 0.15,
+      "price": 37.0,
+      "mrp": 43.0,
+      "price_per_kg": 246.67
+    },
+    {
+      "name": "Organic Cherry Tomatoes",
+      "commodity": "tomato",
+      "variant": "cherry",
+      "quantity": "150 g",
+      "quantity_kg": 0.15,
+      "price": 32.0,
+      "mrp": 39.0,
+      "price_per_kg": 213.33
+    }
+  ]
+}

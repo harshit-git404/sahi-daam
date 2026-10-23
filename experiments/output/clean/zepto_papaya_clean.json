@@ -1,0 +1,87 @@
+{
+  "platform": "zepto",
+  "commodity": "papaya",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T17:02:55.193781",
+  "summary": {
+    "raw_count": 30,
+    "unique_count": 30,
+    "valid_count": 6,
+    "excluded_count": 24
+  },
+  "products": [
+    {
+      "name": "Papaya Cut",
+      "commodity": "papaya",
+      "variant": [
+        "cut"
+      ],
+      "quantity": "200 g",
+      "quantity_kg": 0.2,
+      "price": 54.0,
+      "mrp": 89.0,
+      "price_per_kg": 270.0
+    },
+    {
+      "name": "Papaya Raw",
+      "commodity": "papaya",
+      "variant": [
+        "raw"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 38.0,
+      "mrp": 57.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Papaya",
+      "commodity": "papaya",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 68.0,
+      "mrp": 153.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Papaya Raw",
+      "commodity": "papaya",
+      "variant": [
+        "raw",
+        "organic"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 41.0,
+      "mrp": 60.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Papaya",
+      "commodity": "papaya",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 74.8,
+      "mrp": 151.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Bloom Papaya",
+      "commodity": "papaya",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 139.0,
+      "mrp": 168.0,
+      "price_per_kg": null
+    }
+  ]
+}

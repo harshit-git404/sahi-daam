@@ -1,0 +1,112 @@
+{
+  "platform": "zepto",
+  "commodity": "cucumber",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T17:02:27.642682",
+  "summary": {
+    "raw_count": 30,
+    "unique_count": 30,
+    "valid_count": 8,
+    "excluded_count": 22
+  },
+  "products": [
+    {
+      "name": "Cucumber English",
+      "commodity": "cucumber",
+      "variant": [
+        "english"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 33.0,
+      "mrp": 70.0,
+      "price_per_kg": 66.0
+    },
+    {
+      "name": "Cucumber Green",
+      "commodity": "cucumber",
+      "variant": [
+        "green"
+      ],
+      "quantity": "3 pcs",
+      "quantity_kg": null,
+      "price": 37.0,
+      "mrp": 81.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Cucumber English",
+      "commodity": "cucumber",
+      "variant": [
+        "english"
+      ],
+      "quantity": "200 - 300 g",
+      "quantity_kg": 0.25,
+      "price": 20.0,
+      "mrp": 40.0,
+      "price_per_kg": 80.0
+    },
+    {
+      "name": "Cucumber Green",
+      "commodity": "cucumber",
+      "variant": [
+        "green"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 15.0,
+      "mrp": 33.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Cucumber Indian",
+      "commodity": "cucumber",
+      "variant": [
+        "organic",
+        "indian"
+      ],
+      "quantity": "2 pcs",
+      "quantity_kg": null,
+      "price": 54.0,
+      "mrp": 71.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Cucumber English",
+      "commodity": "cucumber",
+      "variant": [
+        "english",
+        "organic"
+      ],
+      "quantity": "2 pcs",
+      "quantity_kg": null,
+      "price": 22.0,
+      "mrp": 51.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Cucumber Malabar",
+      "commodity": "cucumber",
+      "variant": [
+        "malabar"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 28.0,
+      "mrp": 88.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Sambhar Cucumber",
+      "commodity": "cucumber",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 49.0,
+      "mrp": 65.0,
+      "price_per_kg": null
+    }
+  ]
+}

@@ -1,0 +1,469 @@
+{
+  "platform": "zepto",
+  "commodity_search": "Papaya",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T17:02:55.193781",
+  "products": [
+    {
+      "name": "Papaya Cut",
+      "quantity": "200 g",
+      "price": 54.0,
+      "mrp": 89.0,
+      "raw_text": [
+        "ADD",
+        "₹54",
+        "₹89",
+        "₹35",
+        "OFF",
+        "Papaya Cut",
+        "200 g"
+      ]
+    },
+    {
+      "name": "Papaya Raw",
+      "quantity": "1 pc",
+      "price": 38.0,
+      "mrp": 57.0,
+      "raw_text": [
+        "ADD",
+        "₹38",
+        "₹57",
+        "₹19",
+        "OFF",
+        "Papaya Raw",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Papaya",
+      "quantity": "1 pc",
+      "price": 68.0,
+      "mrp": 153.0,
+      "raw_text": [
+        "ADD",
+        "₹68",
+        "₹153",
+        "₹85",
+        "OFF",
+        "Papaya",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Organically Grown Papaya Raw",
+      "quantity": "1 pc",
+      "price": 41.0,
+      "mrp": 60.0,
+      "raw_text": [
+        "ADD",
+        "₹41",
+        "₹60",
+        "₹19",
+        "OFF",
+        "Organically Grown Papaya Raw",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Organically Grown Papaya",
+      "quantity": "1 pc",
+      "price": 74.8,
+      "mrp": 151.0,
+      "raw_text": [
+        "ADD",
+        "₹74.8",
+        "₹151",
+        "₹76",
+        "OFF",
+        "Organically Grown Papaya",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Bloom Papaya",
+      "quantity": "1 pc",
+      "price": 139.0,
+      "mrp": 168.0,
+      "raw_text": [
+        "ADD",
+        "₹139",
+        "₹168",
+        "₹29",
+        "OFF",
+        "Bloom Papaya",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Banana Elaichi (Yelakki)",
+      "quantity": "500 g",
+      "price": 74.0,
+      "mrp": 149.0,
+      "raw_text": [
+        "ADD",
+        "₹74",
+        "₹149",
+        "₹75",
+        "OFF",
+        "Banana Elaichi (Yelakki)",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Banana Robusta",
+      "quantity": "4 pcs",
+      "price": 31.0,
+      "mrp": 72.0,
+      "raw_text": [
+        "ADD",
+        "₹31",
+        "₹72",
+        "₹41",
+        "OFF",
+        "Banana Robusta",
+        "4 pcs"
+      ]
+    },
+    {
+      "name": "Coconut",
+      "quantity": "1 pc",
+      "price": 45.0,
+      "mrp": 96.0,
+      "raw_text": [
+        "ADD",
+        "₹45",
+        "₹96",
+        "₹51",
+        "OFF",
+        "Coconut",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Gooseberry (Amla)",
+      "quantity": "250 g",
+      "price": 38.0,
+      "mrp": 104.0,
+      "raw_text": [
+        "ADD",
+        "₹38",
+        "₹104",
+        "₹66",
+        "OFF",
+        "Gooseberry (Amla)",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Watermelon Kiran (Tarbooj)",
+      "quantity": "1 pc",
+      "price": 90.0,
+      "mrp": 161.0,
+      "raw_text": [
+        "ADD",
+        "₹90",
+        "₹161",
+        "₹71",
+        "OFF",
+        "Watermelon Kiran (Tarbooj)",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Pineapple",
+      "quantity": "1 pc",
+      "price": 97.0,
+      "mrp": 197.0,
+      "raw_text": [
+        "ADD",
+        "₹97",
+        "₹197",
+        "₹100",
+        "OFF",
+        "Pineapple",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Tender Coconut",
+      "quantity": "1 pc",
+      "price": 75.0,
+      "mrp": 161.0,
+      "raw_text": [
+        "ADD",
+        "₹75",
+        "₹161",
+        "₹86",
+        "OFF",
+        "Tender Coconut",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Banana Nendran",
+      "quantity": "500 g",
+      "price": 77.0,
+      "mrp": 142.0,
+      "raw_text": [
+        "ADD",
+        "₹77",
+        "₹142",
+        "₹65",
+        "OFF",
+        "Banana Nendran",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Tender Coconut Orange (King Coconut)",
+      "quantity": "1 pc",
+      "price": 89.0,
+      "mrp": 175.0,
+      "raw_text": [
+        "ADD",
+        "₹89",
+        "₹175",
+        "₹86",
+        "OFF",
+        "Tender Coconut Orange (King Coconut)",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Banana Red Semi Ripe",
+      "quantity": "500 g",
+      "price": 76.0,
+      "mrp": 152.0,
+      "raw_text": [
+        "ADD",
+        "₹76",
+        "₹152",
+        "₹76",
+        "OFF",
+        "Banana Red Semi Ripe",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Banana Robusta",
+      "quantity": "2 pcs",
+      "price": 19.0,
+      "mrp": 42.0,
+      "raw_text": [
+        "ADD",
+        "₹19",
+        "₹42",
+        "₹23",
+        "OFF",
+        "Banana Robusta",
+        "2 pcs"
+      ]
+    },
+    {
+      "name": "Grapes Bangalore Blue",
+      "quantity": "500 g",
+      "price": 60.0,
+      "mrp": 128.0,
+      "raw_text": [
+        "ADD",
+        "₹60",
+        "₹128",
+        "₹68",
+        "OFF",
+        "Grapes Bangalore Blue",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Banana Robusta Baby",
+      "quantity": "4 pcs",
+      "price": 21.0,
+      "mrp": 58.0,
+      "raw_text": [
+        "ADD",
+        "₹21",
+        "₹58",
+        "₹37",
+        "OFF",
+        "Banana Robusta Baby",
+        "4 pcs"
+      ]
+    },
+    {
+      "name": "Muskmelon",
+      "quantity": "1 pc",
+      "price": 46.0,
+      "mrp": 93.0,
+      "raw_text": [
+        "ADD",
+        "₹46",
+        "₹93",
+        "₹47",
+        "OFF",
+        "Muskmelon",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Mango Raw",
+      "quantity": "500 g (3 - 4 pcs)",
+      "price": 63.0,
+      "mrp": 184.0,
+      "raw_text": [
+        "ADD",
+        "₹63",
+        "₹184",
+        "₹121",
+        "OFF",
+        "Mango Raw",
+        "500 g (3 - 4 pcs)"
+      ]
+    },
+    {
+      "name": "Gold Winner Refined Sunflower Oil - Pouch",
+      "quantity": "1 pack (1 L)",
+      "price": 181.0,
+      "mrp": 207.0,
+      "raw_text": [
+        "ADD",
+        "₹181",
+        "₹207",
+        "₹26",
+        "OFF",
+        "Gold Winner Refined Sunflower Oil - Pouch",
+        "1 pack (1 L)",
+        "4.8",
+        "(209.0k)"
+      ]
+    },
+    {
+      "name": "Let's try Sabudana Mixture | Fasting Snacks",
+      "quantity": "1 pack (192 g)",
+      "price": 95.0,
+      "mrp": 100.0,
+      "raw_text": [
+        "ADD",
+        "₹95",
+        "₹100",
+        "₹5",
+        "OFF",
+        "Let's try Sabudana Mixture | Fasting Snacks",
+        "1 pack (192 g)",
+        "4.3",
+        "(7.5k)"
+      ]
+    },
+    {
+      "name": "Potato",
+      "quantity": "900 g - 1 kg",
+      "price": 25.0,
+      "mrp": 55.0,
+      "raw_text": [
+        "ADD",
+        "₹25",
+        "₹55",
+        "₹30",
+        "OFF",
+        "Potato",
+        "900 g - 1 kg"
+      ]
+    },
+    {
+      "name": "Cucumber Green",
+      "quantity": "3 pcs",
+      "price": 37.0,
+      "mrp": 81.0,
+      "raw_text": [
+        "ADD",
+        "₹37",
+        "₹81",
+        "₹44",
+        "OFF",
+        "Cucumber Green",
+        "3 pcs"
+      ]
+    },
+    {
+      "name": "Milky Mist High Protein Paneer",
+      "quantity": "1 pack (200 g)",
+      "price": 144.0,
+      "mrp": 165.0,
+      "raw_text": [
+        "ADD",
+        "₹144",
+        "₹165",
+        "₹21",
+        "OFF",
+        "Milky Mist High Protein Paneer",
+        "1 pack (200 g)",
+        "4.5",
+        "(30.8k)"
+      ]
+    },
+    {
+      "name": "Britannia Pav",
+      "quantity": "1 pack (200 g)",
+      "price": 35.0,
+      "mrp": 40.0,
+      "raw_text": [
+        "ADD",
+        "₹35",
+        "₹40",
+        "₹5",
+        "OFF",
+        "Britannia Pav",
+        "1 pack (200 g)",
+        "4.5",
+        "(24.2k)"
+      ]
+    },
+    {
+      "name": "Fortune Rice Bran Health Oil | Jar",
+      "quantity": "1 pc (4.35 kg)",
+      "price": 903.0,
+      "mrp": 1149.0,
+      "raw_text": [
+        "ADD",
+        "₹903",
+        "₹1149",
+        "₹246",
+        "OFF",
+        "Fortune Rice Bran Health Oil | Jar",
+        "1 pc (4.35 kg)",
+        "Rice Bran Oil",
+        "4.7",
+        "(7.0k)"
+      ]
+    },
+    {
+      "name": "Coriander Leaves",
+      "quantity": "100 g",
+      "price": 11.0,
+      "mrp": 23.0,
+      "raw_text": [
+        "ADD",
+        "₹11",
+        "₹23",
+        "₹12",
+        "OFF",
+        "Coriander Leaves",
+        "100 g"
+      ]
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "250 g",
+      "price": 26.0,
+      "mrp": 56.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹56",
+        "₹30",
+        "OFF",
+        "Carrot Local",
+        "250 g"
+      ]
+    }
+  ]
+}

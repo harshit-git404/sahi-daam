@@ -1,0 +1,208 @@
+{
+  "excluded_products": [
+    {
+      "name": "Unknown",
+      "quantity": "Unknown",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "33% OFF",
+        "8 MINS",
+        "Yu Berry Blast Fruit Juice with Berry Pieces",
+        "3 x 225 ml",
+        "₹150",
+        "₹225",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "500 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "18% OFF",
+        "8 MINS",
+        "Organically Grown Yellaki Banana By Akshayakalpa Organic - 500 g",
+        "500 g",
+        "₹103",
+        "₹127",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Banana Stem (Vazhai Thandu)",
+      "quantity": "800 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "8% OFF",
+        "8 MINS",
+        "Banana Stem (Vazhai Thandu)",
+        "800 g",
+        "₹11",
+        "₹12",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "matched exclusion keyword: stem"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "200 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "18% OFF",
+        "8 MINS",
+        "Lemon (Elumichai Pazham)",
+        "200 g",
+        "₹45",
+        "₹55",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "350 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "20% OFF",
+        "8 MINS",
+        "Indian Guava (Koiya Pazham)",
+        "350 g",
+        "₹63",
+        "₹79",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "400 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "12% OFF",
+        "8 MINS",
+        "Thai White Guava (Koiya Pazham)",
+        "400 g",
+        "₹74",
+        "₹85",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "3 pcs",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "18% OFF",
+        "8 MINS",
+        "Green Kiwi (Pasali Pazham)",
+        "3 pcs",
+        "₹108",
+        "₹133",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "800 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "17% OFF",
+        "8 MINS",
+        "Pineapple (Annachi Pazham)",
+        "800 g",
+        "₹86",
+        "₹104",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "220 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "17% OFF",
+        "8 MINS",
+        "Organically Grown Lemon (Elumichai Pazham)",
+        "220 g",
+        "₹48",
+        "₹58",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "450 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "19% OFF",
+        "8 MINS",
+        "Red Delicious Apple (Imported)",
+        "450 g",
+        "₹182",
+        "₹227",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "300 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "13% OFF",
+        "8 MINS",
+        "Royal Gala Apple (Italy / Poland)",
+        "300 g",
+        "₹140",
+        "₹162",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "250 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "15% OFF",
+        "8 MINS",
+        "Pink Lady Apple - USA",
+        "250 g",
+        "₹113",
+        "₹133",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    }
+  ]
+}

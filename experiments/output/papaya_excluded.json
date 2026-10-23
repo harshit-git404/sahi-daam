@@ -1,0 +1,221 @@
+{
+  "excluded_products": [
+    {
+      "name": "Unknown",
+      "quantity": "Unknown",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "₹64",
+        "₹81",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "500 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "15% OFF",
+        "8 MINS",
+        "Yellaki Banana (Vaazhapazham)",
+        "500 g",
+        "₹68",
+        "₹80",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "3 pcs",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "22% OFF",
+        "8 MINS",
+        "Banana (Vaazhapazham)",
+        "3 pcs",
+        "₹28",
+        "₹36",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "4 pcs",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "12% OFF",
+        "8 MINS",
+        "Baby Banana (Vaazhapazham)",
+        "4 pcs",
+        "₹28",
+        "₹32",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "2 pcs",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "16% OFF",
+        "8 MINS",
+        "Organically Grown Raw Banana (Vazhakkai)",
+        "2 pcs",
+        "₹20",
+        "₹24",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "400 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "22% OFF",
+        "8 MINS",
+        "Neelam Mango (Mampazham)",
+        "400 g",
+        "₹144",
+        "₹185",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "350 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "14% OFF",
+        "8 MINS",
+        "Red Delicious Apple - Italy/New Zealand",
+        "350 g",
+        "₹144",
+        "₹168",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "450 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "19% OFF",
+        "8 MINS",
+        "Red Delicious Apple (Imported)",
+        "450 g",
+        "₹182",
+        "₹227",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "300 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "13% OFF",
+        "8 MINS",
+        "Royal Gala Apple (Italy / Poland)",
+        "300 g",
+        "₹140",
+        "₹162",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "250 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "15% OFF",
+        "8 MINS",
+        "Pink Lady Apple - USA",
+        "250 g",
+        "₹113",
+        "₹133",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "340 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "21% OFF",
+        "8 MINS",
+        "Washington Red Delicious Apple",
+        "340 g",
+        "₹175",
+        "₹224",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "2 kg",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "22% OFF",
+        "8 MINS",
+        "Kiran Watermelon",
+        "2 kg",
+        "₹45",
+        "₹58",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "800 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "17% OFF",
+        "8 MINS",
+        "Pineapple (Annachi Pazham)",
+        "800 g",
+        "₹86",
+        "₹104",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    }
+  ]
+}

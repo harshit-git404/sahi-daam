@@ -1,0 +1,88 @@
+{
+  "platform": "blinkit",
+  "commodity": "cucumber",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T15:12:23.644164",
+  "summary": {
+    "raw_count": 179,
+    "unique_count": 13,
+    "valid_count": 6,
+    "excluded_count": 7
+  },
+  "products": [
+    {
+      "name": "Organically Grown - English Cucumber (Vellarikai)",
+      "commodity": "cucumber",
+      "variant": [
+        "english",
+        "organic"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Green Cucumber (Vellarikai)",
+      "commodity": "cucumber",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "English Cucumber (Vellarikai)",
+      "commodity": "cucumber",
+      "variant": [
+        "english"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Green Cucumber (Vellarikai)",
+      "commodity": "cucumber",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Mangalore Cucumber (Vellarikai)",
+      "commodity": "cucumber",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "400 g",
+      "quantity_kg": 0.4,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown - English Cucumber (Vellarikai)",
+      "commodity": "cucumber",
+      "variant": [
+        "english",
+        "organic"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    }
+  ]
+}

@@ -1,0 +1,361 @@
+{
+  "excluded_products": [
+    {
+      "name": "Potato",
+      "quantity": "900 g - 1 kg",
+      "price": 25.0,
+      "mrp": 55.0,
+      "raw_text": [
+        "ADD",
+        "₹25",
+        "₹55",
+        "₹30",
+        "OFF",
+        "Potato",
+        "900 g - 1 kg"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "250 g",
+      "price": 26.0,
+      "mrp": 56.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹56",
+        "₹30",
+        "OFF",
+        "Carrot Local",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Capsicum Green",
+      "quantity": "2 pcs",
+      "price": 16.0,
+      "mrp": 55.0,
+      "raw_text": [
+        "ADD",
+        "₹16",
+        "₹55",
+        "₹39",
+        "OFF",
+        "Capsicum Green",
+        "2 pcs"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Onion",
+      "quantity": "900 g - 1 kg",
+      "price": 38.0,
+      "mrp": 90.0,
+      "raw_text": [
+        "ADD",
+        "₹38",
+        "₹90",
+        "₹52",
+        "OFF",
+        "Onion",
+        "900 g - 1 kg"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Lady Finger",
+      "quantity": "500 g",
+      "price": 30.0,
+      "mrp": 81.0,
+      "raw_text": [
+        "ADD",
+        "₹30",
+        "₹81",
+        "₹51",
+        "OFF",
+        "Lady Finger",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Beans Haricot",
+      "quantity": "250 g",
+      "price": 24.0,
+      "mrp": 63.0,
+      "raw_text": [
+        "ADD",
+        "₹24",
+        "₹63",
+        "₹39",
+        "OFF",
+        "Beans Haricot",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Cucumber Green",
+      "quantity": "3 pcs",
+      "price": 37.0,
+      "mrp": 81.0,
+      "raw_text": [
+        "ADD",
+        "₹37",
+        "₹81",
+        "₹44",
+        "OFF",
+        "Cucumber Green",
+        "3 pcs"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Brinjal Purple Striped",
+      "quantity": "250 g",
+      "price": 14.0,
+      "mrp": 48.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹48",
+        "₹34",
+        "OFF",
+        "Brinjal Purple Striped",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Cucumber English",
+      "quantity": "200 - 300 g",
+      "price": 20.0,
+      "mrp": 40.0,
+      "raw_text": [
+        "ADD",
+        "₹20",
+        "₹40",
+        "₹20",
+        "OFF",
+        "Cucumber English",
+        "200 - 300 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "500 g",
+      "price": 44.0,
+      "mrp": 96.0,
+      "raw_text": [
+        "ADD",
+        "₹44",
+        "₹96",
+        "₹52",
+        "OFF",
+        "Carrot Local",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Bottle Gourd",
+      "quantity": "1 pc",
+      "price": 29.0,
+      "mrp": 74.0,
+      "raw_text": [
+        "ADD",
+        "₹29",
+        "₹74",
+        "₹45",
+        "OFF",
+        "Bottle Gourd",
+        "1 pc"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Brinjal Bharta",
+      "quantity": "2 pcs",
+      "price": 24.0,
+      "mrp": 87.0,
+      "raw_text": [
+        "ADD",
+        "₹24",
+        "₹87",
+        "₹63",
+        "OFF",
+        "Brinjal Bharta",
+        "2 pcs"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Beans French",
+      "quantity": "250 g",
+      "price": 27.0,
+      "mrp": 65.0,
+      "raw_text": [
+        "ADD",
+        "₹27",
+        "₹65",
+        "₹38",
+        "OFF",
+        "Beans French",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Brinjal Bharta",
+      "quantity": "1 pc",
+      "price": 14.0,
+      "mrp": 53.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹53",
+        "₹39",
+        "OFF",
+        "Brinjal Bharta",
+        "1 pc"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Beans Broad",
+      "quantity": "250 g",
+      "price": 26.0,
+      "mrp": 54.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹54",
+        "₹28",
+        "OFF",
+        "Beans Broad",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Beans Cluster (Gawar Phali)",
+      "quantity": "250 g",
+      "price": 16.0,
+      "mrp": 41.0,
+      "raw_text": [
+        "ADD",
+        "₹16",
+        "₹41",
+        "₹25",
+        "OFF",
+        "Beans Cluster (Gawar Phali)",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Beans Cowpea",
+      "quantity": "500 g",
+      "price": 42.0,
+      "mrp": 106.0,
+      "raw_text": [
+        "ADD",
+        "₹42",
+        "₹106",
+        "₹64",
+        "OFF",
+        "Beans Cowpea",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Cabbage",
+      "quantity": "1 pc",
+      "price": 20.0,
+      "mrp": 53.0,
+      "raw_text": [
+        "ADD",
+        "₹20",
+        "₹53",
+        "₹33",
+        "OFF",
+        "Cabbage",
+        "1 pc"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Cucumber English",
+      "quantity": "500 g",
+      "price": 33.0,
+      "mrp": 70.0,
+      "raw_text": [
+        "ADD",
+        "₹33",
+        "₹70",
+        "₹37",
+        "OFF",
+        "Cucumber English",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Lady Finger",
+      "quantity": "250 g",
+      "price": 18.0,
+      "mrp": 45.0,
+      "raw_text": [
+        "ADD",
+        "₹18",
+        "₹45",
+        "₹27",
+        "OFF",
+        "Lady Finger",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Beetroot",
+      "quantity": "500 g",
+      "price": 32.0,
+      "mrp": 66.0,
+      "raw_text": [
+        "ADD",
+        "₹32",
+        "₹66",
+        "₹34",
+        "OFF",
+        "Beetroot",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    }
+  ]
+}

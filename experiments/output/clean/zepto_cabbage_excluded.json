@@ -1,0 +1,431 @@
+{
+  "excluded_products": [
+    {
+      "name": "Capsicum Green",
+      "quantity": "2 pcs",
+      "price": 16.0,
+      "mrp": 55.0,
+      "raw_text": [
+        "ADD",
+        "₹16",
+        "₹55",
+        "₹39",
+        "OFF",
+        "Capsicum Green",
+        "2 pcs"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Beetroot",
+      "quantity": "500 g",
+      "price": 32.0,
+      "mrp": 66.0,
+      "raw_text": [
+        "ADD",
+        "₹32",
+        "₹66",
+        "₹34",
+        "OFF",
+        "Beetroot",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Radish White (Mooli)",
+      "quantity": "250 g",
+      "price": 14.0,
+      "mrp": 29.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹29",
+        "₹15",
+        "OFF",
+        "Radish White (Mooli)",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Broccoli",
+      "quantity": "1 pc",
+      "price": 44.0,
+      "mrp": 110.0,
+      "raw_text": [
+        "ADD",
+        "₹44",
+        "₹110",
+        "₹66",
+        "OFF",
+        "Broccoli",
+        "1 pc"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Colocasia (Arbi)",
+      "quantity": "250 g",
+      "price": 26.0,
+      "mrp": 64.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹64",
+        "₹38",
+        "OFF",
+        "Colocasia (Arbi)",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Capsicum Red",
+      "quantity": "1 pc",
+      "price": 47.0,
+      "mrp": 74.0,
+      "raw_text": [
+        "ADD",
+        "₹47",
+        "₹74",
+        "₹27",
+        "OFF",
+        "Capsicum Red",
+        "1 pc"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "250 g",
+      "price": 26.0,
+      "mrp": 56.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹56",
+        "₹30",
+        "OFF",
+        "Carrot Local",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Colocassia Stem",
+      "quantity": "300 g",
+      "price": 41.0,
+      "mrp": 94.0,
+      "raw_text": [
+        "ADD",
+        "₹41",
+        "₹94",
+        "₹53",
+        "OFF",
+        "Colocassia Stem",
+        "300 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Capsicum Yellow",
+      "quantity": "1 pc",
+      "price": 47.0,
+      "mrp": 73.0,
+      "raw_text": [
+        "ADD",
+        "₹47",
+        "₹73",
+        "₹26",
+        "OFF",
+        "Capsicum Yellow",
+        "1 pc"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Tomato Local",
+      "quantity": "500 g",
+      "price": 13.0,
+      "mrp": 37.0,
+      "raw_text": [
+        "ADD",
+        "₹13",
+        "₹37",
+        "₹24",
+        "OFF",
+        "Tomato Local",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Lady Finger",
+      "quantity": "500 g",
+      "price": 30.0,
+      "mrp": 81.0,
+      "raw_text": [
+        "ADD",
+        "₹30",
+        "₹81",
+        "₹51",
+        "OFF",
+        "Lady Finger",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Tomato Local",
+      "quantity": "250 g",
+      "price": 8.0,
+      "mrp": 27.0,
+      "raw_text": [
+        "ADD",
+        "₹8",
+        "₹27",
+        "₹19",
+        "OFF",
+        "Tomato Local",
+        "250 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Bottle Gourd",
+      "quantity": "1 pc",
+      "price": 29.0,
+      "mrp": 74.0,
+      "raw_text": [
+        "ADD",
+        "₹29",
+        "₹74",
+        "₹45",
+        "OFF",
+        "Bottle Gourd",
+        "1 pc"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "500 g",
+      "price": 44.0,
+      "mrp": 96.0,
+      "raw_text": [
+        "ADD",
+        "₹44",
+        "₹96",
+        "₹52",
+        "OFF",
+        "Carrot Local",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Tomato Hybrid",
+      "quantity": "500 g",
+      "price": 14.0,
+      "mrp": 39.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹39",
+        "₹25",
+        "OFF",
+        "Tomato Hybrid",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Carrot Ooty",
+      "quantity": "200 - 300 g",
+      "price": 40.0,
+      "mrp": 79.0,
+      "raw_text": [
+        "ADD",
+        "₹40",
+        "₹79",
+        "₹39",
+        "OFF",
+        "Carrot Ooty",
+        "200 - 300 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Carrot Ooty",
+      "quantity": "500 g",
+      "price": 68.0,
+      "mrp": 188.0,
+      "raw_text": [
+        "ADD",
+        "₹68",
+        "₹188",
+        "₹120",
+        "OFF",
+        "Carrot Ooty",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "MasterChow Momo Chutney",
+      "quantity": "1 pc (250 g)",
+      "price": 92.0,
+      "mrp": 110.0,
+      "raw_text": [
+        "ADD",
+        "₹92",
+        "₹110",
+        "₹18",
+        "OFF",
+        "MasterChow Momo Chutney",
+        "1 pc (250 g)",
+        "4.8",
+        "(1.0k)"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Organically Grown Tomato Hybrid",
+      "quantity": "500 g",
+      "price": 28.0,
+      "mrp": 54.0,
+      "raw_text": [
+        "ADD",
+        "₹28",
+        "₹54",
+        "₹26",
+        "OFF",
+        "Organically Grown Tomato Hybrid",
+        "500 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Nescafe Classic - Instant Coffee Powder - Pure Coffee",
+      "quantity": "1 pc (24 g)",
+      "price": 124.0,
+      "mrp": null,
+      "raw_text": [
+        "ADD",
+        "₹124",
+        "Nescafe Classic - Instant Coffee Powder - Pure Coffee",
+        "1 pc (24 g)",
+        "4.7",
+        "(15.3k)"
+      ],
+      "status": "excluded",
+      "reason": "matched exclusion keyword: powder"
+    },
+    {
+      "name": "Organically Grown Spinach",
+      "quantity": "100 g",
+      "price": 19.57,
+      "mrp": 32.0,
+      "raw_text": [
+        "ADD",
+        "₹19.57",
+        "₹32",
+        "₹12",
+        "OFF",
+        "Organically Grown Spinach",
+        "100 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Chilli Green",
+      "quantity": "100 g",
+      "price": 15.0,
+      "mrp": 34.0,
+      "raw_text": [
+        "ADD",
+        "₹15",
+        "₹34",
+        "₹19",
+        "OFF",
+        "Chilli Green",
+        "100 g"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Keya Schezwan Chilli Garlic | Spicy & Tangy | Sauce | Dip| Spread | Chutney",
+      "quantity": "1 pc (250 g)",
+      "price": 70.0,
+      "mrp": 90.0,
+      "raw_text": [
+        "ADD",
+        "₹70",
+        "₹90",
+        "₹20",
+        "OFF",
+        "Keya Schezwan Chilli Garlic | Spicy & Tangy | Sauce | Dip| Spread | Chutney",
+        "1 pc (250 g)",
+        "4.5",
+        "(720)"
+      ],
+      "status": "excluded",
+      "reason": "matched exclusion keyword: sauce"
+    },
+    {
+      "name": "Coconut",
+      "quantity": "1 pc",
+      "price": 45.0,
+      "mrp": 96.0,
+      "raw_text": [
+        "ADD",
+        "₹45",
+        "₹96",
+        "₹51",
+        "OFF",
+        "Coconut",
+        "1 pc"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Wai Wai Ready to Eat Noodles, Chicken Masala Pack | 6 in 1",
+      "quantity": "1 pack (420 g)",
+      "price": 90.0,
+      "mrp": null,
+      "raw_text": [
+        "ADD",
+        "₹90",
+        "Wai Wai Ready to Eat Noodles, Chicken Masala Pack | 6 in 1",
+        "1 pack (420 g)",
+        "4.9",
+        "(40.4k)"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    }
+  ]
+}

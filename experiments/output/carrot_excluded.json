@@ -1,0 +1,83 @@
+{
+  "excluded_products": [
+    {
+      "name": "Unknown",
+      "quantity": "400 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "50% OFF",
+        "8 MINS",
+        "Yu 100% Whole Wheat Elbow Macaroni Pasta",
+        "400 g",
+        "₹75",
+        "₹150",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "Unknown",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "₹75",
+        "₹150",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "500 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "19% OFF",
+        "8 MINS",
+        "Green Cucumber (Vellarikai)",
+        "500 g",
+        "₹34",
+        "₹42",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "250 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "17% OFF",
+        "8 MINS",
+        "French Beans - 250 g",
+        "250 g",
+        "₹23",
+        "₹28",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "420 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "8 MINS",
+        "American Garden Baked Beans in Tomato Sauce",
+        "420 g",
+        "₹165",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    }
+  ]
+}

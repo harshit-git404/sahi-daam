@@ -1,0 +1,147 @@
+{
+  "platform": "blinkit",
+  "commodity": "banana",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T15:12:58.164781",
+  "summary": {
+    "raw_count": 179,
+    "unique_count": 23,
+    "valid_count": 11,
+    "excluded_count": 12
+  },
+  "products": [
+    {
+      "name": "Banana Flower (Vazhai Poo)",
+      "commodity": "banana",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Banana (Vaazhapazham)",
+      "commodity": "banana",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "3 pcs",
+      "quantity_kg": null,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Baby Banana (Vaazhapazham)",
+      "commodity": "banana",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "4 pcs",
+      "quantity_kg": null,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Yellaki Banana (Vaazhapazham)",
+      "commodity": "banana",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Red Banana (Vaazhapazham)",
+      "commodity": "banana",
+      "variant": [
+        "red"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Karpooravalli Banana (Vaazhapazham)",
+      "commodity": "banana",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Poovan Banana (Vaazhapazham)",
+      "commodity": "banana",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Nendran Banana (Vaazhapazham)",
+      "commodity": "banana",
+      "variant": [
+        "nendran"
+      ],
+      "quantity": "3 pcs",
+      "quantity_kg": null,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Raw Banana (Vazhakkai)",
+      "commodity": "banana",
+      "variant": [
+        "raw"
+      ],
+      "quantity": "3 pcs",
+      "quantity_kg": null,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Raw Banana (Vazhakkai)",
+      "commodity": "banana",
+      "variant": [
+        "raw",
+        "organic"
+      ],
+      "quantity": "2 pcs",
+      "quantity_kg": null,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Banana Flower (Vazhai Poo)",
+      "commodity": "banana",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    }
+  ]
+}

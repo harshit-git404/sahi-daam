@@ -1,0 +1,102 @@
+{
+  "platform": "blinkit",
+  "commodity": "tomato",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T15:11:49.500005",
+  "summary": {
+    "raw_count": 179,
+    "unique_count": 25,
+    "valid_count": 7,
+    "excluded_count": 18
+  },
+  "products": [
+    {
+      "name": "Desi Tomato (Thakkali)",
+      "commodity": "tomato",
+      "variant": [
+        "desi"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Hybrid Tomato (Thakkali)",
+      "commodity": "tomato",
+      "variant": [
+        "hybrid"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Tomato (Desi) (Thakkali)",
+      "commodity": "tomato",
+      "variant": [
+        "organic",
+        "desi"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Tomato (Hybrid) (Thakkali)",
+      "commodity": "tomato",
+      "variant": [
+        "organic",
+        "hybrid"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Desi Tomato by Bhoomi Farms",
+      "commodity": "tomato",
+      "variant": [
+        "organic",
+        "desi"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Cherry Tomatoes - Packet",
+      "commodity": "tomato",
+      "variant": [
+        "cherry"
+      ],
+      "quantity": "150 g",
+      "quantity_kg": 0.15,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organic Cherry Tomatoes",
+      "commodity": "tomato",
+      "variant": [
+        "cherry",
+        "organic"
+      ],
+      "quantity": "150 g",
+      "quantity_kg": 0.15,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    }
+  ]
+}

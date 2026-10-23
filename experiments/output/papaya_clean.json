@@ -1,0 +1,51 @@
+{
+  "platform": "blinkit",
+  "commodity": "papaya",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T15:13:07.362339",
+  "summary": {
+    "raw_count": 165,
+    "unique_count": 16,
+    "valid_count": 3,
+    "excluded_count": 13
+  },
+  "products": [
+    {
+      "name": "Organically Grown Raw Papaya",
+      "commodity": "papaya",
+      "variant": [
+        "raw",
+        "organic"
+      ],
+      "quantity": "800 g",
+      "quantity_kg": 0.8,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Papaya (Papaali)",
+      "commodity": "papaya",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "700 g",
+      "quantity_kg": 0.7,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Raw Papaya (Papali)",
+      "commodity": "papaya",
+      "variant": [
+        "raw"
+      ],
+      "quantity": "400 g",
+      "quantity_kg": 0.4,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    }
+  ]
+}

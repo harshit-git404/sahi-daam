@@ -1,0 +1,74 @@
+{
+  "platform": "blinkit",
+  "commodity": "carrot",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T15:12:14.023771",
+  "summary": {
+    "raw_count": 172,
+    "unique_count": 10,
+    "valid_count": 5,
+    "excluded_count": 5
+  },
+  "products": [
+    {
+      "name": "Carrot - Cut",
+      "commodity": "carrot",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "400 g",
+      "quantity_kg": 0.4,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Orange Carrot (Local Carrot)",
+      "commodity": "carrot",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Ooty Carrot",
+      "commodity": "carrot",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Ooty Carrot",
+      "commodity": "carrot",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Carrot - Cut",
+      "commodity": "carrot",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    }
+  ]
+}

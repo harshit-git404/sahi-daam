@@ -1,0 +1,38 @@
+{
+  "platform": "blinkit",
+  "commodity": "cabbage",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T15:12:51.287340",
+  "summary": {
+    "raw_count": 165,
+    "unique_count": 10,
+    "valid_count": 2,
+    "excluded_count": 8
+  },
+  "products": [
+    {
+      "name": "Organically Grown Cabbage (Muttaikose)",
+      "commodity": "cabbage",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "400 g",
+      "quantity_kg": 0.4,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Cabbage (Muttaikose)",
+      "commodity": "cabbage",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "400 g",
+      "quantity_kg": 0.4,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    }
+  ]
+}

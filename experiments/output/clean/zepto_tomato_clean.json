@@ -1,0 +1,124 @@
+{
+  "platform": "zepto",
+  "commodity": "tomato",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T17:02:05.114230",
+  "summary": {
+    "raw_count": 30,
+    "unique_count": 30,
+    "valid_count": 9,
+    "excluded_count": 21
+  },
+  "products": [
+    {
+      "name": "Tomato Local",
+      "commodity": "tomato",
+      "variant": [
+        "local"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 13.0,
+      "mrp": 37.0,
+      "price_per_kg": 26.0
+    },
+    {
+      "name": "Tomato Hybrid",
+      "commodity": "tomato",
+      "variant": [
+        "hybrid"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 14.0,
+      "mrp": 39.0,
+      "price_per_kg": 28.0
+    },
+    {
+      "name": "Tomato Local",
+      "commodity": "tomato",
+      "variant": [
+        "local"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": 8.0,
+      "mrp": 27.0,
+      "price_per_kg": 32.0
+    },
+    {
+      "name": "Organically Grown Tomato Local",
+      "commodity": "tomato",
+      "variant": [
+        "organic",
+        "local"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 14.3,
+      "mrp": 47.0,
+      "price_per_kg": 28.6
+    },
+    {
+      "name": "Organically Grown Tomato Hybrid",
+      "commodity": "tomato",
+      "variant": [
+        "organic",
+        "hybrid"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 28.0,
+      "mrp": 54.0,
+      "price_per_kg": 56.0
+    },
+    {
+      "name": "Tomato Green",
+      "commodity": "tomato",
+      "variant": [
+        "green"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 14.0,
+      "mrp": 44.0,
+      "price_per_kg": 28.0
+    },
+    {
+      "name": "Cherry Tomato",
+      "commodity": "tomato",
+      "variant": [
+        "cherry"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": 49.0,
+      "mrp": 98.0,
+      "price_per_kg": 196.0
+    },
+    {
+      "name": "Cherry Tomato Mix",
+      "commodity": "tomato",
+      "variant": [
+        "cherry"
+      ],
+      "quantity": "100 g",
+      "quantity_kg": 0.1,
+      "price": 26.0,
+      "mrp": 48.0,
+      "price_per_kg": 260.0
+    },
+    {
+      "name": "Hydroponic Cherry Tomato",
+      "commodity": "tomato",
+      "variant": [
+        "cherry"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": 48.0,
+      "mrp": 89.0,
+      "price_per_kg": 192.0
+    }
+  ]
+}

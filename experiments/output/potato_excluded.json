@@ -1,0 +1,102 @@
+{
+  "excluded_products": [
+    {
+      "name": "Unknown",
+      "quantity": "Unknown",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "₹31",
+        "₹60",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "1 kg",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "20% OFF",
+        "8 MINS",
+        "Onion (Vengayam)",
+        "1 kg",
+        "₹44",
+        "₹55",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "250 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "17% OFF",
+        "8 MINS",
+        "Sambhar Onion (Vengayam)",
+        "250 g",
+        "₹19",
+        "₹23",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "150 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "22% OFF",
+        "8 MINS",
+        "Spring Onion (Vengaya Thaal)",
+        "150 g",
+        "₹14",
+        "₹18",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "500 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "15% OFF",
+        "8 MINS",
+        "Organically Grown - Onion (Vengayam)",
+        "500 g",
+        "₹39",
+        "₹46",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "100 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "9% OFF",
+        "8 MINS",
+        "Green Chilli (Pachai Milagaai)",
+        "100 g",
+        "₹10",
+        "₹11",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    }
+  ]
+}

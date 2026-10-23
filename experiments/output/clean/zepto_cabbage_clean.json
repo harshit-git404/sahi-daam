@@ -1,0 +1,74 @@
+{
+  "platform": "zepto",
+  "commodity": "cabbage",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T17:02:44.288617",
+  "summary": {
+    "raw_count": 30,
+    "unique_count": 30,
+    "valid_count": 5,
+    "excluded_count": 25
+  },
+  "products": [
+    {
+      "name": "Cabbage",
+      "commodity": "cabbage",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 20.0,
+      "mrp": 53.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Organically Grown Cabbage",
+      "commodity": "cabbage",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 22.0,
+      "mrp": 68.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Cabbage Shreds (Patta Kobi)",
+      "commodity": "cabbage",
+      "variant": [
+        "red"
+      ],
+      "quantity": "200 g",
+      "quantity_kg": 0.2,
+      "price": 25.0,
+      "mrp": 39.0,
+      "price_per_kg": 125.0
+    },
+    {
+      "name": "Cabbage Red",
+      "commodity": "cabbage",
+      "variant": [
+        "red"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 69.0,
+      "mrp": 141.0,
+      "price_per_kg": null
+    },
+    {
+      "name": "Cabbage Chinese",
+      "commodity": "cabbage",
+      "variant": [
+        "chinese"
+      ],
+      "quantity": "1 pc",
+      "quantity_kg": null,
+      "price": 60.0,
+      "mrp": 97.0,
+      "price_per_kg": null
+    }
+  ]
+}

@@ -1,0 +1,458 @@
+{
+  "platform": "zepto",
+  "commodity_search": "Potato",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T17:02:10.708468",
+  "products": [
+    {
+      "name": "Potato",
+      "quantity": "900 g - 1 kg",
+      "price": 25.0,
+      "mrp": 55.0,
+      "raw_text": [
+        "ADD",
+        "₹25",
+        "₹55",
+        "₹30",
+        "OFF",
+        "Potato",
+        "900 g - 1 kg"
+      ]
+    },
+    {
+      "name": "Organically Grown Potato",
+      "quantity": "500 g",
+      "price": 29.0,
+      "mrp": 49.0,
+      "raw_text": [
+        "ADD",
+        "₹29",
+        "₹49",
+        "₹20",
+        "OFF",
+        "Organically Grown Potato",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Baby Potato",
+      "quantity": "500 g",
+      "price": 19.0,
+      "mrp": 56.0,
+      "raw_text": [
+        "ADD",
+        "₹19",
+        "₹56",
+        "₹37",
+        "OFF",
+        "Baby Potato",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Potato Ooty",
+      "quantity": "1 kg",
+      "price": 83.0,
+      "mrp": 101.0,
+      "raw_text": [
+        "ADD",
+        "₹83",
+        "₹101",
+        "₹18",
+        "OFF",
+        "Potato Ooty",
+        "1 kg"
+      ]
+    },
+    {
+      "name": "Bloom Potato",
+      "quantity": "750 g",
+      "price": 63.0,
+      "mrp": 67.0,
+      "raw_text": [
+        "ADD",
+        "₹63",
+        "₹67",
+        "₹4",
+        "OFF",
+        "Bloom Potato",
+        "750 g"
+      ]
+    },
+    {
+      "name": "Organically Grown Baby Potato (Chota Aloo)",
+      "quantity": "250 g",
+      "price": 14.0,
+      "mrp": 25.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹25",
+        "₹11",
+        "OFF",
+        "Organically Grown Baby Potato (Chota Aloo)",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Sweet Potato",
+      "quantity": "500 g",
+      "price": 33.0,
+      "mrp": 105.0,
+      "raw_text": [
+        "ADD",
+        "₹33",
+        "₹105",
+        "₹72",
+        "OFF",
+        "Sweet Potato",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Organically Grown Potato Combo",
+      "quantity": "500 g X 2",
+      "price": 58.0,
+      "mrp": 98.0,
+      "raw_text": [
+        "ADD",
+        "₹58",
+        "₹98",
+        "₹40",
+        "OFF",
+        "Organically Grown Potato Combo",
+        "500 g X 2"
+      ]
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "250 g",
+      "price": 26.0,
+      "mrp": 56.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹56",
+        "₹30",
+        "OFF",
+        "Carrot Local",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Tomato Local",
+      "quantity": "500 g",
+      "price": 13.0,
+      "mrp": 37.0,
+      "raw_text": [
+        "ADD",
+        "₹13",
+        "₹37",
+        "₹24",
+        "OFF",
+        "Tomato Local",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Bloom Potato Ooty",
+      "quantity": "500 g",
+      "price": 58.0,
+      "mrp": 60.0,
+      "raw_text": [
+        "ADD",
+        "₹58",
+        "₹60",
+        "₹2",
+        "OFF",
+        "Bloom Potato Ooty",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Organically Grown Sweet Potato",
+      "quantity": "500 g",
+      "price": 36.3,
+      "mrp": 80.0,
+      "raw_text": [
+        "ADD",
+        "₹36.3",
+        "₹80",
+        "₹44",
+        "OFF",
+        "Organically Grown Sweet Potato",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Capsicum Green",
+      "quantity": "2 pcs",
+      "price": 16.0,
+      "mrp": 55.0,
+      "raw_text": [
+        "ADD",
+        "₹16",
+        "₹55",
+        "₹39",
+        "OFF",
+        "Capsicum Green",
+        "2 pcs"
+      ]
+    },
+    {
+      "name": "Beans Haricot",
+      "quantity": "250 g",
+      "price": 24.0,
+      "mrp": 63.0,
+      "raw_text": [
+        "ADD",
+        "₹24",
+        "₹63",
+        "₹39",
+        "OFF",
+        "Beans Haricot",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Cucumber Green",
+      "quantity": "3 pcs",
+      "price": 37.0,
+      "mrp": 81.0,
+      "raw_text": [
+        "ADD",
+        "₹37",
+        "₹81",
+        "₹44",
+        "OFF",
+        "Cucumber Green",
+        "3 pcs"
+      ]
+    },
+    {
+      "name": "Cucumber English",
+      "quantity": "500 g",
+      "price": 33.0,
+      "mrp": 70.0,
+      "raw_text": [
+        "ADD",
+        "₹33",
+        "₹70",
+        "₹37",
+        "OFF",
+        "Cucumber English",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Potato Red",
+      "quantity": "1 kg",
+      "price": 36.0,
+      "mrp": 70.0,
+      "raw_text": [
+        "ADD",
+        "₹36",
+        "₹70",
+        "₹34",
+        "OFF",
+        "Potato Red",
+        "1 kg"
+      ]
+    },
+    {
+      "name": "Onion",
+      "quantity": "900 g - 1 kg",
+      "price": 38.0,
+      "mrp": 90.0,
+      "raw_text": [
+        "ADD",
+        "₹38",
+        "₹90",
+        "₹52",
+        "OFF",
+        "Onion",
+        "900 g - 1 kg"
+      ]
+    },
+    {
+      "name": "Lady Finger",
+      "quantity": "500 g",
+      "price": 30.0,
+      "mrp": 81.0,
+      "raw_text": [
+        "ADD",
+        "₹30",
+        "₹81",
+        "₹51",
+        "OFF",
+        "Lady Finger",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Cucumber English",
+      "quantity": "200 - 300 g",
+      "price": 20.0,
+      "mrp": 40.0,
+      "raw_text": [
+        "ADD",
+        "₹20",
+        "₹40",
+        "₹20",
+        "OFF",
+        "Cucumber English",
+        "200 - 300 g"
+      ]
+    },
+    {
+      "name": "Brinjal Purple Striped",
+      "quantity": "250 g",
+      "price": 14.0,
+      "mrp": 48.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹48",
+        "₹34",
+        "OFF",
+        "Brinjal Purple Striped",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Tomato Local",
+      "quantity": "250 g",
+      "price": 8.0,
+      "mrp": 27.0,
+      "raw_text": [
+        "ADD",
+        "₹8",
+        "₹27",
+        "₹19",
+        "OFF",
+        "Tomato Local",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Bottle Gourd",
+      "quantity": "1 pc",
+      "price": 29.0,
+      "mrp": 74.0,
+      "raw_text": [
+        "ADD",
+        "₹29",
+        "₹74",
+        "₹45",
+        "OFF",
+        "Bottle Gourd",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "500 g",
+      "price": 44.0,
+      "mrp": 96.0,
+      "raw_text": [
+        "ADD",
+        "₹44",
+        "₹96",
+        "₹52",
+        "OFF",
+        "Carrot Local",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Coccinia",
+      "quantity": "250 g",
+      "price": 13.0,
+      "mrp": 39.0,
+      "raw_text": [
+        "ADD",
+        "₹13",
+        "₹39",
+        "₹26",
+        "OFF",
+        "Coccinia",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Sweet Corn",
+      "quantity": "2 pcs",
+      "price": 44.0,
+      "mrp": 92.0,
+      "raw_text": [
+        "ADD",
+        "₹44",
+        "₹92",
+        "₹48",
+        "OFF",
+        "Sweet Corn",
+        "2 pcs"
+      ]
+    },
+    {
+      "name": "Tomato Hybrid",
+      "quantity": "500 g",
+      "price": 14.0,
+      "mrp": 39.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹39",
+        "₹25",
+        "OFF",
+        "Tomato Hybrid",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Pointed Gourd (Parwal)",
+      "quantity": "250 g",
+      "price": 46.0,
+      "mrp": 117.0,
+      "raw_text": [
+        "ADD",
+        "₹46",
+        "₹117",
+        "₹71",
+        "OFF",
+        "Pointed Gourd (Parwal)",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Beans French",
+      "quantity": "250 g",
+      "price": 27.0,
+      "mrp": 65.0,
+      "raw_text": [
+        "ADD",
+        "₹27",
+        "₹65",
+        "₹38",
+        "OFF",
+        "Beans French",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Brinjal Bharta",
+      "quantity": "2 pcs",
+      "price": 24.0,
+      "mrp": 87.0,
+      "raw_text": [
+        "ADD",
+        "₹24",
+        "₹87",
+        "₹63",
+        "OFF",
+        "Brinjal Bharta",
+        "2 pcs"
+      ]
+    }
+  ]
+}

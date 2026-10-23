@@ -1,0 +1,38 @@
+{
+  "platform": "blinkit",
+  "commodity": "cauliflower",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T15:12:43.659490",
+  "summary": {
+    "raw_count": 172,
+    "unique_count": 8,
+    "valid_count": 2,
+    "excluded_count": 6
+  },
+  "products": [
+    {
+      "name": "Cauliflower Florets (Pookousu)",
+      "commodity": "cauliflower",
+      "variant": [
+        "florets"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    },
+    {
+      "name": "Cauliflower (Pookousu)",
+      "commodity": "cauliflower",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "300 g",
+      "quantity_kg": 0.3,
+      "price": null,
+      "mrp": null,
+      "price_per_kg": null
+    }
+  ]
+}

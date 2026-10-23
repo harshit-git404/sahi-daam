@@ -1,0 +1,147 @@
+{
+  "platform": "zepto",
+  "commodity": "potato",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T17:02:10.722394",
+  "summary": {
+    "raw_count": 30,
+    "unique_count": 30,
+    "valid_count": 11,
+    "excluded_count": 19
+  },
+  "products": [
+    {
+      "name": "Potato",
+      "commodity": "potato",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "900 g - 1 kg",
+      "quantity_kg": 0.95,
+      "price": 25.0,
+      "mrp": 55.0,
+      "price_per_kg": 26.32
+    },
+    {
+      "name": "Organically Grown Potato",
+      "commodity": "potato",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 29.0,
+      "mrp": 49.0,
+      "price_per_kg": 58.0
+    },
+    {
+      "name": "Baby Potato",
+      "commodity": "potato",
+      "variant": [
+        "baby"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 19.0,
+      "mrp": 56.0,
+      "price_per_kg": 38.0
+    },
+    {
+      "name": "Potato Ooty",
+      "commodity": "potato",
+      "variant": [
+        "ooty"
+      ],
+      "quantity": "1 kg",
+      "quantity_kg": 1.0,
+      "price": 83.0,
+      "mrp": 101.0,
+      "price_per_kg": 83.0
+    },
+    {
+      "name": "Bloom Potato",
+      "commodity": "potato",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "750 g",
+      "quantity_kg": 0.75,
+      "price": 63.0,
+      "mrp": 67.0,
+      "price_per_kg": 84.0
+    },
+    {
+      "name": "Organically Grown Baby Potato (Chota Aloo)",
+      "commodity": "potato",
+      "variant": [
+        "baby",
+        "organic"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": 14.0,
+      "mrp": 25.0,
+      "price_per_kg": 56.0
+    },
+    {
+      "name": "Sweet Potato",
+      "commodity": "potato",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 33.0,
+      "mrp": 105.0,
+      "price_per_kg": 66.0
+    },
+    {
+      "name": "Organically Grown Potato Combo",
+      "commodity": "potato",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "500 g X 2",
+      "quantity_kg": 1.0,
+      "price": 58.0,
+      "mrp": 98.0,
+      "price_per_kg": 58.0
+    },
+    {
+      "name": "Bloom Potato Ooty",
+      "commodity": "potato",
+      "variant": [
+        "ooty"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 58.0,
+      "mrp": 60.0,
+      "price_per_kg": 116.0
+    },
+    {
+      "name": "Organically Grown Sweet Potato",
+      "commodity": "potato",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 36.3,
+      "mrp": 80.0,
+      "price_per_kg": 72.6
+    },
+    {
+      "name": "Potato Red",
+      "commodity": "potato",
+      "variant": [
+        "red"
+      ],
+      "quantity": "1 kg",
+      "quantity_kg": 1.0,
+      "price": 36.0,
+      "mrp": 70.0,
+      "price_per_kg": 36.0
+    }
+  ]
+}

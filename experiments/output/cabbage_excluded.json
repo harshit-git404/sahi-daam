@@ -1,0 +1,134 @@
+{
+  "excluded_products": [
+    {
+      "name": "Unknown",
+      "quantity": "Unknown",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "₹26",
+        "₹32",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "500 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "15% OFF",
+        "8 MINS",
+        "Orange Carrot (Local Carrot)",
+        "500 g",
+        "₹39",
+        "₹46",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "250 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "17% OFF",
+        "8 MINS",
+        "Ooty Carrot",
+        "250 g",
+        "₹29",
+        "₹35",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "3 pcs",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "12% OFF",
+        "8 MINS",
+        "Assorted Capsicum - (Red, Yellow, Green) (Kudai Milagaai)",
+        "3 pcs",
+        "₹94",
+        "₹108",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "125 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "21% OFF",
+        "8 MINS",
+        "Red Bell Pepper (Kodaimilagai)",
+        "125 g",
+        "₹44",
+        "₹56",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "300 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "16% OFF",
+        "8 MINS",
+        "Cauliflower (Pookousu)",
+        "300 g",
+        "₹36",
+        "₹43",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "150 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "22% OFF",
+        "8 MINS",
+        "Spring Onion (Vengaya Thaal)",
+        "150 g",
+        "₹14",
+        "₹18",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    },
+    {
+      "name": "Unknown",
+      "quantity": "400 g",
+      "price": null,
+      "mrp": null,
+      "raw_text": [
+        "8 MINS",
+        "Abbie's Baked Beans In Tomato Sauce",
+        "400 g",
+        "₹130",
+        "ADD"
+      ],
+      "status": "excluded",
+      "reason": "did not match required commodity keywords"
+    }
+  ]
+}

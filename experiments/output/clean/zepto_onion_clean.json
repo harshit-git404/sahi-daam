@@ -1,0 +1,99 @@
+{
+  "platform": "zepto",
+  "commodity": "onion",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T17:02:16.353107",
+  "summary": {
+    "raw_count": 30,
+    "unique_count": 30,
+    "valid_count": 7,
+    "excluded_count": 23
+  },
+  "products": [
+    {
+      "name": "Onion",
+      "commodity": "onion",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "900 g - 1 kg",
+      "quantity_kg": 0.95,
+      "price": 38.0,
+      "mrp": 90.0,
+      "price_per_kg": 40.0
+    },
+    {
+      "name": "Organically Grown Onion",
+      "commodity": "onion",
+      "variant": [
+        "organic"
+      ],
+      "quantity": "500 g",
+      "quantity_kg": 0.5,
+      "price": 47.0,
+      "mrp": 65.0,
+      "price_per_kg": 94.0
+    },
+    {
+      "name": "Sambar Onion",
+      "commodity": "onion",
+      "variant": [
+        "sambar"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": 22.0,
+      "mrp": 57.0,
+      "price_per_kg": 88.0
+    },
+    {
+      "name": "Sambar Onion Peeled",
+      "commodity": "onion",
+      "variant": [
+        "sambar"
+      ],
+      "quantity": "100 g",
+      "quantity_kg": 0.1,
+      "price": 27.0,
+      "mrp": 62.0,
+      "price_per_kg": 270.0
+    },
+    {
+      "name": "Organically Grown Sambar Onion",
+      "commodity": "onion",
+      "variant": [
+        "organic",
+        "sambar"
+      ],
+      "quantity": "200 g",
+      "quantity_kg": 0.2,
+      "price": 38.0,
+      "mrp": 72.0,
+      "price_per_kg": 190.0
+    },
+    {
+      "name": "Bloom Onion",
+      "commodity": "onion",
+      "variant": [
+        "regular"
+      ],
+      "quantity": "750 g",
+      "quantity_kg": 0.75,
+      "price": 91.0,
+      "mrp": 111.0,
+      "price_per_kg": 121.33
+    },
+    {
+      "name": "Spring Onion",
+      "commodity": "onion",
+      "variant": [
+        "spring"
+      ],
+      "quantity": "250 g",
+      "quantity_kg": 0.25,
+      "price": 25.0,
+      "mrp": 69.0,
+      "price_per_kg": 100.0
+    }
+  ]
+}

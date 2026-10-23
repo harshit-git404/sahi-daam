@@ -1,0 +1,458 @@
+{
+  "platform": "zepto",
+  "commodity_search": "Carrot",
+  "location": "Katpadi, Vellore",
+  "collected_at": "2026-08-20T17:02:21.960092",
+  "products": [
+    {
+      "name": "Carrot Local",
+      "quantity": "250 g",
+      "price": 26.0,
+      "mrp": 56.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹56",
+        "₹30",
+        "OFF",
+        "Carrot Local",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Carrot Local",
+      "quantity": "500 g",
+      "price": 44.0,
+      "mrp": 96.0,
+      "raw_text": [
+        "ADD",
+        "₹44",
+        "₹96",
+        "₹52",
+        "OFF",
+        "Carrot Local",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Organically Grown Carrot",
+      "quantity": "200 g",
+      "price": 41.0,
+      "mrp": 60.0,
+      "raw_text": [
+        "ADD",
+        "₹41",
+        "₹60",
+        "₹19",
+        "OFF",
+        "Organically Grown Carrot",
+        "200 g"
+      ]
+    },
+    {
+      "name": "Carrot Ooty",
+      "quantity": "200 - 300 g",
+      "price": 40.0,
+      "mrp": 79.0,
+      "raw_text": [
+        "ADD",
+        "₹40",
+        "₹79",
+        "₹39",
+        "OFF",
+        "Carrot Ooty",
+        "200 - 300 g"
+      ]
+    },
+    {
+      "name": "Organically Grown Carrot Ooty",
+      "quantity": "250g",
+      "price": 44.0,
+      "mrp": 87.0,
+      "raw_text": [
+        "ADD",
+        "₹44",
+        "₹87",
+        "₹43",
+        "OFF",
+        "Organically Grown Carrot Ooty",
+        "250g"
+      ]
+    },
+    {
+      "name": "Carrot Ooty",
+      "quantity": "500 g",
+      "price": 68.0,
+      "mrp": 188.0,
+      "raw_text": [
+        "ADD",
+        "₹68",
+        "₹188",
+        "₹120",
+        "OFF",
+        "Carrot Ooty",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Potato",
+      "quantity": "900 g - 1 kg",
+      "price": 25.0,
+      "mrp": 55.0,
+      "raw_text": [
+        "ADD",
+        "₹25",
+        "₹55",
+        "₹30",
+        "OFF",
+        "Potato",
+        "900 g - 1 kg"
+      ]
+    },
+    {
+      "name": "Onion",
+      "quantity": "900 g - 1 kg",
+      "price": 38.0,
+      "mrp": 90.0,
+      "raw_text": [
+        "ADD",
+        "₹38",
+        "₹90",
+        "₹52",
+        "OFF",
+        "Onion",
+        "900 g - 1 kg"
+      ]
+    },
+    {
+      "name": "Beans Haricot",
+      "quantity": "250 g",
+      "price": 24.0,
+      "mrp": 63.0,
+      "raw_text": [
+        "ADD",
+        "₹24",
+        "₹63",
+        "₹39",
+        "OFF",
+        "Beans Haricot",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Beetroot",
+      "quantity": "500 g",
+      "price": 32.0,
+      "mrp": 66.0,
+      "raw_text": [
+        "ADD",
+        "₹32",
+        "₹66",
+        "₹34",
+        "OFF",
+        "Beetroot",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Cucumber Green",
+      "quantity": "3 pcs",
+      "price": 37.0,
+      "mrp": 81.0,
+      "raw_text": [
+        "ADD",
+        "₹37",
+        "₹81",
+        "₹44",
+        "OFF",
+        "Cucumber Green",
+        "3 pcs"
+      ]
+    },
+    {
+      "name": "Tomato Local",
+      "quantity": "250 g",
+      "price": 8.0,
+      "mrp": 27.0,
+      "raw_text": [
+        "ADD",
+        "₹8",
+        "₹27",
+        "₹19",
+        "OFF",
+        "Tomato Local",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Radish White (Mooli)",
+      "quantity": "250 g",
+      "price": 14.0,
+      "mrp": 29.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹29",
+        "₹15",
+        "OFF",
+        "Radish White (Mooli)",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Brinjal Purple Striped",
+      "quantity": "250 g",
+      "price": 14.0,
+      "mrp": 48.0,
+      "raw_text": [
+        "ADD",
+        "₹14",
+        "₹48",
+        "₹34",
+        "OFF",
+        "Brinjal Purple Striped",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Sweet Corn",
+      "quantity": "2 pcs",
+      "price": 44.0,
+      "mrp": 92.0,
+      "raw_text": [
+        "ADD",
+        "₹44",
+        "₹92",
+        "₹48",
+        "OFF",
+        "Sweet Corn",
+        "2 pcs"
+      ]
+    },
+    {
+      "name": "Brinjal Bharta",
+      "quantity": "2 pcs",
+      "price": 24.0,
+      "mrp": 87.0,
+      "raw_text": [
+        "ADD",
+        "₹24",
+        "₹87",
+        "₹63",
+        "OFF",
+        "Brinjal Bharta",
+        "2 pcs"
+      ]
+    },
+    {
+      "name": "Lady Finger",
+      "quantity": "250 g",
+      "price": 18.0,
+      "mrp": 45.0,
+      "raw_text": [
+        "ADD",
+        "₹18",
+        "₹45",
+        "₹27",
+        "OFF",
+        "Lady Finger",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Cucumber Green",
+      "quantity": "1 pc",
+      "price": 15.0,
+      "mrp": 33.0,
+      "raw_text": [
+        "ADD",
+        "₹15",
+        "₹33",
+        "₹18",
+        "OFF",
+        "Cucumber Green",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Brinjal Purple Long",
+      "quantity": "250 g",
+      "price": 26.0,
+      "mrp": 81.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹81",
+        "₹55",
+        "OFF",
+        "Brinjal Purple Long",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Tomato Local",
+      "quantity": "500 g",
+      "price": 13.0,
+      "mrp": 37.0,
+      "raw_text": [
+        "ADD",
+        "₹13",
+        "₹37",
+        "₹24",
+        "OFF",
+        "Tomato Local",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Lady Finger",
+      "quantity": "500 g",
+      "price": 30.0,
+      "mrp": 81.0,
+      "raw_text": [
+        "ADD",
+        "₹30",
+        "₹81",
+        "₹51",
+        "OFF",
+        "Lady Finger",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Beans Broad",
+      "quantity": "250 g",
+      "price": 26.0,
+      "mrp": 54.0,
+      "raw_text": [
+        "ADD",
+        "₹26",
+        "₹54",
+        "₹28",
+        "OFF",
+        "Beans Broad",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Beans Cluster (Gawar Phali)",
+      "quantity": "250 g",
+      "price": 16.0,
+      "mrp": 41.0,
+      "raw_text": [
+        "ADD",
+        "₹16",
+        "₹41",
+        "₹25",
+        "OFF",
+        "Beans Cluster (Gawar Phali)",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Green Peas (Matar)",
+      "quantity": "250 g",
+      "price": 66.0,
+      "mrp": 174.0,
+      "raw_text": [
+        "ADD",
+        "₹66",
+        "₹174",
+        "₹108",
+        "OFF",
+        "Green Peas (Matar)",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Beans Cowpea",
+      "quantity": "500 g",
+      "price": 42.0,
+      "mrp": 106.0,
+      "raw_text": [
+        "ADD",
+        "₹42",
+        "₹106",
+        "₹64",
+        "OFF",
+        "Beans Cowpea",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Sambar Onion",
+      "quantity": "250 g",
+      "price": 22.0,
+      "mrp": 57.0,
+      "raw_text": [
+        "ADD",
+        "₹22",
+        "₹57",
+        "₹35",
+        "OFF",
+        "Sambar Onion",
+        "250 g"
+      ]
+    },
+    {
+      "name": "Brinjal Small Striped",
+      "quantity": "500 g",
+      "price": 35.0,
+      "mrp": 86.0,
+      "raw_text": [
+        "ADD",
+        "₹35",
+        "₹86",
+        "₹51",
+        "OFF",
+        "Brinjal Small Striped",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Cucumber Malabar",
+      "quantity": "1 pc",
+      "price": 28.0,
+      "mrp": 88.0,
+      "raw_text": [
+        "ADD",
+        "₹28",
+        "₹88",
+        "₹60",
+        "OFF",
+        "Cucumber Malabar",
+        "1 pc"
+      ]
+    },
+    {
+      "name": "Banana Raw",
+      "quantity": "500 g",
+      "price": 43.0,
+      "mrp": 86.0,
+      "raw_text": [
+        "ADD",
+        "₹43",
+        "₹86",
+        "₹43",
+        "OFF",
+        "Banana Raw",
+        "500 g"
+      ]
+    },
+    {
+      "name": "Pomegranate Premium",
+      "quantity": "1 pc (180 - 220 g)",
+      "price": 42.0,
+      "mrp": 70.0,
+      "raw_text": [
+        "ADD",
+        "₹42",
+        "₹70",
+        "₹28",
+        "OFF",
+        "Pomegranate Premium",
+        "1 pc (180 - 220 g)"
+      ]
+    }
+  ]
+}
