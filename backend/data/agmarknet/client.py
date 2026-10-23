@@ -21,11 +21,12 @@ async def fetch_market_data(
     """
     Fetch market data from data.gov.in API.
     """
-    if not API_KEY:
+    api_key = os.getenv("DATA_GOV_API_KEY", "").strip()
+    if not api_key:
         raise ValueError("DATA_GOV_API_KEY environment variable is not set")
 
     params = {
-        "api-key": API_KEY.strip() if API_KEY else "",
+        "api-key": api_key,
         "format": "json",
         "limit": limit,
         "filters[Commodity]": commodity

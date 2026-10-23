@@ -84,6 +84,60 @@ def identify_produce(image_bytes: bytes) -> ProduceClassification:
     return result
 
 
-def load_produce_classifier() -> None:
-    """Load the classifier during application startup for visible diagnostics."""
-    _get_model()
+def _is_network_error(exc: BaseException) -> bool:
+    """Determine whether an exception is caused by a network or remote connection failure."""
+    visited = set()
+    current = exc
+    while current and id(current) not in visited:
+        visited.add(id(current))
+        if isinstance(current, (ConnectionError, TimeoutError)):
+            return True
+        if isinstance(current, OSError):
+            msg = str(current).lower()
+            if any(term in msg for term in (
+                "couldn't connect", "failed to establish a new connection",
+                "connection refused", "network is unreachable", "name resolution",
+                "getaddrinfo failed", "temporary failure in name resolution",
+                "timed out", "timeout", "offline", "unreachable", "reset by peer",
+                "cannot reach", "not found"
+            )):
+                return True
+        type_name = type(current).__name__
+        if any(name in type_name for name in (
+            "HfHubHTTPError", "LocalEntryNotFoundError", "RepositoryNotFoundError",
+            "EntryNotFoundError", "HTTPError", "MaxRetryError", "NewConnectionError",
+            "ConnectTimeout", "ReadTimeout", "Timeout", "SSLError"
+        )):
+            return True
+        current = current.__cause__ or current.__context__
+    return False
+
+
+def is_produce_classifier_loaded() -> bool:
+    """Return True if the local produce classifier is loaded in memory."""
+    return _model is not None and _processor is not None
+
+
+def load_produce_classifier() -> bool:
+    """Load the classifier during application startup for visible diagnostics.
+
+    A network failure while loading this optional remote model will not prevent
+    the application from starting. A diagnostic warning is logged, and False is returned.
+    Programming errors or unrelated issues are not suppressed.
+    """
+    try:
+        _get_model()
+        return True
+    except RuntimeError as exc:
+        cause = exc.__cause__ or exc
+        if _is_network_error(cause):
+            logger.warning(
+                "Optional produce classifier '%s' could not be loaded due to network error: %s. "
+                "Application will start with Gemini primary; local ML fallback will be unavailable.",
+                MODEL_NAME,
+                cause,
+            )
+            return False
+        # Do not hide non-network or programming errors
+        raise
+

@@ -18,9 +18,15 @@ logger = logging.getLogger(__name__)
 @app.on_event("startup")
 def load_ml_models() -> None:
     logger.info("Loading local ML models")
-    load_produce_classifier()
+    classifier_loaded = load_produce_classifier()
     load_freshness_model()
-    logger.info("Local ML models loaded successfully")
+    if classifier_loaded:
+        logger.info("Local ML models loaded successfully")
+    else:
+        logger.warning(
+            "Produce classifier is unavailable (network/remote loading failed). "
+            "Operating with Gemini as primary vision provider; local produce fallback will be disabled."
+        )
 
 app.add_middleware(
     CORSMiddleware,

@@ -8,6 +8,17 @@ from pathlib import Path
 from PIL import Image
 import io
 
+import socket
+
+# Prioritize IPv4 on Windows where ISP IPv6 routes to Google frequently timeout
+_orig_getaddrinfo = socket.getaddrinfo
+def _ipv4_first_getaddrinfo(*args, **kwargs):
+    responses = _orig_getaddrinfo(*args, **kwargs)
+    ipv4 = [r for r in responses if r[0] == socket.AF_INET]
+    return ipv4 if ipv4 else responses
+socket.getaddrinfo = _ipv4_first_getaddrinfo
+
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 load_dotenv(Path(__file__).resolve().parents[3] / ".env")
 
@@ -33,17 +44,23 @@ def analyze_with_gemini(image_bytes: bytes) -> dict[str, Any]:
         mime_type = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "webp": "image/webp"}.get(format_name, "image/jpeg")
 
         client = genai.Client(api_key=api_key)
-        response = client.models.generate_content(
-            model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
-            contents=[
-                types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
-                """Analyze this fruit or vegetable image. Return only JSON with keys:
-                produce_type (string), produce_confidence (number 0-100),
-                freshness_percent (number 0-100), freshness_label (Fresh, Slightly Aged, or Overripe),
-                freshness_note (string), quality_adjustment (integer, usually 0, -2, or -5),
-                quality_adjustment_label (string). Do not add markdown.""",
-            ],
-        )
+        model_name = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
+        contents = [
+            types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
+            """Analyze this fruit or vegetable image. Return only JSON with keys:
+            produce_type (string), produce_confidence (number 0-100),
+            freshness_percent (number 0-100), freshness_label (Fresh, Slightly Aged, or Overripe),
+            freshness_note (string), quality_adjustment (integer, usually 0, -2, or -5),
+            quality_adjustment_label (string). Do not add markdown.""",
+        ]
+        try:
+            response = client.models.generate_content(model=model_name, contents=contents)
+        except Exception as exc:
+            if "429" in str(exc) and model_name != "gemini-3.5-flash":
+                logger.warning("Gemini model %s exceeded quota (429), attempting fallback to gemini-3.5-flash", model_name)
+                response = client.models.generate_content(model="gemini-3.5-flash", contents=contents)
+            else:
+                raise
         text = (response.text or "").strip()
         if text.startswith("```"):
             text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()

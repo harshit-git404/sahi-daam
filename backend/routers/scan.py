@@ -98,6 +98,7 @@ def _build_retail_unavailable(commodity_id: str, location: str | None, message: 
 # Debug endpoint — keep for Agmarknet verification
 # ---------------------------------------------------------------------------
 
+@router.get("/market-price")
 @router.get("/api/market-price")
 async def verify_market_price(
     commodity: str,
@@ -174,11 +175,11 @@ async def scan_produce(request: ScanRequest):
         analysis_provider = "local_fallback"
         logger.info("Gemini unavailable (%s), using local ML fallback.", gem_exc)
         try:
-            classification = identify_produce(image_bytes)
+            classification = await asyncio.to_thread(identify_produce, image_bytes)
             detected_produce = classification["produce_type"]
             detected_produce_id = classification["produce_id"]
             produce_confidence = classification["produce_confidence"]
-            freshness_data = predict_freshness(image_bytes, detected_produce)
+            freshness_data = await asyncio.to_thread(predict_freshness, image_bytes, detected_produce)
             logger.info(
                 "Local ML fallback succeeded: produce=%s confidence=%.1f%% freshness=%s%%",
                 detected_produce,
