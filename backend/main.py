@@ -6,16 +6,17 @@ try:
     from .ml.freshness_model import load_freshness_model
     from .ml.produce_classifier import load_produce_classifier
     from .routers import scan, haggle, sector
+    from .database import init_db, seed_database, SessionLocal
 except ImportError:
     from ml.freshness_model import load_freshness_model
     from ml.produce_classifier import load_produce_classifier
     from routers import scan, haggle, sector
+    from database import init_db, seed_database, SessionLocal
 
 app = FastAPI(title="Sahi Daam API")
 logger = logging.getLogger(__name__)
 
 
-@app.on_event("startup")
 def load_ml_models() -> None:
     logger.info("Loading local ML models")
     classifier_loaded = load_produce_classifier()
@@ -27,6 +28,23 @@ def load_ml_models() -> None:
             "Produce classifier is unavailable (network/remote loading failed). "
             "Operating with Gemini as primary vision provider; local produce fallback will be disabled."
         )
+
+
+@app.on_event("startup")
+def startup_events() -> None:
+    logger.info("Initializing database...")
+    init_db()
+    with SessionLocal() as db_session:
+        seed_summary = seed_database(db_session)
+        logger.info(
+            "Database initialized and seeded: %d localities, %d mandis, %d transport configs, %d community observations",
+            seed_summary["localities_count"],
+            seed_summary["mandis_count"],
+            seed_summary["transport_configs_count"],
+            seed_summary["community_observations_count"],
+        )
+
+    load_ml_models()
 
 app.add_middleware(
     CORSMiddleware,

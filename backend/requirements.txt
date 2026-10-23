@@ -12,3 +12,4 @@ google-genai
 httpx>=0.28.1,<1.0.0
 python-dotenv==1.0.1
 playwright>=1.48,<2
+sqlalchemy>=2.0.0,<3.0.0
