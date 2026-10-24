@@ -1,0 +1,325 @@
+{
+  "schema_version": "1.0.0",
+  "experiment": {
+    "run_id": "run_insufficient_community_9b5d93faa1",
+    "scenario_id": "insufficient_community",
+    "scenario_name": "Scenario E — Insufficient Community Sample (Threshold Gate)",
+    "category": "Community Reconciliation",
+    "description": "Demonstrates that a small community sample (9 reports) cannot override the baseline. Weight alpha = 0.0, baseline range is preserved in full.",
+    "timestamp_utc": "2026-10-24T11:00:26.137827+00:00",
+    "status": "COMPLETED",
+    "is_mock": true,
+    "deterministic": true
+  },
+  "configuration": {
+    "fixture_version": "1.0.0",
+    "algorithm_version": "v2.0-locality-reconciled",
+    "policy": {
+      "window_days": 2,
+      "min_sample_size": 10,
+      "base_alpha": 0.2,
+      "alpha_per_additional_sample": 0.02,
+      "max_alpha": 0.4,
+      "markup_min_pct": 30.0,
+      "markup_max_pct": 45.0
+    },
+    "reference_clock_utc": "2026-10-24T12:00:00+00:00"
+  },
+  "inputs": {
+    "commodity_id": "tomato",
+    "wholesale_price_per_kg": 20.0,
+    "transport_cost_per_kg": 2.0,
+    "transport_status": "available",
+    "transport_method": "distance_vehicle_model",
+    "quality_adjustment": 0,
+    "quality_adjustment_meaning": "No freshness deduction",
+    "markup_min_pct": 30.0,
+    "markup_max_pct": 45.0,
+    "total_community_observations_count": 9,
+    "community_observations": [
+      {
+        "price": 22.0,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 23.0,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 23.0,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 24.0,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 24.0,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 25.0,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 26.0,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 27.0,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 28.0,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      }
+    ]
+  },
+  "eligible_community_observations": {
+    "total_found": 9,
+    "eligible_count": 9,
+    "excluded_duplicates_count": 0,
+    "excluded_stale_count": 0,
+    "excluded_non_weight_unit_count": 0,
+    "excluded_invalid_count": 0,
+    "eligible_prices": [
+      22.0,
+      23.0,
+      23.0,
+      24.0,
+      24.0,
+      25.0,
+      26.0,
+      27.0,
+      28.0
+    ],
+    "community_median": 24.0,
+    "community_mean": 24.67,
+    "community_min": 22.0,
+    "community_max": 28.0
+  },
+  "calculation_steps": [
+    {
+      "step_number": 1,
+      "title": "Determine Delivered Cost Basis",
+      "formula": "Cost Basis = Wholesale Price + Transport Cost per kg",
+      "inputs": {
+        "wholesale_price": 20.0,
+        "transport_cost": 2.0
+      },
+      "substitutions": "₹20.00 + ₹2.00",
+      "result_label": "Delivered Cost Basis",
+      "result_value": "₹22.00/kg",
+      "unit": "₹/kg",
+      "status": "COMPLETE",
+      "explanation": "Delivered cost includes freight (distance_vehicle_model) to retail locality."
+    },
+    {
+      "step_number": 2,
+      "title": "Calculate Minimum Baseline Boundary",
+      "formula": "Baseline Min = Cost Basis × (1 + Minimum Markup %) + Freshness Adjustment",
+      "inputs": {
+        "cost_basis": 22.0,
+        "markup_min_pct": 30.0,
+        "quality_adjustment": 0
+      },
+      "substitutions": "₹22.00 × (1 + 0.30) + (+0)",
+      "result_label": "Baseline Minimum",
+      "result_value": "₹28.60/kg",
+      "unit": "₹/kg",
+      "status": "COMPLETE",
+      "explanation": "Applies minimum retailer margin (+30%) and quality adjustment (No freshness deduction)."
+    },
+    {
+      "step_number": 3,
+      "title": "Calculate Maximum Baseline Boundary",
+      "formula": "Baseline Max = Cost Basis × (1 + Maximum Markup %) + Freshness Adjustment",
+      "inputs": {
+        "cost_basis": 22.0,
+        "markup_max_pct": 45.0,
+        "quality_adjustment": 0
+      },
+      "substitutions": "₹22.00 × (1 + 0.45) + (+0)",
+      "result_label": "Baseline Maximum",
+      "result_value": "₹31.90/kg",
+      "unit": "₹/kg",
+      "status": "COMPLETE",
+      "explanation": "Applies maximum retailer margin (+45%) and quality adjustment (No freshness deduction)."
+    },
+    {
+      "step_number": 4,
+      "title": "Evaluate Community Evidence & Sample Sufficiency",
+      "formula": "Adaptive Weight α = 0.0 if Eligible Reports < 10, else min(0.40, 0.20 + 0.02 × (N - 10))",
+      "inputs": {
+        "total_observations_found": 9,
+        "excluded_duplicates": 0,
+        "excluded_stale": 0,
+        "excluded_non_weight_units": 0,
+        "eligible_independent_reports": 9,
+        "required_threshold": 10,
+        "community_median": 24.0
+      },
+      "substitutions": "Total=9, Duplicates=0, Eligible=9 vs Threshold=10",
+      "result_label": "Reconciliation Weight (α)",
+      "result_value": "α = 0.00 (Weight Inactive)",
+      "unit": "scalar",
+      "status": "INSUFFICIENT_SAMPLE",
+      "explanation": "Sample requirement not satisfied (9 < 10 independent reports). Community weight α = 0.0; empirical median does not influence final price."
+    },
+    {
+      "step_number": 5,
+      "title": "Preserve Baseline Reference (Reconciliation Inactive)",
+      "formula": "Final Range = Baseline Range (α = 0.0)",
+      "inputs": {
+        "baseline_min": 28.6,
+        "baseline_max": 31.9,
+        "alpha": 0.0
+      },
+      "substitutions": "Final Range = Baseline Range",
+      "result_label": "Final Output Range",
+      "result_value": "₹28.60–₹31.90/kg",
+      "unit": "₹/kg",
+      "status": "BASELINE_PRESERVED",
+      "explanation": "Because α = 0.0, the pure cost-basis baseline range is preserved in full without distortion."
+    }
+  ],
+  "actual_output": {
+    "commodity_id": "tomato",
+    "locality_id": "sim_locality_katpadi",
+    "calculation_status": "TRANSPORT_AWARE_BASELINE",
+    "wholesale_price_per_kg": 20.0,
+    "transport_cost_per_kg": 2.0,
+    "transport_status": "available",
+    "transport_method": "distance_vehicle_model",
+    "cost_basis_per_kg": 22.0,
+    "is_provisional_wholesale_only": false,
+    "markup_min_pct": 30.0,
+    "markup_max_pct": 45.0,
+    "quality_adjustment": 0,
+    "quality_adjustment_meaning": "No freshness deduction",
+    "baseline_range": {
+      "min": 28.6,
+      "max": 31.9,
+      "mid": 30.25,
+      "unit": "kg"
+    },
+    "community_sample_size": 9,
+    "community_estimate": 24.0,
+    "reconciliation_weight_alpha": 0.0,
+    "is_sample_sufficient": false,
+    "reconciled_range": {
+      "min": 28.6,
+      "max": 31.9,
+      "mid": 30.25,
+      "unit": "kg"
+    },
+    "suggested_price": 30.25,
+    "observation_breakdown": {
+      "total_found": 9,
+      "eligible_count": 9,
+      "excluded_duplicates_count": 0,
+      "excluded_stale_count": 0,
+      "excluded_non_weight_unit_count": 0,
+      "excluded_invalid_count": 0,
+      "eligible_prices": [
+        22.0,
+        23.0,
+        23.0,
+        24.0,
+        24.0,
+        25.0,
+        26.0,
+        27.0,
+        28.0
+      ],
+      "community_median": 24.0,
+      "community_mean": 24.67,
+      "community_min": 22.0,
+      "community_max": 28.0
+    },
+    "warnings": [],
+    "notes": [
+      "Community sample size (9) is below minimum threshold (10); reconciliation weight is 0.0."
+    ]
+  },
+  "sub_runs": [],
+  "warnings": [],
+  "notes": [
+    "Community sample size (9) is below minimum threshold (10); reconciliation weight is 0.0."
+  ],
+  "missing_inputs": [],
+  "persistence": {
+    "saved": true,
+    "relative_path": "insufficient_community/run_insufficient_community_9b5d93faa1.json",
+    "file_size_bytes": 7871,
+    "sha256_hash": "897c231909714df647749ef742fdc92f2d0fed1b88a833c63ae8bfefbd6f8519"
+  },
+  "integrity": {
+    "normal_ledger_record_id": null,
+    "normal_ledger_sequence": null,
+    "normal_ledger_hash": null,
+    "notes": "Executed in isolated Experiment Lab fixture. Main application database left untouched."
+  },
+  "expected_behavior_checks": [
+    {
+      "check_name": "Transport Availability",
+      "expected": "available",
+      "actual": "available",
+      "passed": true,
+      "explanation": "Transport status matches expected 'available'."
+    },
+    {
+      "check_name": "Sample Sufficiency",
+      "expected": "9 eligible reports (sufficient=False)",
+      "actual": "9 eligible reports (sufficient=False)",
+      "passed": true,
+      "explanation": "Eligible independent community count matches expected 9."
+    },
+    {
+      "check_name": "Reconciliation Weight (α)",
+      "expected": "α between 0.00 and 0.00",
+      "actual": "α = 0.00",
+      "passed": true,
+      "explanation": "Adaptive weight alpha is within approved range."
+    },
+    {
+      "check_name": "Calculation Status",
+      "expected": "TRANSPORT_AWARE_BASELINE",
+      "actual": "TRANSPORT_AWARE_BASELINE",
+      "passed": true,
+      "explanation": "Lifecycle calculation status matches expected 'TRANSPORT_AWARE_BASELINE'."
+    },
+    {
+      "check_name": "Baseline Ordering & Validity",
+      "expected": "0 <= min <= max (finite positive numbers)",
+      "actual": "min=28.6, max=31.9",
+      "passed": true,
+      "explanation": "Cost-basis baseline is strictly ordered and non-negative."
+    },
+    {
+      "check_name": "Atomic Evidence Persistence",
+      "expected": "Saved to scenario directory with manifest entry",
+      "actual": "Successfully Saved",
+      "passed": true,
+      "explanation": "Scenario evidence serialized to JSON and indexed in manifest."
+    }
+  ]
+}

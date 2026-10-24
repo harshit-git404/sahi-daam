@@ -1,0 +1,26 @@
+{
+  "run_id": "run_transport_available_1aadc6dcfc",
+  "scenario_id": "transport_available",
+  "scenario_name": "Scenario A — Transport Available",
+  "timestamp_utc": "2026-10-24T11:03:54.304567+00:00",
+  "status": "COMPLETED",
+  "calculation_status": "TRANSPORT_AWARE_BASELINE",
+  "all_checks_passed": true,
+  "cost_basis_per_kg": 22.0,
+  "baseline_range": {
+    "min": 28.6,
+    "max": 31.9,
+    "mid": 30.25,
+    "unit": "kg"
+  },
+  "reconciled_range": {
+    "min": 28.6,
+    "max": 31.9,
+    "mid": 30.25,
+    "unit": "kg"
+  },
+  "alpha": 0.0,
+  "relative_path": "transport_available/run_transport_available_1aadc6dcfc.json",
+  "sha256_hash": "37f1e4c5cd3fba92a22315ebe14f4044dee6dfda8f48263e7a893721af59d0d2",
+  "is_mock": true
+}

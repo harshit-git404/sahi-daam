@@ -1,0 +1,16 @@
+{
+  "run_id": "run_combined_missing_wholesale_d539c8dedf",
+  "scenario_id": "combined_missing_wholesale",
+  "scenario_name": "Combined 5 — Missing Wholesale Price (No Fabrication)",
+  "timestamp_utc": "2026-10-24T11:02:41.371708+00:00",
+  "status": "COMPLETED",
+  "calculation_status": "UNAVAILABLE",
+  "all_checks_passed": true,
+  "cost_basis_per_kg": null,
+  "baseline_range": null,
+  "reconciled_range": null,
+  "alpha": 0.0,
+  "relative_path": "combined_missing_wholesale/run_combined_missing_wholesale_d539c8dedf.json",
+  "sha256_hash": "bb9680d5ae6e5bd90cb50c5145223b75f7a28a68f427432630e4918b34e03fb3",
+  "is_mock": true
+}

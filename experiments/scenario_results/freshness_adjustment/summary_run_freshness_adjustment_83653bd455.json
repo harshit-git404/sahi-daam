@@ -1,0 +1,26 @@
+{
+  "run_id": "run_freshness_adjustment_83653bd455",
+  "scenario_id": "freshness_adjustment",
+  "scenario_name": "Scenario G — Freshness Adjustment (Fair Quality Deduction)",
+  "timestamp_utc": "2026-10-24T11:02:41.758987+00:00",
+  "status": "COMPLETED",
+  "calculation_status": "TRANSPORT_AWARE_BASELINE",
+  "all_checks_passed": true,
+  "cost_basis_per_kg": 22.0,
+  "baseline_range": {
+    "min": 26.6,
+    "max": 29.9,
+    "mid": 28.25,
+    "unit": "kg"
+  },
+  "reconciled_range": {
+    "min": 26.6,
+    "max": 29.9,
+    "mid": 28.25,
+    "unit": "kg"
+  },
+  "alpha": 0.0,
+  "relative_path": "freshness_adjustment/run_freshness_adjustment_83653bd455.json",
+  "sha256_hash": "3c358b29fc317dcfb65b23e212d24dd7ec607b0a63842faeb36d4cfebf46668c",
+  "is_mock": true
+}

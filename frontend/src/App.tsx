@@ -17,6 +17,7 @@ import { AudioHaggleModal } from './components/AudioHaggleModal';
 import { LocalityModal } from './components/LocalityModal';
 import { CommunityPriceModal } from './components/CommunityPriceModal';
 import { LedgerAuditScreen } from './components/LedgerAuditScreen';
+import { ExperimentLabScreen } from './components/ExperimentLabScreen';
 
 const LOADING_MESSAGES = [
   "Analyzing produce visuals...",
@@ -56,6 +57,7 @@ const AppContent: React.FC = () => {
         {currentScreen === 'bargain' && <BargainScreen />}
         {currentScreen === 'history' && <HistoryScreen />}
         {currentScreen === 'ledger_audit' && <LedgerAuditScreen />}
+        {currentScreen === 'experiment_lab' && <ExperimentLabScreen />}
       </div>
 
       {/* Global Navigation Shell */}

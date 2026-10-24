@@ -1,0 +1,26 @@
+{
+  "run_id": "run_combined_high_community_with_duplicates_e82ce62c45",
+  "scenario_id": "combined_high_community_with_duplicates",
+  "scenario_name": "Combined 4 — High Community Prices with Flagged Duplicates",
+  "timestamp_utc": "2026-10-24T11:00:26.243458+00:00",
+  "status": "COMPLETED",
+  "calculation_status": "TRANSPORT_AWARE_BASELINE",
+  "all_checks_passed": true,
+  "cost_basis_per_kg": 22.0,
+  "baseline_range": {
+    "min": 28.6,
+    "max": 31.9,
+    "mid": 30.25,
+    "unit": "kg"
+  },
+  "reconciled_range": {
+    "min": 28.6,
+    "max": 31.9,
+    "mid": 30.25,
+    "unit": "kg"
+  },
+  "alpha": 0.0,
+  "relative_path": "combined_high_community_with_duplicates/run_combined_high_community_with_duplicates_e82ce62c45.json",
+  "sha256_hash": "1287ad0d75a8f6099d68bd9af2eb01d550b0857e67c0c5652e288c5fc4257c7f",
+  "is_mock": true
+}

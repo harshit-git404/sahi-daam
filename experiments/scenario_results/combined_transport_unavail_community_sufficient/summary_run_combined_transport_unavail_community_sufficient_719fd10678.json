@@ -1,0 +1,26 @@
+{
+  "run_id": "run_combined_transport_unavail_community_sufficient_719fd10678",
+  "scenario_id": "combined_transport_unavail_community_sufficient",
+  "scenario_name": "Combined 3 — Transport Unavailable + Sufficient Community Reports",
+  "timestamp_utc": "2026-10-24T11:00:26.224458+00:00",
+  "status": "COMPLETED",
+  "calculation_status": "PROVISIONAL_WHOLESALE_RECONCILED",
+  "all_checks_passed": true,
+  "cost_basis_per_kg": 20.0,
+  "baseline_range": {
+    "min": 26.0,
+    "max": 29.0,
+    "mid": 27.5,
+    "unit": "kg"
+  },
+  "reconciled_range": {
+    "min": 25.3,
+    "max": 28.3,
+    "mid": 26.8,
+    "unit": "kg"
+  },
+  "alpha": 0.2,
+  "relative_path": "combined_transport_unavail_community_sufficient/run_combined_transport_unavail_community_sufficient_719fd10678.json",
+  "sha256_hash": "5b768b10b25ab9bd7bceeb55127830d13a24583fcc1b594f2708a4dcd999f39c",
+  "is_mock": true
+}

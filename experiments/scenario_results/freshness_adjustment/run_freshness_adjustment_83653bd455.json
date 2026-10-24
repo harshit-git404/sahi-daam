@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0.0",
+  "experiment": {
+    "run_id": "run_freshness_adjustment_83653bd455",
+    "scenario_id": "freshness_adjustment",
+    "scenario_name": "Scenario G — Freshness Adjustment (Fair Quality Deduction)",
+    "category": "Produce Quality",
+    "description": "Demonstrates the effect of produce quality on retail range. Sub-run G1 evaluates fresh produce (₹0 deduction), while G2 applies a ₹-2.00/kg freshness deduction.",
+    "timestamp_utc": "2026-10-24T11:02:41.758987+00:00",
+    "status": "COMPLETED",
+    "is_mock": true,
+    "deterministic": true
+  },
+  "configuration": {
+    "fixture_version": "1.0.0",
+    "algorithm_version": "v2.0-locality-reconciled",
+    "policy": {
+      "window_days": 2,
+      "min_sample_size": 10,
+      "base_alpha": 0.2,
+      "alpha_per_additional_sample": 0.02,
+      "max_alpha": 0.4,
+      "markup_min_pct": 30.0,
+      "markup_max_pct": 45.0
+    },
+    "reference_clock_utc": "2026-10-24T12:00:00+00:00"
+  },
+  "inputs": {
+    "commodity_id": "tomato",
+    "wholesale_price_per_kg": 20.0,
+    "transport_cost_per_kg": 2.0,
+    "transport_status": "available",
+    "transport_method": "distance_vehicle_model",
+    "quality_adjustment": -2,
+    "quality_adjustment_meaning": "Fair freshness deduction of ₹-2.00/kg",
+    "markup_min_pct": 30.0,
+    "markup_max_pct": 45.0,
+    "total_community_observations_count": 2,
+    "community_observations": [
+      {
+        "price": 28.0,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 29.0,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      }
+    ]
+  },
+  "eligible_community_observations": {
+    "total_found": 2,
+    "eligible_count": 2,
+    "excluded_duplicates_count": 0,
+    "excluded_stale_count": 0,
+    "excluded_non_weight_unit_count": 0,
+    "excluded_invalid_count": 0,
+    "eligible_prices": [
+      28.0,
+      29.0
+    ],
+    "community_median": 28.5,
+    "community_mean": 28.5,
+    "community_min": 28.0,
+    "community_max": 29.0
+  },
+  "calculation_steps": [
+    {
+      "step_number": 1,
+      "title": "Determine Delivered Cost Basis",
+      "formula": "Cost Basis = Wholesale Price + Transport Cost per kg",
+      "inputs": {
+        "wholesale_price": 20.0,
+        "transport_cost": 2.0
+      },
+      "substitutions": "₹20.00 + ₹2.00",
+      "result_label": "Delivered Cost Basis",
+      "result_value": "₹22.00/kg",
+      "unit": "₹/kg",
+      "status": "COMPLETE",
+      "explanation": "Delivered cost includes freight (distance_vehicle_model) to retail locality."
+    },
+    {
+      "step_number": 2,
+      "title": "Calculate Minimum Baseline Boundary",
+      "formula": "Baseline Min = Cost Basis × (1 + Minimum Markup %) + Freshness Adjustment",
+      "inputs": {
+        "cost_basis": 22.0,
+        "markup_min_pct": 30.0,
+        "quality_adjustment": -2
+      },
+      "substitutions": "₹22.00 × (1 + 0.30) + (-2)",
+      "result_label": "Baseline Minimum",
+      "result_value": "₹26.60/kg",
+      "unit": "₹/kg",
+      "status": "COMPLETE",
+      "explanation": "Applies minimum retailer margin (+30%) and quality adjustment (Fair freshness deduction of ₹-2.00/kg)."
+    },
+    {
+      "step_number": 3,
+      "title": "Calculate Maximum Baseline Boundary",
+      "formula": "Baseline Max = Cost Basis × (1 + Maximum Markup %) + Freshness Adjustment",
+      "inputs": {
+        "cost_basis": 22.0,
+        "markup_max_pct": 45.0,
+        "quality_adjustment": -2
+      },
+      "substitutions": "₹22.00 × (1 + 0.45) + (-2)",
+      "result_label": "Baseline Maximum",
+      "result_value": "₹29.90/kg",
+      "unit": "₹/kg",
+      "status": "COMPLETE",
+      "explanation": "Applies maximum retailer margin (+45%) and quality adjustment (Fair freshness deduction of ₹-2.00/kg)."
+    },
+    {
+      "step_number": 4,
+      "title": "Evaluate Community Evidence & Sample Sufficiency",
+      "formula": "Adaptive Weight α = 0.0 if Eligible Reports < 10, else min(0.40, 0.20 + 0.02 × (N - 10))",
+      "inputs": {
+        "total_observations_found": 2,
+        "excluded_duplicates": 0,
+        "excluded_stale": 0,
+        "excluded_non_weight_units": 0,
+        "eligible_independent_reports": 2,
+        "required_threshold": 10,
+        "community_median": 28.5
+      },
+      "substitutions": "Total=2, Duplicates=0, Eligible=2 vs Threshold=10",
+      "result_label": "Reconciliation Weight (α)",
+      "result_value": "α = 0.00 (Weight Inactive)",
+      "unit": "scalar",
+      "status": "INSUFFICIENT_SAMPLE",
+      "explanation": "Sample requirement not satisfied (2 < 10 independent reports). Community weight α = 0.0; empirical median does not influence final price."
+    },
+    {
+      "step_number": 5,
+      "title": "Preserve Baseline Reference (Reconciliation Inactive)",
+      "formula": "Final Range = Baseline Range (α = 0.0)",
+      "inputs": {
+        "baseline_min": 26.6,
+        "baseline_max": 29.9,
+        "alpha": 0.0
+      },
+      "substitutions": "Final Range = Baseline Range",
+      "result_label": "Final Output Range",
+      "result_value": "₹26.60–₹29.90/kg",
+      "unit": "₹/kg",
+      "status": "BASELINE_PRESERVED",
+      "explanation": "Because α = 0.0, the pure cost-basis baseline range is preserved in full without distortion."
+    }
+  ],
+  "actual_output": {
+    "commodity_id": "tomato",
+    "locality_id": "sim_locality_katpadi",
+    "calculation_status": "TRANSPORT_AWARE_BASELINE",
+    "wholesale_price_per_kg": 20.0,
+    "transport_cost_per_kg": 2.0,
+    "transport_status": "available",
+    "transport_method": "distance_vehicle_model",
+    "cost_basis_per_kg": 22.0,
+    "is_provisional_wholesale_only": false,
+    "markup_min_pct": 30.0,
+    "markup_max_pct": 45.0,
+    "quality_adjustment": -2,
+    "quality_adjustment_meaning": "Fair freshness deduction of ₹-2.00/kg",
+    "baseline_range": {
+      "min": 26.6,
+      "max": 29.9,
+      "mid": 28.25,
+      "unit": "kg"
+    },
+    "community_sample_size": 2,
+    "community_estimate": 28.5,
+    "reconciliation_weight_alpha": 0.0,
+    "is_sample_sufficient": false,
+    "reconciled_range": {
+      "min": 26.6,
+      "max": 29.9,
+      "mid": 28.25,
+      "unit": "kg"
+    },
+    "suggested_price": 28.25,
+    "observation_breakdown": {
+      "total_found": 2,
+      "eligible_count": 2,
+      "excluded_duplicates_count": 0,
+      "excluded_stale_count": 0,
+      "excluded_non_weight_unit_count": 0,
+      "excluded_invalid_count": 0,
+      "eligible_prices": [
+        28.0,
+        29.0
+      ],
+      "community_median": 28.5,
+      "community_mean": 28.5,
+      "community_min": 28.0,
+      "community_max": 29.0
+    },
+    "warnings": [],
+    "notes": [
+      "Community sample size (2) is below minimum threshold (10); reconciliation weight is 0.0."
+    ]
+  },
+  "sub_runs": [
+    {
+      "sub_id": "G1",
+      "label": "G1: Fresh / Good Quality (0 deduction)",
+      "quality_adjustment": 0,
+      "meaning": "No freshness deduction",
+      "cost_basis_per_kg": 22.0,
+      "baseline_min": 28.6,
+      "baseline_max": 31.9,
+      "difference_from_fresh": 0.0
+    },
+    {
+      "sub_id": "G2",
+      "label": "G2: Lower / Fair Freshness (-₹2/kg deduction)",
+      "quality_adjustment": -2,
+      "meaning": "₹-2.00/kg freshness deduction",
+      "cost_basis_per_kg": 22.0,
+      "baseline_min": 26.6,
+      "baseline_max": 29.9,
+      "difference_from_fresh": -2.0
+    }
+  ],
+  "warnings": [],
+  "notes": [
+    "Community sample size (2) is below minimum threshold (10); reconciliation weight is 0.0."
+  ],
+  "missing_inputs": [],
+  "persistence": {
+    "saved": true,
+    "relative_path": "freshness_adjustment/run_freshness_adjustment_83653bd455.json",
+    "file_size_bytes": 7725,
+    "sha256_hash": "3c358b29fc317dcfb65b23e212d24dd7ec607b0a63842faeb36d4cfebf46668c"
+  },
+  "integrity": {
+    "normal_ledger_record_id": null,
+    "normal_ledger_sequence": null,
+    "normal_ledger_hash": null,
+    "notes": "Executed in isolated Experiment Lab fixture. Main application database left untouched."
+  },
+  "expected_behavior_checks": [
+    {
+      "check_name": "Transport Availability",
+      "expected": "available",
+      "actual": "available",
+      "passed": true,
+      "explanation": "Transport status matches expected 'available'."
+    },
+    {
+      "check_name": "Sample Sufficiency",
+      "expected": "2 eligible reports (sufficient=False)",
+      "actual": "2 eligible reports (sufficient=False)",
+      "passed": true,
+      "explanation": "Eligible independent community count matches expected 2."
+    },
+    {
+      "check_name": "Reconciliation Weight (α)",
+      "expected": "α between 0.00 and 0.00",
+      "actual": "α = 0.00",
+      "passed": true,
+      "explanation": "Adaptive weight alpha is within approved range."
+    },
+    {
+      "check_name": "Calculation Status",
+      "expected": "TRANSPORT_AWARE_BASELINE",
+      "actual": "TRANSPORT_AWARE_BASELINE",
+      "passed": true,
+      "explanation": "Lifecycle calculation status matches expected 'TRANSPORT_AWARE_BASELINE'."
+    },
+    {
+      "check_name": "Baseline Ordering & Validity",
+      "expected": "0 <= min <= max (finite positive numbers)",
+      "actual": "min=26.6, max=29.9",
+      "passed": true,
+      "explanation": "Cost-basis baseline is strictly ordered and non-negative."
+    },
+    {
+      "check_name": "Atomic Evidence Persistence",
+      "expected": "Saved to scenario directory with manifest entry",
+      "actual": "Successfully Saved",
+      "passed": true,
+      "explanation": "Scenario evidence serialized to JSON and indexed in manifest."
+    }
+  ]
+}

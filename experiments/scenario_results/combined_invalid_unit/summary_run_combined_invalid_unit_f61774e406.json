@@ -1,0 +1,26 @@
+{
+  "run_id": "run_combined_invalid_unit_f61774e406",
+  "scenario_id": "combined_invalid_unit",
+  "scenario_name": "Combined 6 — Unsupported Unit (Non-Weight Units Filtered)",
+  "timestamp_utc": "2026-10-24T11:00:58.595261+00:00",
+  "status": "COMPLETED",
+  "calculation_status": "TRANSPORT_AWARE_BASELINE",
+  "all_checks_passed": true,
+  "cost_basis_per_kg": 22.0,
+  "baseline_range": {
+    "min": 28.6,
+    "max": 31.9,
+    "mid": 30.25,
+    "unit": "kg"
+  },
+  "reconciled_range": {
+    "min": 28.6,
+    "max": 31.9,
+    "mid": 30.25,
+    "unit": "kg"
+  },
+  "alpha": 0.0,
+  "relative_path": "combined_invalid_unit/run_combined_invalid_unit_f61774e406.json",
+  "sha256_hash": "85e859cb789487dfb1c09cf19f315b057bd4e7aa0d36b00de7bbc316eacf6008",
+  "is_mock": true
+}

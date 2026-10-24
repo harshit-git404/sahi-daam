@@ -7,6 +7,9 @@ import {
   CalculationRecordSummary,
   LedgerVerificationResult,
   CommunitySubmissionInput,
+  ScenarioSummaryDTO,
+  ExperimentRunResult,
+  ManifestRunEntry,
 } from '../types';
 
 // Use environment variable if set, otherwise default to the Vite proxy (/api)
@@ -238,5 +241,87 @@ export async function downloadCalculationExport(id: string): Promise<void> {
 export async function verifyLedger(): Promise<LedgerVerificationResult> {
   const res = await fetch(`${API_BASE_URL}/ledger/verify`);
   if (!res.ok) throw new Error(`Failed to verify ledger (${res.status})`);
+  return res.json();
+}
+
+/** ---------------------------------------------------------------------------
+ * Experiment Lab API Functions
+ * --------------------------------------------------------------------------- */
+
+/** GET /experiments/scenarios */
+export async function fetchExperimentScenarios(): Promise<ScenarioSummaryDTO[]> {
+  const res = await fetch(`${API_BASE_URL}/experiments/scenarios`);
+  if (!res.ok) throw new Error(`Failed to fetch scenarios (${res.status})`);
+  return res.json();
+}
+
+/** POST /experiments/run/{scenarioId} */
+export async function runExperimentScenario(scenarioId: string): Promise<ExperimentRunResult> {
+  const res = await fetch(`${API_BASE_URL}/experiments/run/${encodeURIComponent(scenarioId)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok) {
+    let detail = res.statusText;
+    try {
+      const err = await res.json();
+      detail = err?.detail || detail;
+    } catch {}
+    throw new Error(`Scenario run failed: ${detail}`);
+  }
+  return res.json();
+}
+
+/** POST /experiments/run-all */
+export async function runAllExperimentScenarios(): Promise<{
+  total_scenarios: number;
+  executed_count: number;
+  all_passed: boolean;
+  report_path: string;
+}> {
+  const res = await fetch(`${API_BASE_URL}/experiments/run-all`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok) throw new Error(`Batch execution failed (${res.status})`);
+  return res.json();
+}
+
+/** GET /experiments/runs */
+export async function fetchExperimentRuns(): Promise<ManifestRunEntry[]> {
+  const res = await fetch(`${API_BASE_URL}/experiments/runs`);
+  if (!res.ok) throw new Error(`Failed to fetch runs (${res.status})`);
+  return res.json();
+}
+
+/** GET /experiments/runs/{runId} */
+export async function fetchExperimentRunDetail(runId: string): Promise<ExperimentRunResult> {
+  const res = await fetch(`${API_BASE_URL}/experiments/runs/${encodeURIComponent(runId)}`);
+  if (!res.ok) throw new Error(`Run detail not found (${res.status})`);
+  return res.json();
+}
+
+/** GET /experiments/runs/{runId}/export */
+export async function downloadExperimentExport(runId: string): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}/experiments/runs/${encodeURIComponent(runId)}/export`);
+  if (!res.ok) throw new Error(`Failed to export run (${res.status})`);
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${runId}.json`;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+}
+
+/** GET /experiments/manifest */
+export async function fetchExperimentManifest(): Promise<{
+  total_runs: number;
+  runs: ManifestRunEntry[];
+}> {
+  const res = await fetch(`${API_BASE_URL}/experiments/manifest`);
+  if (!res.ok) throw new Error(`Failed to fetch manifest (${res.status})`);
   return res.json();
 }

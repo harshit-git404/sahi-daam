@@ -122,6 +122,24 @@ export const DrawerMenu: React.FC = () => {
               </div>
               <span className="material-symbols-outlined text-[16px] text-[#594238]">chevron_right</span>
             </button>
+
+            <button
+              id="drawer-experiment-lab-btn"
+              onClick={() => {
+                setIsDrawerOpen(false);
+                setCurrentScreen('experiment_lab');
+              }}
+              className="w-full text-left p-3 rounded-xl bg-amber-50/70 border border-amber-200 hover:bg-amber-100/70 flex items-center justify-between transition-all"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-[18px] text-[#9e3d00]">science</span>
+                <div>
+                  <p className="text-xs font-bold text-[#1b1c1a]">Experiment Lab</p>
+                  <p className="text-[10px] text-[#594238]">13 controlled scenarios & formula traces</p>
+                </div>
+              </div>
+              <span className="material-symbols-outlined text-[16px] text-[#9e3d00]">chevron_right</span>
+            </button>
           </div>
 
           {/* Location Selector */}

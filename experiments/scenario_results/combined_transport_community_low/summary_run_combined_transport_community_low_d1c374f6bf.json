@@ -1,0 +1,26 @@
+{
+  "run_id": "run_combined_transport_community_low_d1c374f6bf",
+  "scenario_id": "combined_transport_community_low",
+  "scenario_name": "Combined 1 — Transport Available + Low Community Median",
+  "timestamp_utc": "2026-10-24T11:00:58.508215+00:00",
+  "status": "COMPLETED",
+  "calculation_status": "TRANSPORT_AWARE_RECONCILED",
+  "all_checks_passed": true,
+  "cost_basis_per_kg": 22.0,
+  "baseline_range": {
+    "min": 28.6,
+    "max": 31.9,
+    "mid": 30.25,
+    "unit": "kg"
+  },
+  "reconciled_range": {
+    "min": 26.95,
+    "max": 30.25,
+    "mid": 28.6,
+    "unit": "kg"
+  },
+  "alpha": 0.2,
+  "relative_path": "combined_transport_community_low/run_combined_transport_community_low_d1c374f6bf.json",
+  "sha256_hash": "8cb3a1f9494bb35a62326c4a89160f3306f7b597285a35244d474085e29f7a9a",
+  "is_mock": true
+}

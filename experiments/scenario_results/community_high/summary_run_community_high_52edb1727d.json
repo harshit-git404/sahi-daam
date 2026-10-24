@@ -1,0 +1,26 @@
+{
+  "run_id": "run_community_high_52edb1727d",
+  "scenario_id": "community_high",
+  "scenario_name": "Scenario D — Community Prices Higher Than Baseline",
+  "timestamp_utc": "2026-10-24T11:02:41.652014+00:00",
+  "status": "COMPLETED",
+  "calculation_status": "TRANSPORT_AWARE_RECONCILED",
+  "all_checks_passed": true,
+  "cost_basis_per_kg": 22.0,
+  "baseline_range": {
+    "min": 28.6,
+    "max": 31.9,
+    "mid": 30.25,
+    "unit": "kg"
+  },
+  "reconciled_range": {
+    "min": 29.55,
+    "max": 32.85,
+    "mid": 31.2,
+    "unit": "kg"
+  },
+  "alpha": 0.2,
+  "relative_path": "community_high/run_community_high_52edb1727d.json",
+  "sha256_hash": "0a6e21fe8cd48a08f609f5da0a30de7369f739bb8aa07cc24e2ecab6ff3eb810",
+  "is_mock": true
+}

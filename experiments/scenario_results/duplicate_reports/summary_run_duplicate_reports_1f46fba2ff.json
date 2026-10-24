@@ -1,0 +1,26 @@
+{
+  "run_id": "run_duplicate_reports_1f46fba2ff",
+  "scenario_id": "duplicate_reports",
+  "scenario_name": "Scenario F — Duplicate Community Reports (Anti-Sybil Filtering)",
+  "timestamp_utc": "2026-10-24T11:00:58.461640+00:00",
+  "status": "COMPLETED",
+  "calculation_status": "TRANSPORT_AWARE_BASELINE",
+  "all_checks_passed": true,
+  "cost_basis_per_kg": 22.0,
+  "baseline_range": {
+    "min": 28.6,
+    "max": 31.9,
+    "mid": 30.25,
+    "unit": "kg"
+  },
+  "reconciled_range": {
+    "min": 28.6,
+    "max": 31.9,
+    "mid": 30.25,
+    "unit": "kg"
+  },
+  "alpha": 0.0,
+  "relative_path": "duplicate_reports/run_duplicate_reports_1f46fba2ff.json",
+  "sha256_hash": "7b4e4bc617da7bf217b341c51eca86cda0489c107d8acb382b6f2056dd78c2b7",
+  "is_mock": true
+}

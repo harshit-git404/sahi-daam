@@ -1,0 +1,26 @@
+{
+  "run_id": "run_transport_unavailable_bb60e8e950",
+  "scenario_id": "transport_unavailable",
+  "scenario_name": "Scenario B — Transport Unavailable (Provisional Fallback)",
+  "timestamp_utc": "2026-10-24T11:02:41.490094+00:00",
+  "status": "COMPLETED",
+  "calculation_status": "PROVISIONAL_WHOLESALE_BASELINE",
+  "all_checks_passed": true,
+  "cost_basis_per_kg": 20.0,
+  "baseline_range": {
+    "min": 26.0,
+    "max": 29.0,
+    "mid": 27.5,
+    "unit": "kg"
+  },
+  "reconciled_range": {
+    "min": 26.0,
+    "max": 29.0,
+    "mid": 27.5,
+    "unit": "kg"
+  },
+  "alpha": 0.0,
+  "relative_path": "transport_unavailable/run_transport_unavailable_bb60e8e950.json",
+  "sha256_hash": "9bbfb0c9e26a17c746f9c199483552c153017eb1c62c4947c2330657f892c0b0",
+  "is_mock": true
+}

@@ -1,0 +1,26 @@
+{
+  "run_id": "run_insufficient_community_9b5d93faa1",
+  "scenario_id": "insufficient_community",
+  "scenario_name": "Scenario E — Insufficient Community Sample (Threshold Gate)",
+  "timestamp_utc": "2026-10-24T11:00:26.137827+00:00",
+  "status": "COMPLETED",
+  "calculation_status": "TRANSPORT_AWARE_BASELINE",
+  "all_checks_passed": true,
+  "cost_basis_per_kg": 22.0,
+  "baseline_range": {
+    "min": 28.6,
+    "max": 31.9,
+    "mid": 30.25,
+    "unit": "kg"
+  },
+  "reconciled_range": {
+    "min": 28.6,
+    "max": 31.9,
+    "mid": 30.25,
+    "unit": "kg"
+  },
+  "alpha": 0.0,
+  "relative_path": "insufficient_community/run_insufficient_community_9b5d93faa1.json",
+  "sha256_hash": "897c231909714df647749ef742fdc92f2d0fed1b88a833c63ae8bfefbd6f8519",
+  "is_mock": true
+}

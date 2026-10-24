@@ -1,0 +1,339 @@
+{
+  "schema_version": "1.0.0",
+  "experiment": {
+    "run_id": "run_combined_transport_unavail_community_sufficient_c015ab4c86",
+    "scenario_id": "combined_transport_unavail_community_sufficient",
+    "scenario_name": "Combined 3 — Transport Unavailable + Sufficient Community Reports",
+    "category": "Combined Scenarios",
+    "description": "Demonstrates that community reconciliation can still adjust a provisional wholesale baseline when transport is missing.",
+    "timestamp_utc": "2026-10-24T11:00:58.543213+00:00",
+    "status": "COMPLETED",
+    "is_mock": true,
+    "deterministic": true
+  },
+  "configuration": {
+    "fixture_version": "1.0.0",
+    "algorithm_version": "v2.0-locality-reconciled",
+    "policy": {
+      "window_days": 2,
+      "min_sample_size": 10,
+      "base_alpha": 0.2,
+      "alpha_per_additional_sample": 0.02,
+      "max_alpha": 0.4,
+      "markup_min_pct": 30.0,
+      "markup_max_pct": 45.0
+    },
+    "reference_clock_utc": "2026-10-24T12:00:00+00:00"
+  },
+  "inputs": {
+    "commodity_id": "tomato",
+    "wholesale_price_per_kg": 20.0,
+    "transport_cost_per_kg": null,
+    "transport_status": "unavailable",
+    "transport_method": null,
+    "quality_adjustment": 0,
+    "quality_adjustment_meaning": "No freshness deduction",
+    "markup_min_pct": 30.0,
+    "markup_max_pct": 45.0,
+    "total_community_observations_count": 10,
+    "community_observations": [
+      {
+        "price": 22,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 23,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 23,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 24,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 24,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 24,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 25,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 25,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 26,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      },
+      {
+        "price": 27,
+        "unit": "kg",
+        "is_duplicate": false,
+        "observed_at": "2026-10-24T06:00:00+00:00"
+      }
+    ]
+  },
+  "eligible_community_observations": {
+    "total_found": 10,
+    "eligible_count": 10,
+    "excluded_duplicates_count": 0,
+    "excluded_stale_count": 0,
+    "excluded_non_weight_unit_count": 0,
+    "excluded_invalid_count": 0,
+    "eligible_prices": [
+      22.0,
+      23.0,
+      23.0,
+      24.0,
+      24.0,
+      24.0,
+      25.0,
+      25.0,
+      26.0,
+      27.0
+    ],
+    "community_median": 24.0,
+    "community_mean": 24.3,
+    "community_min": 22.0,
+    "community_max": 27.0
+  },
+  "calculation_steps": [
+    {
+      "step_number": 1,
+      "title": "Evaluate Transport & Determine Cost Basis",
+      "formula": "Cost Basis = Wholesale Price (Transport Unavailable)",
+      "inputs": {
+        "wholesale_price": 20.0,
+        "transport_cost": null
+      },
+      "substitutions": "₹20.00 + [Transport Unconfigured]",
+      "result_label": "Provisional Cost Basis",
+      "result_value": "₹20.00/kg",
+      "unit": "₹/kg",
+      "status": "PROVISIONAL",
+      "explanation": "Transport cost is unavailable. Calculating provisional wholesale-based baseline (not a delivered-cost estimate)."
+    },
+    {
+      "step_number": 2,
+      "title": "Calculate Minimum Baseline Boundary",
+      "formula": "Baseline Min = Cost Basis × (1 + Minimum Markup %) + Freshness Adjustment",
+      "inputs": {
+        "cost_basis": 20.0,
+        "markup_min_pct": 30.0,
+        "quality_adjustment": 0
+      },
+      "substitutions": "₹20.00 × (1 + 0.30) + (+0)",
+      "result_label": "Baseline Minimum",
+      "result_value": "₹26.00/kg",
+      "unit": "₹/kg",
+      "status": "COMPLETE",
+      "explanation": "Applies minimum retailer margin (+30%) and quality adjustment (No freshness deduction)."
+    },
+    {
+      "step_number": 3,
+      "title": "Calculate Maximum Baseline Boundary",
+      "formula": "Baseline Max = Cost Basis × (1 + Maximum Markup %) + Freshness Adjustment",
+      "inputs": {
+        "cost_basis": 20.0,
+        "markup_max_pct": 45.0,
+        "quality_adjustment": 0
+      },
+      "substitutions": "₹20.00 × (1 + 0.45) + (+0)",
+      "result_label": "Baseline Maximum",
+      "result_value": "₹29.00/kg",
+      "unit": "₹/kg",
+      "status": "COMPLETE",
+      "explanation": "Applies maximum retailer margin (+45%) and quality adjustment (No freshness deduction)."
+    },
+    {
+      "step_number": 4,
+      "title": "Evaluate Community Evidence & Sample Sufficiency",
+      "formula": "Adaptive Weight α = 0.0 if Eligible Reports < 10, else min(0.40, 0.20 + 0.02 × (N - 10))",
+      "inputs": {
+        "total_observations_found": 10,
+        "excluded_duplicates": 0,
+        "excluded_stale": 0,
+        "excluded_non_weight_units": 0,
+        "eligible_independent_reports": 10,
+        "required_threshold": 10,
+        "community_median": 24.0
+      },
+      "substitutions": "Total=10, Duplicates=0, Eligible=10 vs Threshold=10",
+      "result_label": "Reconciliation Weight (α)",
+      "result_value": "α = 0.20 (Weight Active)",
+      "unit": "scalar",
+      "status": "RECONCILED",
+      "explanation": "Sample requirement satisfied (10 >= 10 independent reports). Community median is ₹24.00/kg."
+    },
+    {
+      "step_number": 5,
+      "title": "Apply Adaptive Range Reconciliation",
+      "formula": "Reconciled Reference = (1 - α) × Baseline Reference + α × Community Median",
+      "inputs": {
+        "baseline_reference_mid": 27.5,
+        "community_median": 24.0,
+        "alpha": 0.2
+      },
+      "substitutions": "(1 - 0.20) × ₹27.50 + 0.20 × ₹24.00",
+      "result_label": "Reconciled Reference",
+      "result_value": "₹26.80/kg (Range: ₹25.30–₹28.30)",
+      "unit": "₹/kg",
+      "status": "RECONCILED",
+      "explanation": "Cost-basis baseline midpoint (₹27.50) reconciled with crowd reports (₹24.00) using α=0.20."
+    }
+  ],
+  "actual_output": {
+    "commodity_id": "tomato",
+    "locality_id": "sim_locality_katpadi",
+    "calculation_status": "PROVISIONAL_WHOLESALE_RECONCILED",
+    "wholesale_price_per_kg": 20.0,
+    "transport_cost_per_kg": null,
+    "transport_status": "unavailable",
+    "transport_method": null,
+    "cost_basis_per_kg": 20.0,
+    "is_provisional_wholesale_only": true,
+    "markup_min_pct": 30.0,
+    "markup_max_pct": 45.0,
+    "quality_adjustment": 0,
+    "quality_adjustment_meaning": "No freshness deduction",
+    "baseline_range": {
+      "min": 26.0,
+      "max": 29.0,
+      "mid": 27.5,
+      "unit": "kg"
+    },
+    "community_sample_size": 10,
+    "community_estimate": 24.0,
+    "reconciliation_weight_alpha": 0.2,
+    "is_sample_sufficient": true,
+    "reconciled_range": {
+      "min": 25.3,
+      "max": 28.3,
+      "mid": 26.8,
+      "unit": "kg"
+    },
+    "suggested_price": 26.8,
+    "observation_breakdown": {
+      "total_found": 10,
+      "eligible_count": 10,
+      "excluded_duplicates_count": 0,
+      "excluded_stale_count": 0,
+      "excluded_non_weight_unit_count": 0,
+      "excluded_invalid_count": 0,
+      "eligible_prices": [
+        22.0,
+        23.0,
+        23.0,
+        24.0,
+        24.0,
+        24.0,
+        25.0,
+        25.0,
+        26.0,
+        27.0
+      ],
+      "community_median": 24.0,
+      "community_mean": 24.3,
+      "community_min": 22.0,
+      "community_max": 27.0
+    },
+    "warnings": [
+      "Transport cost is unavailable or unconfigured; returning a provisional wholesale-based baseline."
+    ],
+    "notes": [
+      "Sufficient community sample (10 independent reports); provisional adaptive weight alpha=0.20 applied."
+    ]
+  },
+  "sub_runs": [],
+  "warnings": [
+    "Transport cost is unavailable or unconfigured; returning a provisional wholesale-based baseline."
+  ],
+  "notes": [
+    "Sufficient community sample (10 independent reports); provisional adaptive weight alpha=0.20 applied."
+  ],
+  "missing_inputs": [
+    "transport_cost"
+  ],
+  "persistence": {
+    "saved": true,
+    "relative_path": "combined_transport_unavail_community_sufficient/run_combined_transport_unavail_community_sufficient_c015ab4c86.json",
+    "file_size_bytes": 8332,
+    "sha256_hash": "d3212dffc400ada48d0cdaa61971a9b923a0b0d64ace493e8036f279a08b8910"
+  },
+  "integrity": {
+    "normal_ledger_record_id": null,
+    "normal_ledger_sequence": null,
+    "normal_ledger_hash": null,
+    "notes": "Executed in isolated Experiment Lab fixture. Main application database left untouched."
+  },
+  "expected_behavior_checks": [
+    {
+      "check_name": "Transport Availability",
+      "expected": "unavailable",
+      "actual": "unavailable",
+      "passed": true,
+      "explanation": "Transport status matches expected 'unavailable'."
+    },
+    {
+      "check_name": "Sample Sufficiency",
+      "expected": "10 eligible reports (sufficient=True)",
+      "actual": "10 eligible reports (sufficient=True)",
+      "passed": true,
+      "explanation": "Eligible independent community count matches expected 10."
+    },
+    {
+      "check_name": "Reconciliation Weight (α)",
+      "expected": "α between 0.20 and 0.20",
+      "actual": "α = 0.20",
+      "passed": true,
+      "explanation": "Adaptive weight alpha is within approved range."
+    },
+    {
+      "check_name": "Calculation Status",
+      "expected": "PROVISIONAL_WHOLESALE_RECONCILED",
+      "actual": "PROVISIONAL_WHOLESALE_RECONCILED",
+      "passed": true,
+      "explanation": "Lifecycle calculation status matches expected 'PROVISIONAL_WHOLESALE_RECONCILED'."
+    },
+    {
+      "check_name": "Baseline Ordering & Validity",
+      "expected": "0 <= min <= max (finite positive numbers)",
+      "actual": "min=26.0, max=29.0",
+      "passed": true,
+      "explanation": "Cost-basis baseline is strictly ordered and non-negative."
+    },
+    {
+      "check_name": "Atomic Evidence Persistence",
+      "expected": "Saved to scenario directory with manifest entry",
+      "actual": "Successfully Saved",
+      "passed": true,
+      "explanation": "Scenario evidence serialized to JSON and indexed in manifest."
+    }
+  ]
+}
