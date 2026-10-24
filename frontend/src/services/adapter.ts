@@ -107,5 +107,14 @@ export function mergeProduceData(
     quickCommercePrice: qcPrice
       ? { source: qcPrice.source, price: qcPrice.price, unit: qcPrice.unit }
       : undefined,
+    // --- Additive ledger & pricing breakdown ---
+    pricingBreakdown: backendResponse.pricing_breakdown as ProduceItem['pricingBreakdown'],
+    calculationId: (backendResponse.calculation_id as string | undefined) ?? null,
+    sequenceNumber: (backendResponse.sequence_number as number | undefined) ?? null,
+    recordHash: (backendResponse.record_hash as string | undefined) ?? null,
+    calculationStatus: (backendResponse.calculation_status as string | undefined) ?? undefined,
+    isMock: (backendResponse.is_mock as boolean | undefined) ?? true,
+    localityId: (backendResponse.locality_id as string | undefined) ?? null,
+    mandiId: (backendResponse.mandi_id as string | undefined) ?? null,
   };
 }

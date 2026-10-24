@@ -9,6 +9,7 @@ from sqlalchemy import (
     Index,
     Text,
     TypeDecorator,
+    Integer,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .connection import Base
@@ -185,14 +186,23 @@ class CommunityPriceObservation(Base):
 
 
 class CalculationRecord(Base):
-    """Persistent storage for calculation attempts in preparation for Phase 6 ledger."""
+    """Persistent storage for calculation evidence with global SHA-256 hash chaining."""
     __tablename__ = "calculation_records"
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    sequence_number: Mapped[int] = mapped_column(Integer, unique=True, index=True, nullable=False)
     commodity_id: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
     locality_id: Mapped[Optional[str]] = mapped_column(String(64), index=True, nullable=True)
-    status: Mapped[str] = mapped_column(String(32), default="COMPLETED")  # COMPLETED | FAILED | FALLBACK
-    algorithm_version: Mapped[str] = mapped_column(String(32), default="v1.0-baseline")
-    serialized_details: Mapped[str] = mapped_column(Text, nullable=False)  # JSON payload of calculation
-    integrity_hash: Mapped[Optional[str]] = mapped_column(String(128), nullable=True)  # Reserved for Phase 6 hash chain
+    status: Mapped[str] = mapped_column(String(32), default="COMPLETED")  # COMPLETED | INCOMPLETE | FAILED | FALLBACK
+    algorithm_version: Mapped[str] = mapped_column(String(32), default="v2.0-locality-reconciled")
+    schema_version: Mapped[str] = mapped_column(String(32), default="1.0.0")
+    serialized_details: Mapped[str] = mapped_column(Text, nullable=False)  # Canonical JSON payload of calculation
+    previous_record_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    current_record_hash: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    is_mock: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=_utc_now, index=True)
+
+    @property
+    def integrity_hash(self) -> str:
+        """Backward-compatible alias for current_record_hash."""
+        return self.current_record_hash

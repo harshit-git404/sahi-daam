@@ -1,16 +1,29 @@
 import logging
+import sys
+from pathlib import Path
+
+# Ensure project root and backend directory are in sys.path so that
+# 'backend.*' absolute imports and local imports work consistently
+# whether uvicorn is launched from the workspace root or the backend directory.
+_backend_dir = Path(__file__).resolve().parent
+_project_root = _backend_dir.parent
+if str(_project_root) not in sys.path:
+    sys.path.insert(0, str(_project_root))
+if str(_backend_dir) not in sys.path:
+    sys.path.insert(0, str(_backend_dir))
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 try:
-    from .ml.freshness_model import load_freshness_model
-    from .ml.produce_classifier import load_produce_classifier
-    from .routers import scan, haggle, sector, community
-    from .database import init_db, seed_database, SessionLocal
+    from backend.ml.freshness_model import load_freshness_model
+    from backend.ml.produce_classifier import load_produce_classifier
+    from backend.routers import scan, haggle, sector, community, locations, ledger
+    from backend.database import init_db, seed_database, SessionLocal
 except ImportError:
     from ml.freshness_model import load_freshness_model
     from ml.produce_classifier import load_produce_classifier
-    from routers import scan, haggle, sector, community
+    from routers import scan, haggle, sector, community, locations, ledger
     from database import init_db, seed_database, SessionLocal
 
 app = FastAPI(title="Sahi Daam API")
@@ -62,6 +75,8 @@ app.include_router(scan.router)
 app.include_router(haggle.router)
 app.include_router(sector.router)
 app.include_router(community.router)
+app.include_router(locations.router)
+app.include_router(ledger.router)
 
 @app.get("/health")
 def health_check():

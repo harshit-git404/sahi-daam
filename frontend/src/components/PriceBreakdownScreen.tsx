@@ -2,6 +2,7 @@ import React from 'react';
 import { useApp } from '../context/AppContext';
 import { Header } from './Header';
 import { MarketData } from '../types';
+import { downloadCalculationExport } from '../services/api';
 
 // ------------------------------------------------------------------
 // Helper: trend chip
@@ -79,7 +80,16 @@ const StatRow: React.FC<{ label: string; value: string | null }> = ({ label, val
 // Main component
 // ------------------------------------------------------------------
 export const PriceBreakdownScreen: React.FC = () => {
-  const { setCurrentScreen, selectedProduce, selectedLocation, theme, purchaseType } = useApp();
+  const {
+    setCurrentScreen,
+    selectedProduce,
+    selectedLocation,
+    theme,
+    purchaseType,
+    selectedLocality,
+    selectedMandi,
+    setIsCommunityModalOpen,
+  } = useApp();
   const isTerracotta = theme === 'terracotta';
 
   const market: MarketData | undefined = selectedProduce.market;
@@ -163,51 +173,172 @@ export const PriceBreakdownScreen: React.FC = () => {
           id="receipt-price-breakdown-card"
           className="bg-[#efeeea] rounded-[24px] p-6 relative border border-[#e0c0b2]/30 shadow-xs"
         >
-          <h3 className="font-display text-[18px] font-bold text-[#1b1c1a] mb-4 border-b border-[#c1c8c2]/50 pb-3">
-            Price Breakdown
-          </h3>
+          <div className="flex items-center justify-between border-b border-[#c1c8c2]/50 pb-3 mb-4">
+            <h3 className="font-display text-[18px] font-bold text-[#1b1c1a]">
+              Explainable Cost Basis
+            </h3>
+            <span className="text-[10px] font-semibold uppercase tracking-wider bg-white px-2 py-0.5 rounded-full text-[#594238] border border-[#d5cfc7]">
+              Formula Step 1–4
+            </span>
+          </div>
+
           <ul className="flex flex-col gap-0">
             <StatRow
-              label={`Today's mandi price · ${selectedLocation.mandiName}`}
+              label={`Wholesale Price (${selectedMandi?.market_name || selectedLocation.mandiName})`}
               value={
-                marketAvailable && market?.today_price != null
-                  ? `₹${market.today_price}/${displayUnit}`
+                marketAvailable && (selectedProduce.pricingBreakdown?.wholesale_price_per_kg || market?.today_price != null)
+                  ? `₹${selectedProduce.pricingBreakdown?.wholesale_price_per_kg ?? market?.today_price}/${displayUnit}`
                   : 'Unavailable'
               }
             />
             <StatRow
-              label={`Typical local markup (+${selectedProduce.markupMinPercent}–${selectedProduce.markupMaxPercent}%)`}
+              label="Freight / Transport to Retail Locality"
+              value={
+                selectedProduce.pricingBreakdown?.transport_status === 'available' && selectedProduce.pricingBreakdown?.transport_cost_per_kg != null
+                  ? `+₹${selectedProduce.pricingBreakdown.transport_cost_per_kg.toFixed(2)}/${displayUnit}`
+                  : selectedProduce.pricingBreakdown?.is_provisional_wholesale_only
+                  ? 'Provisional (Transport unconfigured)'
+                  : 'Unavailable'
+              }
+            />
+            {selectedProduce.pricingBreakdown?.cost_basis_per_kg != null && (
+              <StatRow
+                label="Delivered Cost Basis (Wholesale + Transport)"
+                value={`₹${selectedProduce.pricingBreakdown.cost_basis_per_kg.toFixed(2)}/${displayUnit}`}
+              />
+            )}
+            <StatRow
+              label={`Retail Markup Range (+${selectedProduce.markupMinPercent}–${selectedProduce.markupMaxPercent}%)`}
               value={
                 marketAvailable && selectedProduce.wholesalePrice > 0
-                  ? `₹${Math.round(selectedProduce.wholesalePrice * (1 + selectedProduce.markupMinPercent / 100))}–${Math.round(selectedProduce.wholesalePrice * (1 + selectedProduce.markupMaxPercent / 100))}/${displayUnit}`
+                  ? `+₹${Math.round(selectedProduce.wholesalePrice * (selectedProduce.markupMinPercent / 100))}–₹${Math.round(selectedProduce.wholesalePrice * (selectedProduce.markupMaxPercent / 100))}`
                   : 'Unavailable'
               }
             />
             <StatRow
-              label={`Freshness adjustment (${selectedProduce.qualityAdjustmentLabel || 'none'})`}
+              label={`Freshness Deduction (${selectedProduce.qualityAdjustmentLabel || 'none'})`}
               value={
                 selectedProduce.qualityAdjustment < 0
-                  ? `-₹${Math.abs(selectedProduce.qualityAdjustment)}`
+                  ? `-₹${Math.abs(selectedProduce.qualityAdjustment)}/${displayUnit}`
                   : selectedProduce.qualityAdjustment > 0
-                  ? `+₹${selectedProduce.qualityAdjustment}`
-                  : '₹0'
+                  ? `+₹${selectedProduce.qualityAdjustment}/${displayUnit}`
+                  : '₹0 deduction'
               }
             />
+            {selectedProduce.pricingBreakdown?.baseline_range && (
+              <StatRow
+                label="Cost-Based Baseline Range"
+                value={`₹${selectedProduce.pricingBreakdown.baseline_range.min}–₹${selectedProduce.pricingBreakdown.baseline_range.max}/${displayUnit}`}
+              />
+            )}
           </ul>
 
-          {/* Data confidence */}
-          <div className="mt-4 pt-3 border-t border-[#c1c8c2]/50 flex items-center justify-between">
-            <div className="flex items-center gap-1.5 bg-[#a46700]/15 text-[#835100] px-3 py-1.5 rounded-full text-[12px] font-semibold">
-              <span className="material-symbols-outlined text-[16px]">info</span>
-              Data: {selectedProduce.dataConfidence}
-            </div>
-            <span className="text-[11px] text-[#594238]">
-              {market?.date
-                ? `Agmarknet · ${market.date}`
-                : 'Agmarknet · unavailable'}
+          {/* Location & Provenance Footnote */}
+          <div className="mt-4 pt-3 border-t border-[#c1c8c2]/50 flex items-center justify-between text-[11px] text-[#594238]">
+            <span className="flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px] text-[#9e3d00]">verified</span>
+              {selectedLocality ? `${selectedLocality.name} (${selectedLocality.pincode})` : selectedLocation.name}
+            </span>
+            <span>
+              {market?.date ? `Observed: ${market.date}` : 'Regional Seed'}
             </span>
           </div>
         </section>
+
+        {/* ── Community Price Reconciliation Card ── */}
+        <section className="bg-white rounded-[24px] p-5 border border-[#e4e2de] shadow-xs">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-700 flex items-center justify-center">
+                <span className="material-symbols-outlined text-[18px]">groups</span>
+              </div>
+              <div>
+                <h3 className="font-display text-[15px] font-bold text-[#1b1c1a]">Community Reconciliation</h3>
+                <p className="text-[11px] text-[#85736b]">2-Day Rolling Locality Window</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsCommunityModalOpen(true)}
+              className="text-[12px] font-bold text-[#9e3d00] hover:underline flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[15px]">add_circle</span>
+              Report Price
+            </button>
+          </div>
+
+          <div className="bg-[#fbf9f5] rounded-xl p-3 border border-[#f0eee9] space-y-1.5 text-[12px] my-3">
+            <div className="flex justify-between">
+              <span className="text-[#594238]">Eligible independent reports:</span>
+              <span className="font-bold text-[#1b1c1a]">
+                {selectedProduce.pricingBreakdown?.community_sample_size ?? 0} reports
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-[#594238]">Community median estimate:</span>
+              <span className="font-semibold text-[#1b1c1a]">
+                {selectedProduce.pricingBreakdown?.community_estimate != null
+                  ? `₹${selectedProduce.pricingBreakdown.community_estimate}/${displayUnit}`
+                  : 'Insufficient data'}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-[#594238]">Adaptive weight (α):</span>
+              <span className="font-semibold text-[#1b1c1a]">
+                {selectedProduce.pricingBreakdown?.reconciliation_weight_alpha != null
+                  ? `${(selectedProduce.pricingBreakdown.reconciliation_weight_alpha * 100).toFixed(0)}%`
+                  : '0%'}
+              </span>
+            </div>
+          </div>
+
+          <p className="text-[11px] text-[#85736b] leading-relaxed">
+            {selectedProduce.pricingBreakdown?.is_sample_sufficient
+              ? 'Sample threshold satisfied (≥10 reports). Cost-basis baseline reconciled with community reports.'
+              : 'Sample requirement (≥10 independent reports) not yet met. Community weight is 0%; baseline cost range is preserved in full.'}
+          </p>
+        </section>
+
+        {/* ── Cryptographic Evidence & JSON Ledger ── */}
+        {selectedProduce.calculationId && (
+          <section className="bg-white rounded-[24px] p-5 border border-[#e4e2de] shadow-xs">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[20px] text-green-700">lock</span>
+                <div>
+                  <h4 className="font-display text-[14px] font-bold text-[#1b1c1a]">
+                    Verifiable Calculation Ledger
+                  </h4>
+                  <p className="text-[11px] font-mono text-[#85736b]">
+                    Seq #{selectedProduce.sequenceNumber || 1} • {selectedProduce.calculationId}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => selectedProduce.calculationId && downloadCalculationExport(selectedProduce.calculationId)}
+                className="px-3 py-1.5 rounded-xl bg-[#f0eee9] hover:bg-[#e4e2de] text-[#594238] text-[12px] font-bold flex items-center gap-1 transition-all active:scale-95"
+              >
+                <span className="material-symbols-outlined text-[16px]">download</span>
+                JSON
+              </button>
+            </div>
+
+            {selectedProduce.recordHash && (
+              <div className="p-2 rounded-lg bg-[#fbf9f5] border border-[#f0eee9] font-mono text-[10px] text-[#594238] truncate">
+                SHA-256: {selectedProduce.recordHash}
+              </div>
+            )}
+
+            <div className="mt-2 flex items-center justify-between text-[11px] text-[#85736b]">
+              <span>Chain link: Immutable audit trail</span>
+              <button
+                onClick={() => setCurrentScreen('ledger_audit')}
+                className="font-semibold text-[#9e3d00] hover:underline"
+              >
+                Inspect Global Chain →
+              </button>
+            </div>
+          </section>
+        )}
 
         {/* ── 10-Day Market History ── */}
         {marketAvailable && market && (

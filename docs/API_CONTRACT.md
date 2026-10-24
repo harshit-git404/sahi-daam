@@ -387,3 +387,179 @@ Query crowd-sourced price observations and statistical summary metrics across a 
 }
 ```
 
+---
+
+## 4. Locations & Mandi Endpoints
+
+### GET `/localities` (Alias: `/api/localities`)
+Retrieve list of registered localities with optional postal code (pincode) filtering.
+
+#### Query Parameters:
+* **`pincode`** *(string, optional)*: 6-digit postal code (e.g. `"632014"`).
+
+#### Response (HTTP 200):
+```json
+[
+  {
+    "id": "loc_katpadi",
+    "name": "Katpadi",
+    "pincode": "632014",
+    "district": "Vellore",
+    "state": "Tamil Nadu"
+  }
+]
+```
+
+---
+
+### GET `/mandis` (Alias: `/api/mandis`)
+Retrieve registered wholesale agricultural markets (mandis).
+
+#### Query Parameters:
+* **`district`** *(string, optional)*: Filter mandis by district name.
+
+#### Response (HTTP 200):
+```json
+[
+  {
+    "id": "mandi_vellore",
+    "market_name": "Vellore Mandi",
+    "district": "Vellore",
+    "state": "Tamil Nadu",
+    "distance_km_reference": 5.5,
+    "provenance_note": "Official Agmarknet wholesale reporting market",
+    "is_mock": false
+  }
+]
+```
+
+---
+
+### GET `/mandis/recommendation` (Alias: `/api/mandis/recommendation`)
+Suggest the nearest and most reliable wholesale mandi for a locality, verifying reference distance and commodity data availability.
+
+#### Query Parameters:
+* **`locality_id`** *(string, required)*: Locality ID (e.g. `"loc_katpadi"`).
+* **`commodity_id`** *(string, optional)*: Commodity ID to verify active wholesale records.
+
+#### Response (HTTP 200):
+```json
+{
+  "suggested_mandi": {
+    "id": "mandi_katpadi",
+    "market_name": "Katpadi Uzhavar Sandhai",
+    "district": "Vellore",
+    "state": "Tamil Nadu",
+    "distance_km_reference": 2.2,
+    "provenance_note": "Direct farmer retail market",
+    "is_mock": true
+  },
+  "locality": {
+    "id": "loc_katpadi",
+    "name": "Katpadi",
+    "pincode": "632014",
+    "district": "Vellore",
+    "state": "Tamil Nadu"
+  },
+  "has_recommendation": true,
+  "confidence": "high",
+  "distance_km": 2.2,
+  "reason": "Recommended based on geographic alignment with Vellore. Configured reference distance is 2.2 km. Active wholesale records confirmed for tomato.",
+  "available_mandis": [...]
+}
+```
+
+---
+
+## 5. Calculation Ledger & SHA-256 Hash Chain Endpoints
+
+### GET `/calculations` (Alias: `/api/calculations`)
+Retrieve paginated calculation audit history from the persistent SQLite ledger.
+
+#### Query Parameters:
+* **`commodity_id`** *(string, optional)*: Filter by commodity ID.
+* **`locality_id`** *(string, optional)*: Filter by locality ID.
+* **`limit`** *(integer, optional, default: 50, max: 100)*: Items per page.
+* **`offset`** *(integer, optional, default: 0)*: Pagination offset.
+
+#### Response (HTTP 200):
+```json
+{
+  "calculations": [
+    {
+      "id": "calc_a1b2c3d4e5f6",
+      "sequence_number": 1,
+      "commodity_id": "tomato",
+      "locality_id": "loc_katpadi",
+      "status": "TRANSPORT_AWARE_RECONCILED",
+      "algorithm_version": "v2.0-locality-reconciled",
+      "schema_version": "1.0.0",
+      "previous_record_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "current_record_hash": "3f8b72e1c9a...",
+      "is_mock": true,
+      "created_at": "2026-10-24T05:30:00Z"
+    }
+  ],
+  "total_count": 1,
+  "limit": 50,
+  "offset": 0
+}
+```
+
+---
+
+### GET `/calculations/{calculation_id}` (Alias: `/api/calculations/{calculation_id}`)
+Retrieve single calculation audit record with full canonical serialized evidence.
+
+---
+
+### GET `/calculations/{calculation_id}/export` (Alias: `/api/calculations/{calculation_id}/export`)
+Download canonical calculation evidence file as a downloadable JSON attachment (`sahi_daam_{id}.json`). Preserves cryptographic hash envelope and canonical formatting.
+
+---
+
+### GET `/ledger/verify` (Alias: `/api/ledger/verify`)
+Perform full cryptographic verification of the global SHA-256 hash chain:
+1. Sequence continuity (`1, 2, ..., N`).
+2. Genesis hash check (`seq 1 -> 64 zeros`).
+3. Cryptographic link (`rec[i].prev == rec[i-1].curr`).
+4. Canonical JSON SHA-256 hash recomputation.
+5. Checkpoint height validation (if checkpoint supplied).
+
+#### Response (HTTP 200):
+```json
+{
+  "is_valid": true,
+  "total_records": 12,
+  "last_sequence_number": 12,
+  "last_record_hash": "a4c2e...",
+  "tampered_sequences": [],
+  "errors": [],
+  "checkpoint_verified": false,
+  "verified_at": "2026-10-24T05:35:00Z"
+}
+```
+
+---
+
+### POST `/ledger/checkpoint` (Alias: `/api/ledger/checkpoint`)
+Create a verifiable trusted checkpoint snapshot at current ledger height.
+
+#### Response (HTTP 201):
+```json
+{
+  "checkpoint_id": "ckpt_seq_12_a4c2e91b",
+  "last_verified_sequence": 12,
+  "last_record_hash": "a4c2e...",
+  "record_count": 12,
+  "created_at": "2026-10-24T05:35:00Z",
+  "ledger_schema_version": "1.0.0",
+  "algorithm_version": "v2.0-locality-reconciled"
+}
+```
+
+---
+
+### GET `/ledger/checkpoint` (Alias: `/api/ledger/checkpoint`)
+Retrieve the latest trusted checkpoint for the ledger.
+

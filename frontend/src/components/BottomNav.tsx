@@ -64,6 +64,28 @@ export const BottomNav: React.FC = () => {
           <span className="text-[12px] font-medium leading-tight mt-0.5">Scan</span>
         </button>
 
+        {/* Audit Ledger */}
+        <button
+          id="nav-audit-btn"
+          aria-label="Ledger Audit"
+          onClick={() => setCurrentScreen('ledger_audit')}
+          className={`flex flex-col items-center justify-center transition-all duration-200 active:scale-90 ${
+            currentScreen === 'ledger_audit'
+              ? isTerracotta
+                ? 'bg-[#7bf8a1] text-[#007239] font-semibold rounded-full px-4 py-1 shadow-sm'
+                : 'bg-[#a0f4c8] text-[#19724f] font-semibold rounded-full px-4 py-1 shadow-sm'
+              : 'text-[#594238] px-2 py-1 hover:text-[#1b1c1a]'
+          }`}
+        >
+          <span
+            className="material-symbols-outlined text-[24px]"
+            style={{ fontVariationSettings: currentScreen === 'ledger_audit' ? "'FILL' 1, 'wght' 600" : "'FILL' 0, 'wght' 400" }}
+          >
+            verified_user
+          </span>
+          <span className="text-[12px] font-medium leading-tight mt-0.5">Audit</span>
+        </button>
+
         {/* History */}
         <button
           id="nav-history-btn"
@@ -72,9 +94,9 @@ export const BottomNav: React.FC = () => {
           className={`flex flex-col items-center justify-center transition-all duration-200 active:scale-90 ${
             isHistoryActive
               ? isTerracotta
-                ? 'bg-[#7bf8a1] text-[#007239] font-semibold rounded-full px-5 py-1 shadow-sm'
-                : 'bg-[#a0f4c8] text-[#19724f] font-semibold rounded-full px-5 py-1 shadow-sm'
-              : 'text-[#594238] px-3 py-1 hover:text-[#1b1c1a]'
+                ? 'bg-[#7bf8a1] text-[#007239] font-semibold rounded-full px-4 py-1 shadow-sm'
+                : 'bg-[#a0f4c8] text-[#19724f] font-semibold rounded-full px-4 py-1 shadow-sm'
+              : 'text-[#594238] px-2 py-1 hover:text-[#1b1c1a]'
           }`}
         >
           <span

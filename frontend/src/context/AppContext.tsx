@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useRef, useEffect } from 'react';
-import { Screen, ProduceItem, PurchaseRecord, MandiLocation, AppTheme, PurchaseType } from '../types';
+import { Screen, ProduceItem, PurchaseRecord, MandiLocation, AppTheme, PurchaseType, LocalityDTO, MandiDTO } from '../types';
 import { PRODUCE_DATABASE, INITIAL_PURCHASE_HISTORY } from '../data/produceData';
 import { MANDI_LOCATIONS } from '../data/mandiLocations';
 import confetti from 'canvas-confetti';
@@ -63,6 +63,14 @@ interface AppContextType {
   recordPurchase: (paidPrice: number) => void;
   selectedLocation: MandiLocation;
   setSelectedLocation: (loc: MandiLocation) => void;
+  selectedLocality: LocalityDTO | null;
+  setSelectedLocality: (loc: LocalityDTO | null) => void;
+  selectedMandi: MandiDTO | null;
+  setSelectedMandi: (mandi: MandiDTO | null) => void;
+  isLocalityModalOpen: boolean;
+  setIsLocalityModalOpen: (open: boolean) => void;
+  isCommunityModalOpen: boolean;
+  setIsCommunityModalOpen: (open: boolean) => void;
   theme: AppTheme;
   setTheme: (t: AppTheme) => void;
   toggleTheme: () => void;
@@ -92,6 +100,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [purchaseHistory, setPurchaseHistory] = useState<PurchaseRecord[]>(INITIAL_PURCHASE_HISTORY);
   const [totalSavings, setTotalSavings] = useState<number>(340);
   const [selectedLocation, setSelectedLocation] = useState<MandiLocation>(MANDI_LOCATIONS[0]);
+  const [selectedLocality, setSelectedLocality] = useState<LocalityDTO | null>({
+    id: 'loc_katpadi',
+    name: 'Katpadi',
+    pincode: '632014',
+    district: 'Vellore',
+    state: 'Tamil Nadu',
+  });
+  const [selectedMandi, setSelectedMandi] = useState<MandiDTO | null>({
+    id: 'mandi_katpadi',
+    market_name: 'Katpadi Uzhavar Sandhai',
+    district: 'Vellore',
+    state: 'Tamil Nadu',
+    distance_km_reference: 2.2,
+    is_mock: true,
+  });
+  const [isLocalityModalOpen, setIsLocalityModalOpen] = useState<boolean>(false);
+  const [isCommunityModalOpen, setIsCommunityModalOpen] = useState<boolean>(false);
   const [theme, setTheme] = useState<AppTheme>('terracotta');
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isAudioModalOpen, setIsAudioModalOpen] = useState<boolean>(false);
@@ -146,6 +171,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         district: locationDistrict,
         market: locationMarket,
         purchase_type: 'street_vendor', // scan always returns both; purchase type gates display
+        locality_id: selectedLocality?.id,
+        pincode: selectedLocality?.pincode ?? undefined,
+        mandi_id: selectedMandi?.id,
       });
 
       // Ignore stale responses if a new scan was started
@@ -342,6 +370,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         recordPurchase,
         selectedLocation,
         setSelectedLocation,
+        selectedLocality,
+        setSelectedLocality,
+        selectedMandi,
+        setSelectedMandi,
+        isLocalityModalOpen,
+        setIsLocalityModalOpen,
+        isCommunityModalOpen,
+        setIsCommunityModalOpen,
         theme,
         setTheme,
         toggleTheme,

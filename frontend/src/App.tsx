@@ -14,6 +14,9 @@ import { HistoryScreen } from './components/HistoryScreen';
 import { BottomNav } from './components/BottomNav';
 import { DrawerMenu } from './components/DrawerMenu';
 import { AudioHaggleModal } from './components/AudioHaggleModal';
+import { LocalityModal } from './components/LocalityModal';
+import { CommunityPriceModal } from './components/CommunityPriceModal';
+import { LedgerAuditScreen } from './components/LedgerAuditScreen';
 
 const LOADING_MESSAGES = [
   "Analyzing produce visuals...",
@@ -52,6 +55,7 @@ const AppContent: React.FC = () => {
         {currentScreen === 'price_breakdown' && <PriceBreakdownScreen />}
         {currentScreen === 'bargain' && <BargainScreen />}
         {currentScreen === 'history' && <HistoryScreen />}
+        {currentScreen === 'ledger_audit' && <LedgerAuditScreen />}
       </div>
 
       {/* Global Navigation Shell */}
@@ -62,6 +66,12 @@ const AppContent: React.FC = () => {
 
       {/* Audio Bargaining Modal */}
       <AudioHaggleModal />
+
+      {/* Locality & Mandi Selection Modal */}
+      <LocalityModal />
+
+      {/* Community Price Submission Modal */}
+      <CommunityPriceModal />
 
       {/* Global Branded Loading Overlay */}
       {isScanning && (

@@ -12,7 +12,10 @@ export const DrawerMenu: React.FC = () => {
     toggleTheme,
     totalSavings,
     setCurrentScreen,
-    selectProduceById
+    selectProduceById,
+    selectedLocality,
+    setIsLocalityModalOpen,
+    setIsCommunityModalOpen,
   } = useApp();
 
   if (!isDrawerOpen) return null;
@@ -60,6 +63,65 @@ export const DrawerMenu: React.FC = () => {
             <p className={`font-display text-2xl font-bold mt-0.5 ${isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'}`}>
               ₹{totalSavings}
             </p>
+          </div>
+
+          {/* Audit & Community Tools */}
+          <div className="space-y-2">
+            <label className="text-xs font-semibold uppercase tracking-wider text-[#594238] block">
+              Auditing & Community
+            </label>
+            <button
+              onClick={() => {
+                setIsDrawerOpen(false);
+                setIsLocalityModalOpen(true);
+              }}
+              className="w-full text-left p-3 rounded-xl bg-white border border-[#e4e2de] hover:bg-[#f5f3ef] flex items-center justify-between transition-all"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-[18px] text-[#9e3d00]">pin_drop</span>
+                <div>
+                  <p className="text-xs font-bold text-[#1b1c1a]">Pincode & Locality</p>
+                  <p className="text-[10px] text-[#594238]">
+                    {selectedLocality ? `${selectedLocality.name} (${selectedLocality.pincode})` : 'Default Tamil Nadu'}
+                  </p>
+                </div>
+              </div>
+              <span className="material-symbols-outlined text-[16px] text-[#594238]">chevron_right</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setIsDrawerOpen(false);
+                setIsCommunityModalOpen(true);
+              }}
+              className="w-full text-left p-3 rounded-xl bg-white border border-[#e4e2de] hover:bg-[#f5f3ef] flex items-center justify-between transition-all"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-[18px] text-blue-700">groups</span>
+                <div>
+                  <p className="text-xs font-bold text-[#1b1c1a]">Report Community Price</p>
+                  <p className="text-[10px] text-[#594238]">Contribute locality retail observation</p>
+                </div>
+              </div>
+              <span className="material-symbols-outlined text-[16px] text-[#594238]">chevron_right</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setIsDrawerOpen(false);
+                setCurrentScreen('ledger_audit');
+              }}
+              className="w-full text-left p-3 rounded-xl bg-white border border-[#e4e2de] hover:bg-[#f5f3ef] flex items-center justify-between transition-all"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-[18px] text-green-700">lock</span>
+                <div>
+                  <p className="text-xs font-bold text-[#1b1c1a]">Calculation Ledger & Hash Chain</p>
+                  <p className="text-[10px] text-[#594238]">SHA-256 audit logs & JSON exports</p>
+                </div>
+              </div>
+              <span className="material-symbols-outlined text-[16px] text-[#594238]">chevron_right</span>
+            </button>
           </div>
 
           {/* Location Selector */}

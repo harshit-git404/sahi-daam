@@ -26,6 +26,11 @@ class LocalityRepository:
         return list(session.scalars(stmt).all())
 
     @staticmethod
+    def list_by_pincode(session: Session, pincode: str) -> List[Locality]:
+        stmt = select(Locality).where(Locality.pincode == pincode).order_by(Locality.name)
+        return list(session.scalars(stmt).all())
+
+    @staticmethod
     def upsert(session: Session, data: Dict[str, Any]) -> Locality:
         item = session.get(Locality, data["id"])
         if item:
@@ -45,6 +50,11 @@ class MandiRepository:
     @staticmethod
     def list_all(session: Session) -> List[Mandi]:
         stmt = select(Mandi).order_by(Mandi.market_name)
+        return list(session.scalars(stmt).all())
+
+    @staticmethod
+    def list_by_district(session: Session, district: str) -> List[Mandi]:
+        stmt = select(Mandi).where(Mandi.district == district).order_by(Mandi.market_name)
         return list(session.scalars(stmt).all())
 
     @staticmethod
@@ -345,7 +355,19 @@ class CommunityPriceRepository:
 class CalculationRepository:
     @staticmethod
     def create(session: Session, data: Dict[str, Any]) -> CalculationRecord:
-        record = CalculationRecord(**data)
+        record_data = dict(data)
+        if "integrity_hash" in record_data:
+            legacy_hash = record_data.pop("integrity_hash")
+            if "current_record_hash" not in record_data:
+                record_data["current_record_hash"] = legacy_hash or ("0" * 64)
+        if "sequence_number" not in record_data:
+            max_seq = session.query(func.max(CalculationRecord.sequence_number)).scalar() or 0
+            record_data["sequence_number"] = max_seq + 1
+        if "previous_record_hash" not in record_data:
+            record_data["previous_record_hash"] = "0" * 64
+        if "current_record_hash" not in record_data:
+            record_data["current_record_hash"] = "0" * 64
+        record = CalculationRecord(**record_data)
         session.add(record)
         session.commit()
         session.refresh(record)

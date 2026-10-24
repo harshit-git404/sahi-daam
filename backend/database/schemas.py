@@ -176,12 +176,16 @@ class CommunityPriceListResponse(BaseModel):
 # ---------------------------------------------------------------------------
 class CalculationRecordBase(BaseModel):
     id: str
+    sequence_number: int
     commodity_id: str
     locality_id: Optional[str] = None
     status: str = "COMPLETED"
-    algorithm_version: str = "v1.0-baseline"
+    algorithm_version: str = "v2.0-locality-reconciled"
+    schema_version: str = "1.0.0"
     serialized_details: str
-    integrity_hash: Optional[str] = None
+    previous_record_hash: str
+    current_record_hash: str
+    is_mock: bool = True
 
 
 class CalculationRecordRead(CalculationRecordBase):

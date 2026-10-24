@@ -9,7 +9,108 @@ export type Screen =
   | 'supermarket'
   | 'price_breakdown'
   | 'bargain'
-  | 'history';
+  | 'history'
+  | 'ledger_audit';
+
+export interface LocalityDTO {
+  id: string;
+  name: string;
+  pincode?: string | null;
+  district: string;
+  state: string;
+}
+
+export interface MandiDTO {
+  id: string;
+  market_name: string;
+  district: string;
+  state: string;
+  distance_km_reference?: number | null;
+  provenance_note?: string | null;
+  is_mock: boolean;
+}
+
+export interface MandiRecommendation {
+  suggested_mandi?: MandiDTO | null;
+  locality: LocalityDTO;
+  has_recommendation: boolean;
+  confidence: 'high' | 'provisional' | 'unavailable';
+  distance_km?: number | null;
+  reason: string;
+  available_mandis: MandiDTO[];
+}
+
+export interface PricingBreakdown {
+  commodity_id?: string;
+  locality_id?: string | null;
+  calculation_status?: string;
+  wholesale_price_per_kg?: number | null;
+  transport_cost_per_kg?: number | null;
+  transport_status?: string;
+  transport_method?: string | null;
+  cost_basis_per_kg?: number | null;
+  is_provisional_wholesale_only?: boolean;
+  markup_min_pct?: number;
+  markup_max_pct?: number;
+  quality_adjustment?: number;
+  quality_adjustment_meaning?: string;
+  baseline_range?: { min: number; max: number; mid: number; unit: string } | null;
+  community_sample_size?: number;
+  community_estimate?: number | null;
+  reconciliation_weight_alpha?: number;
+  is_sample_sufficient?: boolean;
+  reconciled_range?: { min: number; max: number; mid: number; unit: string } | null;
+  suggested_price?: number | null;
+  warnings?: string[];
+  notes?: string[];
+  observation_breakdown?: {
+    total_found: number;
+    eligible_count: number;
+    excluded_duplicates_count: number;
+    excluded_stale_count: number;
+    excluded_non_weight_unit_count: number;
+    excluded_invalid_count: number;
+    community_median?: number | null;
+    community_mean?: number | null;
+    community_min?: number | null;
+    community_max?: number | null;
+  };
+}
+
+export interface CalculationRecordSummary {
+  id: string;
+  sequence_number: number;
+  commodity_id: string;
+  locality_id?: string | null;
+  status: string;
+  algorithm_version: string;
+  schema_version: string;
+  previous_record_hash: string;
+  current_record_hash: string;
+  is_mock: boolean;
+  created_at: string;
+}
+
+export interface LedgerVerificationResult {
+  is_valid: boolean;
+  total_records: number;
+  last_sequence_number?: number | null;
+  last_record_hash?: string | null;
+  tampered_sequences: number[];
+  errors: string[];
+  checkpoint_verified?: boolean;
+  verified_at: string;
+}
+
+export interface CommunitySubmissionInput {
+  commodity_id: string;
+  price: number;
+  unit: string;
+  locality_id: string;
+  source_type: 'customer' | 'vendor';
+  contributor_id?: string;
+  observed_at?: string;
+}
 
 export interface SectorAnalysisResult {
   summary: string;
@@ -127,6 +228,15 @@ export interface ProduceItem {
   /** Online retail reference bounds for haggle context */
   onlineReferenceMin?: number | null;
   onlineReferenceMax?: number | null;
+  /** Additive explainable pricing breakdown from backend */
+  pricingBreakdown?: PricingBreakdown;
+  calculationId?: string | null;
+  sequenceNumber?: number | null;
+  recordHash?: string | null;
+  calculationStatus?: string;
+  isMock?: boolean;
+  localityId?: string | null;
+  mandiId?: string | null;
 }
 
 export interface PurchaseRecord {

@@ -1,4 +1,13 @@
-import { RetailResult, SectorAnalysisResult } from '../types';
+import {
+  RetailResult,
+  SectorAnalysisResult,
+  LocalityDTO,
+  MandiDTO,
+  MandiRecommendation,
+  CalculationRecordSummary,
+  LedgerVerificationResult,
+  CommunitySubmissionInput,
+} from '../types';
 
 // Use environment variable if set, otherwise default to the Vite proxy (/api)
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
@@ -8,7 +17,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
  *
  * @param produceId   - known produce ID hint (optional; backend identifies via ML)
  * @param imageBase64 - base64-encoded image (required for ML analysis)
- * @param options     - structured location fields (state, district, market, purchase_type)
+ * @param options     - structured location fields & locality/mandi selection
  */
 export async function fetchScanResult(
   produceId: string,
@@ -18,6 +27,9 @@ export async function fetchScanResult(
     district?: string;
     market?: string;
     purchase_type?: string;
+    locality_id?: string;
+    pincode?: string;
+    mandi_id?: string;
   },
 ) {
   const body: Record<string, unknown> = {
@@ -28,6 +40,9 @@ export async function fetchScanResult(
   if (options?.district) body.district = options.district;
   if (options?.market) body.market = options.market;
   if (options?.purchase_type) body.purchase_type = options.purchase_type;
+  if (options?.locality_id) body.locality_id = options.locality_id;
+  if (options?.pincode) body.pincode = options.pincode;
+  if (options?.mandi_id) body.mandi_id = options.mandi_id;
 
   const response = await fetch(`${API_BASE_URL}/scan-produce`, {
     method: 'POST',
@@ -40,7 +55,7 @@ export async function fetchScanResult(
     try {
       const json = await response.json();
       detail = json?.detail || detail;
-    } catch (_) { /* ignore */ }
+    } catch { /* ignore */ }
     throw new Error(`Scan failed (${response.status}): ${detail}`);
   }
   return response.json();
@@ -83,7 +98,7 @@ export async function fetchHaggleCheck(
     try {
       const json = await response.json();
       detail = json?.detail || detail;
-    } catch (_) { /* ignore */ }
+    } catch { /* ignore */ }
     throw new Error(`Haggle check failed (${response.status}): ${detail}`);
   }
   return response.json();
@@ -101,7 +116,7 @@ export async function fetchSectorAnalysis(
     try {
       const json = await response.json();
       detail = json?.detail || detail;
-    } catch (_) { /* ignore */ }
+    } catch { /* ignore */ }
     throw new Error(`Sector analysis failed (${response.status}): ${detail}`);
   }
   return response.json();
@@ -124,4 +139,104 @@ export async function fetchRetailPrices(
     };
   }
   return response.json();
+}
+
+/** GET /localities */
+export async function fetchLocalities(pincode?: string): Promise<LocalityDTO[]> {
+  const url = pincode ? `${API_BASE_URL}/localities?pincode=${encodeURIComponent(pincode.trim())}` : `${API_BASE_URL}/localities`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Failed to fetch localities (${res.status})`);
+  return res.json();
+}
+
+/** GET /mandis */
+export async function fetchMandis(district?: string): Promise<MandiDTO[]> {
+  const url = district ? `${API_BASE_URL}/mandis?district=${encodeURIComponent(district.trim())}` : `${API_BASE_URL}/mandis`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Failed to fetch mandis (${res.status})`);
+  return res.json();
+}
+
+/** GET /mandis/recommendation */
+export async function fetchMandiRecommendation(
+  localityId: string,
+  commodityId?: string,
+): Promise<MandiRecommendation> {
+  const params = new URLSearchParams({ locality_id: localityId });
+  if (commodityId) params.set('commodity_id', commodityId);
+  const res = await fetch(`${API_BASE_URL}/mandis/recommendation?${params.toString()}`);
+  if (!res.ok) throw new Error(`Failed to get mandi recommendation (${res.status})`);
+  return res.json();
+}
+
+/** POST /community-prices */
+export async function submitCommunityPrice(payload: CommunitySubmissionInput): Promise<any> {
+  const res = await fetch(`${API_BASE_URL}/community-prices`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    let detail = res.statusText;
+    try {
+      const errJson = await res.json();
+      detail = errJson?.detail || detail;
+    } catch {}
+    throw new Error(detail);
+  }
+  return res.json();
+}
+
+/** GET /community-prices */
+export async function fetchCommunityPrices(params?: {
+  commodity_id?: string;
+  locality_id?: string;
+  window_days?: number;
+}): Promise<any> {
+  const q = new URLSearchParams();
+  if (params?.commodity_id) q.set('commodity_id', params.commodity_id);
+  if (params?.locality_id) q.set('locality_id', params.locality_id);
+  if (params?.window_days) q.set('window_days', String(params.window_days));
+  const res = await fetch(`${API_BASE_URL}/community-prices?${q.toString()}`);
+  if (!res.ok) throw new Error(`Failed to fetch community prices (${res.status})`);
+  return res.json();
+}
+
+/** GET /calculations */
+export async function fetchCalculations(
+  limit: number = 50,
+  offset: number = 0,
+): Promise<{ calculations: CalculationRecordSummary[]; total_count: number }> {
+  const res = await fetch(`${API_BASE_URL}/calculations?limit=${limit}&offset=${offset}`);
+  if (!res.ok) throw new Error(`Failed to fetch calculations (${res.status})`);
+  return res.json();
+}
+
+/** GET /calculations/{id} */
+export async function fetchCalculationDetail(id: string): Promise<any> {
+  const res = await fetch(`${API_BASE_URL}/calculations/${encodeURIComponent(id)}`);
+  if (!res.ok) throw new Error(`Calculation not found (${res.status})`);
+  return res.json();
+}
+
+/** GET /calculations/{id}/export */
+export async function downloadCalculationExport(id: string): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}/calculations/${encodeURIComponent(id)}/export`);
+  if (!res.ok) throw new Error(`Failed to export calculation (${res.status})`);
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `sahi_daam_${id}.json`;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+}
+
+/** GET /ledger/verify */
+export async function verifyLedger(): Promise<LedgerVerificationResult> {
+  const res = await fetch(`${API_BASE_URL}/ledger/verify`);
+  if (!res.ok) throw new Error(`Failed to verify ledger (${res.status})`);
+  return res.json();
 }

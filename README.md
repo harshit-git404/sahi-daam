@@ -37,25 +37,42 @@ Sahi Daam is a fair-price companion app for buying fruits and vegetables that em
 ## Running Locally
 
 ### Backend
-1. Navigate to the `backend` directory: `cd backend`
-2. Create and activate a virtual environment: `python -m venv venv` and `.\venv\Scripts\activate` (Windows) or `source venv/bin/activate` (Mac/Linux).
-3. Install dependencies: `pip install -r requirements.txt`
-4. Setup environment variables: Copy `.env.example` to `.env` and insert your `DATA_GOV_API_KEY`.
-5. Run the server: `uvicorn main:app --reload --host 0.0.0.0 --port 8000`
-5. The API will be available at `http://127.0.0.1:8000`.
+1. Use the project virtual environment: `.\venv\Scripts\activate` (Windows) or `source venv/bin/activate` (Mac/Linux).
+2. Setup environment variables: Verify `.env` contains your Gemini or Agmarknet configuration (if using live external providers; fallback works offline with local models and seeded data).
+3. The database is initialized and seeded idempotently on startup. To manually verify or re-seed:
+   `python -c "from backend.database import init_db, seed_database, SessionLocal; init_db(); s=SessionLocal(); seed_database(s); s.close()"`
+4. Run the server: `uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000`
+5. The API will be available at `http://127.0.0.1:8000` (docs at `http://127.0.0.1:8000/docs`).
 
 ### Frontend
 1. Navigate to the `frontend` directory: `cd frontend`
 2. Install dependencies: `npm install`
-3. Run the development server: `npm run dev -- --host`
-4. The application will be available at `http://localhost:5173`.
-5. Note: The frontend uses a Vite proxy (`/api`) to automatically route backend calls to `http://127.0.0.1:8000`.
+3. Build & Typecheck: `npm run build`
+4. Run the development server: `npm run dev -- --host`
+5. The application will be available at `http://localhost:5173`.
+6. Note: The frontend uses a Vite proxy (`/api`) to automatically route backend calls to `http://127.0.0.1:8000`.
 
-### Testing on a Phone (via ngrok)
-Since the frontend proxies API requests to the backend, you only need one ngrok tunnel for the frontend:
-1. Run both the backend and frontend servers as described above.
-2. Expose the frontend port via ngrok: `ngrok http 5173` (or use your static domain: `ngrok http 5173 --domain=your-domain.ngrok-free.app`).
-3. Access the ngrok URL on your phone.
+### Cryptographic Ledger Verification
+To independently verify the global SHA-256 hash chain and ledger integrity:
+```bash
+python -m backend.scripts.verify_ledger
+```
+Optional flags:
+- `--db-url sqlite:///backend/sahi_daam.db`: Custom database path.
+- `--checkpoint checkpoint.json`: Verify against a trusted checkpoint file.
+- `--create-checkpoint out.json`: Export current chain state as a trusted checkpoint.
+
+### Running Tests
+- **Backend Test Suite (124+ automated tests)**:
+  ```bash
+  python -m unittest discover -s backend/tests -v
+  ```
+- **Frontend Build & Linter**:
+  ```bash
+  cd frontend
+  npm run build
+  npm run lint
+  ```
 
 ## Documentation
 - [API Contract](docs/API_CONTRACT.md)

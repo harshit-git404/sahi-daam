@@ -4,7 +4,9 @@ import logging
 from typing import Optional
 import asyncio
 
-from fastapi import APIRouter, HTTPException, Query
+import uuid
+from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
 try:
@@ -15,6 +17,11 @@ try:
     from ..pricing.engine import calculate_fair_price
     from ..data.history import analyze_distinct_history
     from ..data.retail_service import get_retail_prices
+    from ..database.connection import get_db
+    from ..database.repositories import LocalityRepository, MandiRepository, WholesalePriceRepository
+    from ..services.transport_service import TransportCostService
+    from ..pricing.reconciliation_service import PricingReconciliationService
+    from ..services.ledger_service import CalculationLedgerService
 except ImportError:
     from data.agmarknet.service import get_mandi_prices
     from ml.freshness_model import predict_freshness
@@ -23,6 +30,11 @@ except ImportError:
     from pricing.engine import calculate_fair_price
     from data.history import analyze_distinct_history
     from data.retail_service import get_retail_prices
+    from database.connection import get_db
+    from database.repositories import LocalityRepository, MandiRepository, WholesalePriceRepository
+    from services.transport_service import TransportCostService
+    from pricing.reconciliation_service import PricingReconciliationService
+    from services.ledger_service import CalculationLedgerService
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -43,6 +55,10 @@ class ScanRequest(BaseModel):
     district: str | None = None
     market: str | None = None
     purchase_type: str = "street_vendor"
+    # Locality & Mandi selection for transport & community reconciliation
+    locality_id: str | None = None
+    pincode: str | None = None
+    mandi_id: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -115,18 +131,25 @@ async def verify_market_price(
 # ---------------------------------------------------------------------------
 
 @router.post("/scan-produce")
-async def scan_produce(request: ScanRequest):
+@router.post("/api/scan-produce")
+async def scan_produce(
+    request: ScanRequest,
+    db: Session = Depends(get_db),
+):
     """
     Complete produce analysis pipeline:
     1. Gemini Flash (primary) or local ML fallback for produce ID + freshness
-    2. Agmarknet mandi price + 10-day market history
-    3. Freshness-adjusted fair price
-    4. Retail reference prices (Blinkit + Zepto)
+    2. Agmarknet mandi price + 10-day market history + SQLite wholesale fallback
+    3. Locality-aware transport cost calculation
+    4. Adaptive community price reconciliation (2-day window, 10-report minimum threshold)
+    5. Freshness-adjusted fair price & baseline range preservation
+    6. Retail reference prices (Blinkit + Zepto)
+    7. Persistent JSON calculation ledger and global SHA-256 hash chaining
 
     Failure isolation:
     - Gemini failure → local ML fallback (not an error)
     - Both ML paths fail → 503 error
-    - Agmarknet failure → ML result returned; market.status = UNAVAILABLE
+    - Agmarknet failure → wholesale fallback from SQLite or UNAVAILABLE
     - Retail failure → ML + market result returned; retail.status = UNAVAILABLE
     """
     if not request.image:
@@ -201,8 +224,39 @@ async def scan_produce(request: ScanRequest):
     quality_adjustment = int(freshness_data.get("quality_adjustment", 0))
 
     # ------------------------------------------------------------------
-    # Step 2: Agmarknet mandi prices + 10-day market history
-    # (Failure here must NOT erase the ML result)
+    # Step 1.5: Locality and Mandi Resolution
+    # ------------------------------------------------------------------
+    resolved_locality = None
+    resolved_locality_id = None
+    if request.locality_id:
+        resolved_locality = LocalityRepository.get_by_id(db, request.locality_id)
+        if resolved_locality:
+            resolved_locality_id = resolved_locality.id
+    elif request.pincode:
+        locs = LocalityRepository.list_by_pincode(db, request.pincode.strip())
+        if locs:
+            resolved_locality = locs[0]
+            resolved_locality_id = resolved_locality.id
+
+    resolved_mandi = None
+    resolved_mandi_id = None
+    if request.mandi_id:
+        resolved_mandi = MandiRepository.get_by_id(db, request.mandi_id)
+        if resolved_mandi:
+            resolved_mandi_id = resolved_mandi.id
+    elif resolved_locality:
+        district_mandis = MandiRepository.list_by_district(db, resolved_locality.district)
+        if district_mandis:
+            resolved_mandi = district_mandis[0]
+            resolved_mandi_id = resolved_mandi.id
+        else:
+            all_mandis = MandiRepository.list_all(db)
+            if all_mandis:
+                resolved_mandi = all_mandis[0]
+                resolved_mandi_id = resolved_mandi.id
+
+    # ------------------------------------------------------------------
+    # Step 2: Agmarknet mandi prices + 10-day market history + SQLite fallback
     # ------------------------------------------------------------------
     market_data: dict = _build_market_unavailable()
     wholesale_price: float | None = None
@@ -212,21 +266,20 @@ async def scan_produce(request: ScanRequest):
         commodity_query = detected_produce.replace("_", " ").title()
         mandi_response = await get_mandi_prices(
             commodity=commodity_query,
-            state=request.state,
-            district=request.district,
-            market=request.market,
+            state=request.state or (resolved_locality.state if resolved_locality else None),
+            district=request.district or (resolved_locality.district if resolved_locality else None),
+            market=request.market or (resolved_mandi.market_name if resolved_mandi else None),
         )
         records = mandi_response.get("records", [])
 
         if records:
-            # Build 10-day history from ALL returned records (not just the latest)
             history_result = analyze_distinct_history(
                 records,
                 date_field="arrival_date",
                 value_field="modal_price_per_kg",
                 limit=10,
             )
-            latest_record = records[0]  # already sorted newest-first by service
+            latest_record = records[0]
             wholesale_price = latest_record.get("modal_price_per_kg") or None
             data_date = latest_record.get("arrival_date", "")
             if "/" in data_date:
@@ -251,13 +304,6 @@ async def scan_produce(request: ScanRequest):
                 "district": latest_record.get("district", ""),
                 **history_result,
             }
-            logger.info(
-                "Agmarknet: %d records for %s; wholesale=₹%s; periods=%d",
-                len(records),
-                commodity_query,
-                wholesale_price,
-                history_result.get("periods_available", 0),
-            )
         else:
             logger.info("Agmarknet returned 0 records for %s", commodity_query)
             market_data["date"] = ""
@@ -268,28 +314,118 @@ async def scan_produce(request: ScanRequest):
         market_data["error"] = "MARKET_UNAVAILABLE"
         market_data["date"] = ""
 
+    # SQLite wholesale price fallback when Agmarknet is unavailable or returned no data and a locality/mandi is specified
+    if wholesale_price is None and (resolved_mandi_id or resolved_locality_id):
+        db_obs = WholesalePriceRepository.get_latest(
+            db, commodity_id=detected_produce_id, mandi_id=resolved_mandi_id
+        )
+        if db_obs:
+            wholesale_price = db_obs.price_per_kg
+            obs_mandi = resolved_mandi or MandiRepository.get_by_id(db, db_obs.mandi_id)
+            location_display = f"{obs_mandi.market_name if obs_mandi else 'Mandi'}, {obs_mandi.district if obs_mandi else (resolved_locality.district if resolved_locality else 'Tamil Nadu')}"
+            market_data = {
+                "status": "AVAILABLE",
+                "today_price": wholesale_price,
+                "unit": db_obs.unit or "kg",
+                "date": db_obs.observed_at.strftime("%Y-%m-%d"),
+                "market_name": obs_mandi.market_name if obs_mandi else "Local Mandi",
+                "district": obs_mandi.district if obs_mandi else "Local District",
+                "current_value": wholesale_price,
+                "average_10_days": wholesale_price,
+                "high_10_days": wholesale_price,
+                "low_10_days": wholesale_price,
+                "percentage_change": 0.0,
+                "trend": "STABLE",
+                "history": [],
+                "periods_available": 1,
+            }
+
     # ------------------------------------------------------------------
-    # Step 3: Fair price calculation
-    # (Only when wholesale price is available; freshness always applied)
+    # Step 2.5: Transport Cost Calculation
+    # ------------------------------------------------------------------
+    transport_result = None
+    if resolved_mandi_id and resolved_locality_id:
+        try:
+            transport_result = TransportCostService.calculate_from_database_profile(
+                session=db,
+                vehicle_type="tata_ace",
+                mandi_id=resolved_mandi_id,
+            )
+        except Exception as exc:
+            logger.warning("Transport calculation failed: %s", exc)
+            transport_result = None
+
+    # ------------------------------------------------------------------
+    # Step 3: Fair price & Adaptive Community Reconciliation
     # ------------------------------------------------------------------
     pricing: dict | None = None
+    pricing_breakdown: dict = {}
+    calc_status: str = "UNAVAILABLE"
+    recon_result = None
+
     if wholesale_price is not None:
-        pricing = calculate_fair_price(
-            wholesale_price, MARKUP_MIN, MARKUP_MAX, quality_adjustment
+        recon_result = PricingReconciliationService.reconcile_fair_price(
+            session=db,
+            commodity_id=detected_produce_id,
+            locality_id=resolved_locality_id,
+            wholesale_price=wholesale_price,
+            transport_result=transport_result,
+            quality_adjustment=quality_adjustment,
         )
-        logger.info(
-            "Fair price: ₹%s–₹%s (wholesale=₹%s markup=%d–%d%% quality_adj=%d)",
-            pricing["min"],
-            pricing["max"],
-            wholesale_price,
-            MARKUP_MIN,
-            MARKUP_MAX,
-            quality_adjustment,
+        calc_status = recon_result.calculation_status
+        pricing_breakdown = recon_result.model_dump()
+        if recon_result.reconciled_range:
+            pricing = {
+                "min": recon_result.reconciled_range.min,
+                "max": recon_result.reconciled_range.max,
+            }
+        else:
+            pricing = calculate_fair_price(
+                wholesale_price, MARKUP_MIN, MARKUP_MAX, quality_adjustment
+            )
+    else:
+        calc_status = "INCOMPLETE_MISSING_WHOLESALE"
+        pricing_breakdown = {
+            "status": "UNAVAILABLE",
+            "message": "Wholesale price unavailable for produce",
+            "missing_inputs": ["wholesale_price"],
+        }
+
+    # ------------------------------------------------------------------
+    # Step 3.5: Ledger Persistence with SHA-256 Hash Chaining
+    # ------------------------------------------------------------------
+    calc_id = f"calc_{uuid.uuid4().hex[:12]}"
+    evidence = {
+        "commodity_id": detected_produce_id,
+        "locality_id": resolved_locality_id,
+        "mandi_id": resolved_mandi_id,
+        "wholesale_price": wholesale_price,
+        "wholesale_source": market_data.get("market_name", "agmarknet/sqlite"),
+        "transport": transport_result.model_dump() if transport_result else {"status": "unavailable"},
+        "quality_adjustment": quality_adjustment,
+        "quality_adjustment_meaning": freshness_data.get("quality_adjustment_label", "No deduction"),
+        "pricing_breakdown": pricing_breakdown,
+        "missing_inputs": ["wholesale_price"] if wholesale_price is None else (["transport_cost"] if transport_result is None else []),
+        "warnings": recon_result.warnings if recon_result else [],
+        "fallback_decisions": recon_result.notes if recon_result else [],
+    }
+
+    ledger_record = None
+    try:
+        ledger_record = CalculationLedgerService.append_calculation(
+            session=db,
+            calculation_id=calc_id,
+            commodity_id=detected_produce_id,
+            locality_id=resolved_locality_id,
+            status=calc_status,
+            evidence=evidence,
+            is_mock=True,
         )
+    except Exception as exc:
+        logger.exception("Failed to persist calculation to ledger: %s", exc)
 
     # ------------------------------------------------------------------
     # Step 4: Retail reference prices (Blinkit + Zepto)
-    # (Failure here must NOT erase ML + market results)
     # ------------------------------------------------------------------
     location_str = (
         f"{request.district or ''}, {request.state or ''}".strip(", ") or None
@@ -298,12 +434,6 @@ async def scan_produce(request: ScanRequest):
 
     try:
         retail = get_retail_prices(detected_produce_id, location_str)
-        logger.info(
-            "Retail prices for %s: status=%s products=%d",
-            detected_produce_id,
-            retail.get("status"),
-            len(retail.get("products", [])),
-        )
     except Exception as exc:
         logger.exception("Retail price fetch failed for %s", detected_produce_id)
         retail = _build_retail_unavailable(
@@ -317,7 +447,6 @@ async def scan_produce(request: ScanRequest):
     # ------------------------------------------------------------------
     market_status = market_data.get("status", "UNAVAILABLE")
 
-    # Best retail reference for haggle context
     retail_products = retail.get("products", [])
     online_reference_min: float | None = None
     online_reference_max: float | None = None
@@ -327,10 +456,9 @@ async def scan_produce(request: ScanRequest):
             online_reference_min = round(min(prices_per_kg), 2)
             online_reference_max = round(max(prices_per_kg), 2)
 
-    # Quick-commerce summary for backward-compatibility
     quickcommerce_price: dict | None = None
     if retail_products:
-        best = retail_products[0]  # already sorted by price_per_kg
+        best = retail_products[0]
         quickcommerce_price = {
             "source": best["platform"].capitalize(),
             "price": best["price_per_kg"],
@@ -368,4 +496,14 @@ async def scan_produce(request: ScanRequest):
         "online_reference_max": online_reference_max,
         # --- Backward-compatible quick-commerce field ---
         "quickcommerce_price": quickcommerce_price,
+        # --- Additive ledger & explainable pricing breakdown ---
+        "pricing_breakdown": pricing_breakdown,
+        "calculation_id": ledger_record.id if ledger_record else None,
+        "sequence_number": ledger_record.sequence_number if ledger_record else None,
+        "record_hash": ledger_record.current_record_hash if ledger_record else None,
+        "calculation_status": calc_status,
+        "is_mock": True,
+        "locality_id": resolved_locality_id,
+        "mandi_id": resolved_mandi_id,
     }
+

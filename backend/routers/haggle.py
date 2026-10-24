@@ -20,6 +20,7 @@ class HaggleRequest(BaseModel):
 
 
 @router.post("/haggle-check")
+@router.post("/api/haggle-check")
 def haggle_check(request: HaggleRequest):
     if request.purchase_type != "street_vendor":
         raise HTTPException(status_code=400, detail="Haggling is only available for street-vendor purchases.")

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Screen } from '../types';
 
 interface HeaderProps {
   title?: string;
@@ -9,7 +8,16 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ title, showBack, onBack }) => {
-  const { currentScreen, setCurrentScreen, setIsDrawerOpen, theme, toggleTheme, selectedLocation } = useApp();
+  const {
+    currentScreen,
+    setCurrentScreen,
+    setIsDrawerOpen,
+    theme,
+    toggleTheme,
+    selectedLocation,
+    selectedLocality,
+    setIsLocalityModalOpen,
+  } = useApp();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const isTerracotta = theme === 'terracotta';
@@ -75,16 +83,26 @@ export const Header: React.FC<HeaderProps> = ({ title, showBack, onBack }) => {
           </button>
         )}
 
-        {/* Center Title */}
-        <h1
-          id="header-app-title"
-          onClick={() => setCurrentScreen('home')}
-          className={`font-display text-[22px] font-bold tracking-tight cursor-pointer select-none truncate px-2 ${
-            isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'
-          }`}
-        >
-          {getDisplayTitle()}
-        </h1>
+        {/* Center Title & Locality Badge */}
+        <div className="flex flex-col items-center max-w-[200px]">
+          <h1
+            id="header-app-title"
+            onClick={() => setCurrentScreen('home')}
+            className={`font-display text-[18px] font-bold tracking-tight cursor-pointer select-none truncate px-1 ${
+              isTerracotta ? 'text-[#9e3d00]' : 'text-[#012d1d]'
+            }`}
+          >
+            {getDisplayTitle()}
+          </h1>
+          <button
+            onClick={() => setIsLocalityModalOpen(true)}
+            className="flex items-center gap-0.5 text-[11px] text-[#594238] hover:text-[#9e3d00] transition-colors truncate"
+          >
+            <span className="material-symbols-outlined text-[12px] text-[#9e3d00]">location_on</span>
+            <span className="truncate">{selectedLocality ? `${selectedLocality.name}` : selectedLocation.name}</span>
+            <span className="material-symbols-outlined text-[12px]">arrow_drop_down</span>
+          </button>
+        </div>
 
         {/* Right User Profile */}
         <div className="relative">
@@ -140,13 +158,24 @@ export const Header: React.FC<HeaderProps> = ({ title, showBack, onBack }) => {
 
                 <button
                   onClick={() => {
+                    setIsLocalityModalOpen(true);
+                    setShowProfileMenu(false);
+                  }}
+                  className="w-full text-left px-2.5 py-2 text-xs font-medium rounded-xl text-[#1b1c1a] hover:bg-[#f5f3ef] flex items-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-[16px] text-[#9e3d00]">pin_drop</span>
+                  Locality & Mandi ({selectedLocality?.pincode || 'Select'})
+                </button>
+
+                <button
+                  onClick={() => {
                     setIsDrawerOpen(true);
                     setShowProfileMenu(false);
                   }}
                   className="w-full text-left px-2.5 py-2 text-xs font-medium rounded-xl text-[#1b1c1a] hover:bg-[#f5f3ef] flex items-center gap-2"
                 >
                   <span className="material-symbols-outlined text-[16px]">tune</span>
-                  Mandi Settings & Location
+                  Regional Mandi Settings
                 </button>
               </div>
             </div>

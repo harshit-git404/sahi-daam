@@ -30,11 +30,28 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 
+from contextlib import contextmanager
+
+
 def get_db() -> Generator[Session, None, None]:
     """FastAPI dependency for obtaining a database session per request."""
     db = SessionLocal()
     try:
         yield db
+    finally:
+        db.close()
+
+
+@contextmanager
+def get_db_context() -> Generator[Session, None, None]:
+    """Context manager for standalone scripts, services, and tests."""
+    db = SessionLocal()
+    try:
+        yield db
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
     finally:
         db.close()
 
@@ -49,13 +66,31 @@ def init_db(target_engine=None) -> None:
     try:
         from sqlalchemy import text
         with active_engine.connect() as conn:
+            # 1. community_price_observations column checks
             cursor = conn.execute(text("PRAGMA table_info(community_price_observations)"))
-            existing_cols = {row[1] for row in cursor.fetchall()}
-            if existing_cols:
-                if "normalized_price_per_kg" not in existing_cols:
+            cpo_cols = {row[1] for row in cursor.fetchall()}
+            if cpo_cols:
+                if "normalized_price_per_kg" not in cpo_cols:
                     conn.execute(text("ALTER TABLE community_price_observations ADD COLUMN normalized_price_per_kg FLOAT"))
-                if "duplicate_reason" not in existing_cols:
+                if "duplicate_reason" not in cpo_cols:
                     conn.execute(text("ALTER TABLE community_price_observations ADD COLUMN duplicate_reason VARCHAR(256)"))
-                conn.commit()
+
+            # 2. calculation_records migration check
+            calc_cursor = conn.execute(text("PRAGMA table_info(calculation_records)"))
+            calc_cols = {row[1] for row in calc_cursor.fetchall()}
+            if calc_cols and "sequence_number" not in calc_cols:
+                # If table is empty, recreate it with new schema
+                row_count = conn.execute(text("SELECT count(*) FROM calculation_records")).scalar() or 0
+                if row_count == 0:
+                    conn.execute(text("DROP TABLE calculation_records"))
+                    models.CalculationRecord.__table__.create(conn)
+                else:
+                    # Non-destructive column additions
+                    conn.execute(text("ALTER TABLE calculation_records ADD COLUMN sequence_number INTEGER DEFAULT 0"))
+                    conn.execute(text("ALTER TABLE calculation_records ADD COLUMN previous_record_hash VARCHAR(64) DEFAULT ''"))
+                    conn.execute(text("ALTER TABLE calculation_records ADD COLUMN current_record_hash VARCHAR(64) DEFAULT ''"))
+                    conn.execute(text("ALTER TABLE calculation_records ADD COLUMN schema_version VARCHAR(32) DEFAULT '1.0.0'"))
+                    conn.execute(text("ALTER TABLE calculation_records ADD COLUMN is_mock BOOLEAN DEFAULT 1"))
+            conn.commit()
     except Exception:
         pass

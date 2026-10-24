@@ -62,7 +62,7 @@ export const ScanScreen: React.FC = () => {
     // Haptic feedback
     if (navigator.vibrate) navigator.vibrate(60);
     
-    let base64Image = undefined;
+    let base64Image: string | undefined = undefined;
     if (useRealCamera && videoRef.current) {
       const canvas = document.createElement('canvas');
       canvas.width = videoRef.current.videoWidth || 640;
@@ -71,6 +71,28 @@ export const ScanScreen: React.FC = () => {
       if (ctx) {
         ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
         base64Image = canvas.toDataURL('image/jpeg', 0.8);
+      }
+    } else if (!useRealCamera) {
+      // Deterministic synthetic image for simulation mode
+      // Produces valid base64 JPEG so backend image validation succeeds without weakening security
+      const canvas = document.createElement('canvas');
+      canvas.width = 300;
+      canvas.height = 300;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = '#f7eedd';
+        ctx.fillRect(0, 0, 300, 300);
+        ctx.fillStyle = '#9e3d00';
+        ctx.beginPath();
+        ctx.arc(150, 150, 80, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 22px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(selectedProduce?.name || 'Produce', 150, 145);
+        ctx.font = '12px sans-serif';
+        ctx.fillText('Demo Simulation Scan', 150, 175);
+        base64Image = canvas.toDataURL('image/jpeg', 0.85);
       }
     }
     
